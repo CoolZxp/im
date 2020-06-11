@@ -1,0 +1,119 @@
+<style>
+    .header {
+        height: 45px;
+        background-color: #fff;
+        box-shadow: 0 2px 4px 0 rgba(0,0,0,.05);
+    }
+    .header_left {
+        float: left;
+    }
+    .header_right {
+        float: right;
+    }
+    .header_nav {
+        float: left;
+    }
+    .header_nav li {
+        float: left;
+        transition: background-color .5s;
+        padding: 0 8px;
+    }
+    .header_nav li a {
+        height: 45px;
+        line-height: 45px;
+        box-sizing: border-box;
+    }
+    .header_nav li:hover {
+        background-color: #F0F0F5;
+    }
+    .header_nav_active a {
+        border-bottom: 2px solid #E33E33;
+        color: #000;
+    }
+
+    .header_search {
+        float: left;
+        margin-top: 6.5px;
+        margin-left: 15px;
+        border-radius: 5px;
+        height: 32px;
+        overflow: hidden;
+    }
+
+    .header_search_input {
+        width: 350px;
+        height: 32px;
+        background-color: #F0F0F5;
+        padding-left: 10px;
+        border: none;
+        float: left;
+    }
+
+    .header_search_btn {
+        float: left;
+        width: 32px;
+        height: 32px;
+        line-height: 32px;
+        text-align: center;
+        background-color: #E8E8EE;
+    }
+    .header_search_btn:hover {
+        background-color: #E33E33;
+        color: #fff;
+    }
+
+    .header_user {
+        height: 45px;
+        line-height: 45px;
+        padding: 0 5px;
+        transition: background-color .5s;
+    }
+    .header_user:hover {
+        background-color: #F0F0F5;
+    }
+
+</style>
+<div class="header">
+    <div class="wrap clearfix">
+        <div class="header_left clearfix">
+            <ul class="header_nav clearfix">
+                <li {eq name="nav_select" value="index"}class="header_nav_active"{/eq}>
+                    <a href="{:url('index/Index/index')}">首页</a>
+                </li>
+
+                <li {eq name="nav_select" value="aaaa"}class="header_nav_active"{/eq}>
+                    <a href="{:url('index/Index/aaaa')}">测试</a>
+                </li>
+                <li>
+                    <a href="">测试</a>
+                </li>
+                <li>
+                    <a href="">测试</a>
+                </li>
+                <li>
+                    <a href="">测试</a>
+                </li>
+                <li>
+                    <a href="">测试</a>
+                </li>
+                <li>
+                    <a href="">测试</a>
+                </li>
+            </ul>
+
+            <div class="header_search clearfix">
+                <input type="text" class="header_search_input" placeholder="搜索用户、聊天室">
+                <a class="header_search_btn" href="">
+                    <i class="fa fa-search" aria-hidden="true"></i>
+                </a>
+            </div>
+        </div>
+        <div class="header_right clearfix">
+            <div style="float: left">
+                <div class="header_user">
+                    <a href="">登录/注册</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
