@@ -78,12 +78,59 @@
     .header-user {
         height: 45px;
         line-height: 45px;
+
+    }
+
+    .header-user-login {
         padding: 0 5px;
         transition: background-color .5s;
     }
 
-    .header-user:hover {
+    .header-user-login:hover {
         background-color: #F0F0F5;
+    }
+
+    .header-user-info {
+        width: 45px;
+        height: 45px;
+        position: relative;
+    }
+    .header-user-face {
+        width: 30px;
+        height: 30px;
+        margin-top: 7.5px;
+        margin-left: 7.5px;
+        border-radius: 50%;
+    }
+    .header-user-control {
+        position: absolute;
+        top: 100%;
+        right: 0;
+        z-index: 99999;
+        width: auto;
+        background-color: #fff;
+        box-shadow: 0 2px 3px 0 rgba(0,0,0,.1);
+        padding: 10px 0;
+        box-sizing: border-box;
+        display: none;
+    }
+
+    .header-user-control-item {
+        white-space: nowrap;
+        transition: background-color .5s;
+        padding: 0 20px;
+    }
+    .header-user-control-item:hover {
+        background-color: #F0F0F5;
+    }
+
+    .header-user-control-item .fa {
+        width: 14px;
+        height: 14px;
+        line-height: 14px;
+        text-align: center;
+        margin-right: 5px;
+        color: #999aaa;
     }
 
 
@@ -92,28 +139,14 @@
     <div class="wrap clearfix">
         <div class="header-left clearfix">
             <ul class="header-nav clearfix">
-                <li {eq name="navSelect" value="index" }class="header-nav-active" {/eq}>
-                <a href="{:url('index/Index/index')}">首页</a>
+                <li {eq name="navSelect" value="index" }class="header-nav-active"{/eq}>
+                <a href="{:url('index/Index/index')}">聊天室</a>
                 </li>
 
-                <li {eq name="navSelect" value="aaaa" }class="header-nav-active" {/eq}>
-                <a href="{:url('index/Index/aaaa')}">测试</a>
+                <li {eq name="navSelect" value="aaaa" }class="header-nav-active"{/eq}>
+                <a href="{:url('index/Index/aaaa')}">好友</a>
                 </li>
-                <li>
-                    <a href="">测试</a>
-                </li>
-                <li>
-                    <a href="">测试</a>
-                </li>
-                <li>
-                    <a href="">测试</a>
-                </li>
-                <li>
-                    <a href="">测试</a>
-                </li>
-                <li>
-                    <a href="">测试</a>
-                </li>
+
             </ul>
 
             <div class="header-search clearfix">
@@ -125,7 +158,24 @@
         </div>
         <div class="header-right clearfix">
             <div class="header-user">
-                <button onclick="authOpen()">登录/注册</button>
+                {eq name="isLogin" value="0"}
+                    <button class="header-user-login" onclick="authOpen()">登录/注册</button>
+                {else/}
+                    <div class="header-user-info">
+                        <a href=""><img class="header-user-face" src="{$userFace}" /></a>
+                        <div class="header-user-control">
+                            <a href="" class="header-user-control-item">
+                                <i class="fa fa-user" aria-hidden="true"></i>
+                                个人中心
+                            </a>
+                            <a href="javascript:void(0)" onclick="userOut()" class="header-user-control-item">
+                                <i class="fa fa-sign-out" aria-hidden="true"></i>
+                                退出登录
+                            </a>
+                        </div>
+                    </div>
+
+                {/eq}
             </div>
         </div>
     </div>
@@ -374,6 +424,13 @@
             freeModeMomentumBounce: false,
             autoHeight: true,
         })
+        $('.header-user-info').mouseenter(function () {
+            $('.header-user-control').fadeIn(200);
+        });
+
+        $('.header-user-info').mouseleave(function () {
+            $('.header-user-control').fadeOut(200);
+        });
     })
 
 
@@ -381,7 +438,6 @@
         $('.auth-wrap').fadeIn();
         $(".auth-box").animate({top: '50%'});
         authSwiper.update()
-
     }
 
     function authClose() {
@@ -413,8 +469,8 @@
                 if(data.code != 1){
                     humane.log(data.msg);
                 } else {
-                    humane.log('登录成功');
                     $.cookie('im_token', data.data.token, { expires: 7, path: '/' });
+                    location.reload();
                 }
             },
             complete: function () {
@@ -454,7 +510,11 @@
                 $('#auth-btn-register').removeAttr('disabled');
             }
         });
-
+    }
+    
+    function userOut() {
+        $.removeCookie('im_token',{ path: '/'});
+        location.reload();
     }
 
 </script>

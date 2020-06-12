@@ -6,16 +6,170 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>聊天室</title>
     {include file="common/require"}
+    <style>
+        .im-box {
+            width: 100%;
+            background-color: #fff;
+            border-radius: 5px;
+            padding: 20px;
+            margin-top: 20px;
+            box-shadow: 0 0 6px 0 rgba(0, 0, 0, .05);
+        }
+        .im-title {
+            font-size: 26px;
+        }
+        .im-cate-list-item {
+            float: left;
+            padding: 5px 10px;
+            margin-top: 10px;
+            margin-right: 10px;
+            background-color: #F0F0F5;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color .5s;
+        }
+        .im-cate-list-item:hover {
+            background-color: #E8E8EE;
+        }
+        .im-cate-list-item-active {
+            background-color: #E33E33;
+            color: #fff;
+        }
+        .im-room-list {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content:space-between;
+        }
+        .im-room-list-item {
+            width: 24%;
+            border-radius: 5px;
+            overflow: hidden;
+            margin-top: 20px;
+            cursor: pointer;
+            transition: box-shadow .5s;
+            box-shadow: 2px 2px 10px #ddd;
+        }
+        .im-room-list-item:hover {
+        }
+        .im-room-list-item-img {
+            width: 100%;
+            padding-top: 60%;
+            position: relative;
+        }
+        .im-room-list-item-img img {
+            position: absolute;
+            top:0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .im-room-list-item-img-layer {
+            position: absolute;
+            top:0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,.4);
+            opacity: 0;
+            transition: opacity .5s;
+
+            z-index: 99;
+        }
+        .im-room-list-item-img-layer-title {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 100%;
+            color: #fff;
+            text-align: center;
+        }
+
+        .im-room-list-item:hover .im-room-list-item-img-layer {
+            opacity: 1;
+        }
+        .im-room-list-item-main {
+            background-color: #f5f6f7;
+            padding: 10px;
+        }
+        .im-room-list-item-title {
+        }
+        .im-room-list-item-user {
+            height: 20px;
+            line-height: 20px;
+            color: #999;
+            margin-top: 5px;
+        }
+        .im-room-list-item-user-info {
+            float: left;
+        }
+        .im-room-list-item-user-face {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: inline-block;
+            vertical-align: middle;
+        }
+        .im-room-list-item-user-name {
+            display: inline-block;
+            vertical-align: middle;
+            font-size: 14px;
+        }
+        .im-room-list-item-user-num {
+            height: 100%;
+            float: right;
+        }
+
+    </style>
 </head>
 <body>
-    <div id="box">
-        {include file="common/header"}
-        <div class="content">
-
+    {include file="common/header"}
+    <div class="wrap im">
+        <div class="im-box im-cate">
+            <div class="im-title">
+                分类
+            </div>
+            <ul class="im-cate-list clearfix">
+                <li class="im-cate-list-item im-cate-list-item-active">
+                    全部
+                </li>
+            </ul>
         </div>
-        <div class="input">
+        <div class="im-box im-room">
+            <div class="im-title">
+                聊天室
+            </div>
+            <ul class="im-room-list">
 
+                <li class="im-room-list-item">
+                    <div class="im-room-list-item-img">
+                        <img src="https://anchorpost.msstatic.com/cdnimage/anchorpost/1052/fc/175d4ee3fdafd8b3ab463496664200_1663_1564736422.jpg">
+                        <div class="im-room-list-item-img-layer">
+                            <div class="im-room-list-item-img-layer-title">
+                                进入聊天室
+                            </div>
+                        </div>
+                    </div>
+                    <div class="im-room-list-item-main">
+                        <div class="im-room-list-item-title">我是一个标题</div>
+                        <div class="im-room-list-item-user clearfix">
+                            <div class="im-room-list-item-user-info">
+                                <img src="https://anchorpost.msstatic.com/cdnimage/anchorpost/1052/fc/175d4ee3fdafd8b3ab463496664200_1663_1564736422.jpg" class="im-room-list-item-user-face">
+                                <span class="im-room-list-item-user-name">120679956151</span>
+                            </div>
+
+                            <div class="im-room-list-item-user-num">
+                                <i class="fa fa-user" aria-hidden="true"></i>
+                                10000
+                            </div>
+                        </div>
+                    </div>
+                </li>
+
+            </ul>
         </div>
+
+
     </div>
 <script>
 

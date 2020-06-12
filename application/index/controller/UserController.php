@@ -101,14 +101,31 @@ class UserController extends BaseController
     }
 
     /**
-     * checkUserToken 验证用户Token是否有效
+     * getUserTokenInfo 获取TOKEN中用户ID 无效返回false
      * @param $token
-     * @return bool
+     * @return int|bool
      */
-    public function checkUserToken($token)
+    public function getUserTokenInfo($token)
     {
         JWT::$leeway = 60;
         $info = JWT::decode($token, config('user.key'),['HS256']);
-        return Cache::has("USER_TOKEN:{$info -> userId}:{$token}");
+        $is_has = Cache::has("USER_TOKEN:{$info -> userId}:{$token}");
+        if ($is_has) {
+            return $info -> userId;
+        } else {
+            return false;
+        }
     }
+
+    /**
+     * getUserInfo 获取用户信息
+     * @param $userId
+     * @return mixed
+     */
+    public function getUserInfo($userId) {
+        $userInfo = UserModel::get($userId);
+        unset($userInfo['user_pasw']);
+        return $userInfo;
+    }
+
 }

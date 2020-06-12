@@ -20,7 +20,7 @@ class UserValidate extends Validate
         ],
         'nickname' => [
             'require',
-            'length' => '3,15',
+            'length' => '3,12',
             'chsDash'
         ],
         'password' => [

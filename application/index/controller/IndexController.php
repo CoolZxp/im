@@ -12,29 +12,34 @@ class IndexController extends BaseController
         $token = cookie('token');
         if (!empty($token)) {
             $UserController = new UserController;
-//            $UserController ->
-//            $this -> assign('isLogin',true);
+            $userId = $UserController -> getUserTokenInfo($token);
+            if ($userId !== false) {
+                $userInfo = $UserController -> getUserInfo($userId);
+                $this -> assign('isLogin',true);
+                $this -> assign('userFace',$userInfo['user_face']);
+                $this -> assign('UserName',$userInfo['user_name']);
+            } else {
+                $this -> assign('isLogin',false);
+            }
+        } else {
+            $this -> assign('isLogin',false);
         }
+
     }
+
+
 
     public function index()
     {
-        return view() -> assign([
-            'navSelect' => 'index',
-        ]);
+        $this -> assign('navSelect','index');
+        return $this -> fetch();
     }
 
     public function aaaa()
     {
-        return view() -> assign([
-            'navSelect' => 'aaaa',
-        ]);
+        $this -> assign('navSelect','aaaa');
+        return $this -> fetch();
     }
 
-
-    public function login()
-    {
-        return view('user/login');
-    }
 
 }
