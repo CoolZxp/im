@@ -11,4 +11,12 @@
 
 // 应用公共文件
 
-const SUCCESS = 1; //成功
+/**
+ * getCodeMsg 获取具体错误信息
+ * @param $code
+ * @return string
+ */
+function get_code_msg($code) {
+    $msg = config('code.msg');
+    return $msg[$code];
+}

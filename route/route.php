@@ -11,7 +11,7 @@
 
 Route::get('', 'index/Index/index');
 Route::get('aaaa', 'index/Index/aaaa');
-Route::get('aaaa/bbb', 'index/Index/aaaa');
+Route::get('login', 'index/Index/login');
 
 return [
 

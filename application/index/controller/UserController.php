@@ -7,58 +7,79 @@ use app\index\model\UserModel;
 use think\facade\Cache;
 use Firebase\JWT\JWT;
 
-const ERROR_USER_NO = -1000; //用户不存在
-const ERROR_USER_PASW = -1001; //密码错误
-const ERROR_USER_STATUS = -1002; //状态不正确
-const ERROR_USER_REG = -1003; //注册失败
-const ERROR_USER_REG_EXIST = -1004; //用户名已存在
 
 
-class UserController extends Controller
+
+class UserController extends BaseController
 {
+
     /**
      * login 登录
-     * @param $user string 用户名
-     * @param $pasw string 密码
-     * @return bool|int
+     * @return \think\response\Json
      */
-    public function login($user, $pasw)
-    {
-        $userInfo = UserModel::where('user_name', $user)->find();
-        if (!$userInfo) {
-            return ERROR_USER_NO;
-        }
-        if ($userInfo['user_pasw'] != $pasw) {
-            return ERROR_USER_PASW;
-        }
+    public function login() {
+        $postInfo['username'] = input('post.username');
+        $postInfo['password'] = input('post.password');
+        $result = $this -> validate($postInfo,'app\index\validate\UserValidate.login');
 
-        if ($userInfo['user_status'] != 0) {
-            return ERROR_USER_STATUS;
+        if ($result !== true) {
+            $json['code'] = ERROR_VALIDATE;
+            $json['msg'] = $result;
+        } else {
+            $userInfo = UserModel::where('user_name', $postInfo['username'])->find();
+            if (!$userInfo) {
+                $json['code'] = ERROR_USER_NO;
+                $json['msg'] = get_code_msg(ERROR_USER_NO);
+            }else if ($userInfo['user_pasw'] != md5($postInfo['password'])) {
+                $json['code'] = ERROR_USER_PASW;
+                $json['msg'] = get_code_msg(ERROR_USER_PASW);
+            }else if ($userInfo['user_status'] != 0) {
+                $json['code'] = ERROR_USER_STATUS;
+                $json['msg'] = get_code_msg(ERROR_USER_STATUS);
+            } else {
+                $json['code'] = SUCCESS;
+                $json['msg'] = get_code_msg(SUCCESS);
+                $json['data'] = [
+                    'token' => $this->getUserToken($userInfo['id']),
+                ];
+            }
         }
-        return SUCCESS_OK;
+        return json($json);
     }
 
     /**
      * regUser 注册
-     * @param $user string 用户名
-     * @param $nickName string 昵称
-     * @param $pasw string 密码
-     * @return int
+     * @return \think\response\Json
      */
-    public function regUser($user, $nickName, $pasw)
+    public function register()
     {
-        if (UserModel::where('user_name', $user)->find()) {
-            return ERROR_USER_REG_EXIST;
-        }
-        $UserModel = new UserModel;
-        $UserModel -> user_name = $user;
-        $UserModel -> nick_name = $nickName;
-        $UserModel -> user_pasw = $pasw;
-        if ($UserModel -> save()) {
-            return SUCCESS_OK;
+        $postInfo['username'] = input('post.username');
+        $postInfo['nickname'] = input('post.nickname');
+        $postInfo['password'] = input('post.password');
+        $result = $this -> validate($postInfo,'app\index\validate\UserValidate');
+        if ($result !== true) {
+            $json['code'] = ERROR_VALIDATE;
+            $json['msg'] = $result;
         } else {
-            return ERROR_USER_REG;
+            if (UserModel::where('user_name', $postInfo['username'])->find()) {
+                $json['code'] = ERROR_USER_REG_EXIST;
+                $json['msg'] = get_code_msg(ERROR_USER_REG_EXIST);
+            } else {
+                $UserModel = new UserModel;
+                $UserModel->user_name = $postInfo['username'];
+                $UserModel->nick_name = $postInfo['nickname'];
+                $UserModel->user_pasw = md5($postInfo['password']);
+                if ($UserModel->save()) {
+                    $json['code'] = SUCCESS;
+                    $json['msg'] = get_code_msg(SUCCESS);
+                } else {
+                    $json['code'] = ERROR_USER_REG;
+                    $json['msg'] = get_code_msg(ERROR_USER_REG);
+                }
+            }
         }
+
+        return json($json);
     }
 
     /**
@@ -66,7 +87,7 @@ class UserController extends Controller
      * @param $userId
      * @return string
      */
-    public function getUserToken($userId)
+    protected function getUserToken($userId)
     {
         $info = [
             "iat" => time(), //签发时间
