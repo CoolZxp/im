@@ -35,6 +35,6 @@ class RoomModel extends Model
         if ($cateId != null) {
             $roomList -> where('cate_id',$cateId);
         }
-        return $roomList -> paginate(1);
+        return $roomList -> paginate(16);
     }
 }

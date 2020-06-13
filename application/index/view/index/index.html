@@ -157,6 +157,10 @@
             margin: 10% 0;
         }
 
+        .im-room .pagination {
+            margin-top: 20px;
+        }
+
     </style>
 </head>
 <body>
@@ -167,10 +171,15 @@
                 分类
             </div>
             <ul class="im-cate-list clearfix">
-                roomCateList
-                <li class="im-cate-list-item im-cate-list-item-active">
-                    全部
-                </li>
+                {volist name='roomCateList' id='roomCate'}
+                    <li
+                            class="im-cate-list-item
+                            {eq name="cateId" value="$roomCate.id"}im-cate-list-item-active{/eq}"
+                            onclick="updateUrlParam('cateId','{$roomCate.id}')"
+                    >
+                        {$roomCate.cate_name}
+                    </li>
+                {/volist}
             </ul>
         </div>
         <div class="im-box im-room">
@@ -182,12 +191,12 @@
                     新建聊天室
                 </button>
             </div>
-            {neq name="roomListNum" value="0"}
+            {eq name="roomListNum" value="0"}
                 <div class="im-title im-room-no">暂无聊天室...</div>
             {else/}
                 <ul class="im-room-list">
                     {volist name='roomList' id='room'}
-                    <li class="im-room-list-item">
+                        <li class="im-room-list-item">
                         <div class="im-room-list-item-img">
                             <img src="{$room.room_img}">
                             <div class="im-room-list-item-img-layer">
@@ -213,11 +222,11 @@
                     </li>
                     {/volist}
                     {for start="0" end="$roomListAddNum"}
-                    <li class="im-room-list-item" style="visibility:hidden;"></li>
+                        <li class="im-room-list-item" style="visibility:hidden;"></li>
                     {/for}
                 </ul>
                 {$roomList|raw}
-            {/neq}
+            {/eq}
         </div>
 
     </div>

@@ -11,7 +11,12 @@ class RoomCateModel extends Model
      * @return mixed
      */
     public function getRoomCateList() {
-        return $this -> all();
+        $roomCateList = $this -> field(['id','cate_name']) -> all();
+        $roomCateList -> unshift([
+            'id' => 0,
+            'cate_name' => '全部',
+        ]);
+        return $roomCateList;
     }
 
 }
