@@ -1,8 +1,11 @@
 <?php
 namespace app\index\controller;
 
+use app\index\model\RoomCateModel;
+use app\index\model\RoomModel;
 use think\App;
 use think\Controller;
+use think\facade\Request;
 
 class IndexController extends BaseController
 {
@@ -29,15 +32,19 @@ class IndexController extends BaseController
 
 
 
-    public function index()
+    public function index(RoomModel $roomModel,RoomCateModel $roomCateModel)
     {
-        $this -> assign('navSelect','index');
-        return $this -> fetch();
-    }
+        $cateId = Request::get('cateId');
+        $roomList = $roomModel -> getRoomList($cateId);
+        $roomListNum = $roomList -> count();
+        $roomCateList = $roomCateModel -> getRoomCateList();
 
-    public function aaaa()
-    {
-        $this -> assign('navSelect','aaaa');
+        $this -> assign('roomList',$roomList);
+        $this -> assign('roomListNum',$roomListNum);
+        $this -> assign('roomListAddNum',4 - ($roomListNum % 4));
+        $this -> assign('roomCateList',$roomCateList);
+        $this -> assign('navSelect','index');
+
         return $this -> fetch();
     }
 

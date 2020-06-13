@@ -1,0 +1,20 @@
+.clearfix:after{
+    content: '.';
+    height: 0;
+    visibility: hidden;
+    display: block;
+    clear: both;
+}
+
+body {
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+    font-size: 14px;
+    color: #555666;
+    background-color: #f5f6f7;
+}
+
+
+.wrap {
+    width: 1200px;
+    margin: 0 auto;
+}

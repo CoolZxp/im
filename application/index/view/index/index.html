@@ -18,9 +18,12 @@
         .im-title {
             font-size: 26px;
         }
+
         .im-cate-list-item {
             float: left;
-            padding: 5px 10px;
+            height: 30px;
+            line-height: 30px;
+            padding: 0 10px;
             margin-top: 10px;
             margin-right: 10px;
             background-color: #F0F0F5;
@@ -35,6 +38,34 @@
             background-color: #E33E33;
             color: #fff;
         }
+        .im-room-top {
+            height: 40px;
+        }
+
+        .im-room-top-title {
+            float: left;
+        }
+        .im-room-top-new {
+            float: right;
+            height: 30px;
+            line-height: 30px;
+            padding: 0 10px;
+            margin-top: 5px;
+            background-color: #E33E33;
+            color: #fff;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color .5s;
+        }
+        .im-room-top-new:hover {
+            background-color: #ea6a62;
+        }
+        .im-room-top-new:active {
+            background-color: #de291d;
+        }
+
+
+
         .im-room-list {
             display: flex;
             flex-wrap: wrap;
@@ -53,7 +84,7 @@
         }
         .im-room-list-item-img {
             width: 100%;
-            padding-top: 60%;
+            padding-top: 65%;
             position: relative;
         }
         .im-room-list-item-img img {
@@ -120,6 +151,12 @@
             float: right;
         }
 
+        .im-room-no {
+            width: 100%;
+            text-align: center;
+            margin: 10% 0;
+        }
+
     </style>
 </head>
 <body>
@@ -130,45 +167,58 @@
                 分类
             </div>
             <ul class="im-cate-list clearfix">
+                roomCateList
                 <li class="im-cate-list-item im-cate-list-item-active">
                     全部
                 </li>
             </ul>
         </div>
         <div class="im-box im-room">
-            <div class="im-title">
-                聊天室
+            <div class="im-room-top clearfix">
+                <div class="im-title im-room-top-title">
+                    聊天室
+                </div>
+                <button class="im-room-top-new">
+                    新建聊天室
+                </button>
             </div>
-            <ul class="im-room-list">
-
-                <li class="im-room-list-item">
-                    <div class="im-room-list-item-img">
-                        <img src="https://anchorpost.msstatic.com/cdnimage/anchorpost/1052/fc/175d4ee3fdafd8b3ab463496664200_1663_1564736422.jpg">
-                        <div class="im-room-list-item-img-layer">
-                            <div class="im-room-list-item-img-layer-title">
-                                进入聊天室
+            {neq name="roomListNum" value="0"}
+                <div class="im-title im-room-no">暂无聊天室...</div>
+            {else/}
+                <ul class="im-room-list">
+                    {volist name='roomList' id='room'}
+                    <li class="im-room-list-item">
+                        <div class="im-room-list-item-img">
+                            <img src="{$room.room_img}">
+                            <div class="im-room-list-item-img-layer">
+                                <div class="im-room-list-item-img-layer-title">
+                                    进入聊天室
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="im-room-list-item-main">
-                        <div class="im-room-list-item-title">我是一个标题</div>
-                        <div class="im-room-list-item-user clearfix">
-                            <div class="im-room-list-item-user-info">
-                                <img src="https://anchorpost.msstatic.com/cdnimage/anchorpost/1052/fc/175d4ee3fdafd8b3ab463496664200_1663_1564736422.jpg" class="im-room-list-item-user-face">
-                                <span class="im-room-list-item-user-name">120679956151</span>
-                            </div>
+                        <div class="im-room-list-item-main">
+                            <div class="im-room-list-item-title">{$room.room_name}</div>
+                            <div class="im-room-list-item-user clearfix">
+                                <div class="im-room-list-item-user-info">
+                                    <img src="{$room.user_face}" class="im-room-list-item-user-face">
+                                    <span class="im-room-list-item-user-name">{$room.user_name}</span>
+                                </div>
 
-                            <div class="im-room-list-item-user-num">
-                                <i class="fa fa-user" aria-hidden="true"></i>
-                                10000
+                                <div class="im-room-list-item-user-num">
+                                    <i class="fa fa-user" aria-hidden="true"></i>
+                                    10000
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </li>
-
-            </ul>
+                    </li>
+                    {/volist}
+                    {for start="0" end="$roomListAddNum"}
+                    <li class="im-room-list-item" style="visibility:hidden;"></li>
+                    {/for}
+                </ul>
+                {$roomList|raw}
+            {/neq}
         </div>
-
 
     </div>
 <script>
