@@ -1,11 +1,11 @@
 /**
  * UpdateUrlParam 修改URL参数
+ * @param thisURL
  * @param name
  * @param val
- * @constructor
+ * @returns {string}
  */
-function updateUrlParam(name, val) {
-    var thisURL = document.location.href;
+function updateUrlParam(thisURL,name, val) {
     // 如果 url中包含这个参数 则修改
     if (thisURL.indexOf(name+'=') > 0) {
         var v = getUrlParam(name);
@@ -26,7 +26,7 @@ function updateUrlParam(name, val) {
             thisURL = thisURL + "?" + name + "=" + val;
         }
     }
-    location.href = thisURL;
+    return thisURL;
 }
 
 /**

@@ -2,12 +2,13 @@
 namespace app\index\model;
 
 use think\facade\Cache;
+use think\facade\Request;
 use think\Model;
 
 
 class RoomModel extends Model
 {
-
+    //关联User
     public function user()
     {
         return $this -> belongsTo('UserModel') -> bind([
@@ -16,7 +17,7 @@ class RoomModel extends Model
             'user_face',
         ]);
     }
-
+    //关联RoomCate
     public function roomCate()
     {
         return $this -> belongsTo('RoomCateModel','cate_id') -> bind([
@@ -35,6 +36,20 @@ class RoomModel extends Model
         if ($cateId != null) {
             $roomList -> where('cate_id',$cateId);
         }
-        return $roomList -> paginate(16);
+
+
+        $pageConfig = [
+            'query' => [
+                'cateId'=> input('get.cateId')
+            ]
+        ];
+        return $roomList -> paginate(16,false,$pageConfig) ;
     }
+
+
+    public function getRoomUserNum($roomId) {
+
+//        Cache("room:{$roomId}");
+    }
+
 }

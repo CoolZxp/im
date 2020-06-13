@@ -34,9 +34,18 @@ class IndexController extends BaseController
 
     public function index(RoomModel $roomModel,RoomCateModel $roomCateModel)
     {
+        $page = Request::get('page');
         $cateId = Request::get('cateId');
         $cateId = $cateId == '0'?null:$cateId;
         $roomList = $roomModel -> getRoomList($cateId);
+
+//        if ($page > $roomList -> lastPage()) {
+//            $pageConfig['page'] = $roomList -> lastPage();
+//            $page = Request::get('page');
+//        }
+
+//        $roomModel -> getRoomUserNum(1);
+
         $roomListNum = $roomList -> count();
         $roomCateList = $roomCateModel -> getRoomCateList();
         $this -> assign('cateId',$cateId);

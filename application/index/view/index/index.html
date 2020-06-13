@@ -176,7 +176,7 @@
                     <li
                             class="im-cate-list-item
                             {eq name="cateId" value="$roomCate.id"}im-cate-list-item-active{/eq}"
-                            onclick="updateUrlParam('cateId','{$roomCate.id}')"
+                            onclick="setCate('{$roomCate.id}')"
                     >
                         {$roomCate.cate_name}
                     </li>
@@ -232,7 +232,11 @@
 
     </div>
 <script>
-
+    function setCate(id) {
+        var url = location.href;
+        url = updateUrlParam(url,'cateId',id);
+        location.href = updateUrlParam(url,'page',1);
+    }
 </script>
 </body>
 </html>
