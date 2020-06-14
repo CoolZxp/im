@@ -29,7 +29,6 @@ class IndexController extends BaseController
         } else {
             $this -> assign('isLogin',false);
         }
-
     }
 
 

@@ -7,6 +7,9 @@ html, body, div, span, input,button,applet, object, h1, h2, h3, h4, h5, h6, p, b
     font-weight: normal;
     vertical-align: baseline;
 }
+* {
+    box-sizing:border-box;
+}
 
 /* HTML5 display-role reset for older browsers */
 article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section {
