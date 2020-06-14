@@ -166,71 +166,7 @@
 </head>
 <body>
     {include file="common/header"}
-    <div class="wrap im">
-        <div class="im-box im-cate">
-            <div class="im-title">
-                分类
-            </div>
-            <ul class="im-cate-list clearfix">
-                {volist name='roomCateList' id='roomCate'}
-                    <li
-                            class="im-cate-list-item
-                            {eq name="cateId" value="$roomCate.id"}im-cate-list-item-active{/eq}"
-                            onclick="setCate('{$roomCate.id}')"
-                    >
-                        {$roomCate.cate_name}
-                    </li>
-                {/volist}
-            </ul>
-        </div>
-        <div class="im-box im-room">
-            <div class="im-room-top clearfix">
-                <div class="im-title im-room-top-title">
-                    聊天室
-                </div>
-                <button class="im-room-top-new">
-                    新建聊天室
-                </button>
-            </div>
-            {eq name="roomListNum" value="0"}
-                <div class="im-title im-room-no">暂无聊天室...</div>
-            {else/}
-                <ul class="im-room-list">
-                    {volist name='roomList' id='room'}
-                        <li class="im-room-list-item">
-                        <div class="im-room-list-item-img">
-                            <img src="{$room.room_img}">
-                            <div class="im-room-list-item-img-layer">
-                                <div class="im-room-list-item-img-layer-title">
-                                    进入聊天室
-                                </div>
-                            </div>
-                        </div>
-                        <div class="im-room-list-item-main">
-                            <div class="im-room-list-item-title">{$room.room_name}</div>
-                            <div class="im-room-list-item-user clearfix">
-                                <div class="im-room-list-item-user-info">
-                                    <img src="{$room.user_face}" class="im-room-list-item-user-face">
-                                    <span class="im-room-list-item-user-name">{$room.user_name}</span>
-                                </div>
 
-                                <div class="im-room-list-item-user-num">
-                                    <i class="fa fa-user" aria-hidden="true"></i>
-                                    {$room.room_user_num}
-                                </div>
-                            </div>
-                        </div>
-                    </li>
-                    {/volist}
-                    {for start="0" end="$roomListAddNum"}
-                        <li class="im-room-list-item" style="visibility:hidden;"></li>
-                    {/for}
-                </ul>
-                {$roomList|raw}
-            {/eq}
-        </div>
-
-    </div>
 <script>
     function setCate(id) {
         var url = location.href;

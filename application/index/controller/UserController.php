@@ -17,7 +17,7 @@ class UserController extends BaseController
      * login 登录
      * @return \think\response\Json
      */
-    public function login() {
+    public function login(UserModel $userModel) {
         $postInfo['username'] = input('post.username');
         $postInfo['password'] = input('post.password');
         $result = $this -> validate($postInfo,'app\index\validate\UserValidate.login');
@@ -40,7 +40,7 @@ class UserController extends BaseController
                 $json['code'] = SUCCESS;
                 $json['msg'] = get_code_msg(SUCCESS);
                 $json['data'] = [
-                    'token' => $this->getUserToken($userInfo['id']),
+                    'token' => $userModel -> getUserToken($userInfo['id']),
                 ];
             }
         }
@@ -82,50 +82,5 @@ class UserController extends BaseController
         return json($json);
     }
 
-    /**
-     * getUserToken 获取用户TOKEN
-     * @param $userId
-     * @return string
-     */
-    protected function getUserToken($userId)
-    {
-        $info = [
-            "iat" => time(), //签发时间
-            "nbf" => time(), //生效时间
-            "exp" => time() + (7 * 24 * 60 * 60), //token 过期时间1周
-            "userId" => $userId
-        ];
-        $token = JWT::encode($info, config('user.key'),'HS256');
-        Cache::set("user:token:{$userId}:{$token}", time(), time() + (7 * 24 * 60 * 60)); //过期时间1周
-        return $token;
-    }
-
-    /**
-     * getUserTokenInfo 获取TOKEN中用户ID 无效返回false
-     * @param $token
-     * @return int|bool
-     */
-    protected function getUserTokenInfo($token)
-    {
-        JWT::$leeway = 60;
-        $info = JWT::decode($token, config('user.key'),['HS256']);
-        $is_has = Cache::has("user:token:{$info -> userId}:{$token}");
-        if ($is_has) {
-            return $info -> userId;
-        } else {
-            return false;
-        }
-    }
-
-    /**
-     * getUserInfo 获取用户信息
-     * @param $userId
-     * @return mixed
-     */
-    protected function getUserInfo($userId) {
-        $userInfo = UserModel::get($userId);
-        unset($userInfo['user_pasw']);
-        return $userInfo;
-    }
 
 }
