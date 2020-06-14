@@ -47,7 +47,7 @@ class RoomModel extends Model
     }
 
     /**
-     * getRoomUserNum 获取房间人数
+     * getRoomUserNum 获取聊天室人数
      * @param $roomId
      * @return int
      */
