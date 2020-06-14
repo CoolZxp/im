@@ -21,17 +21,20 @@
             transform: translateY(-50%);
             border-radius: 5px;
             box-shadow: 0 0 6px 0 rgba(0, 0, 0, .05);
+            padding: 15px;
         }
 
         .room-user-list {
             width: 20%;
             height: 100%;
             float: left;
-            border-right: 1px solid #000;
-            padding: 10px;
+            padding-right: 20px;
+            /*border-right: 1px solid #000;*/
         }
+
         .room-user-list-title {
-            
+            font-size: 18px;
+            margin-bottom: 10px;
         }
 
         .room-user {
@@ -42,6 +45,8 @@
             padding: 10px;
             box-sizing: content-box;
             box-shadow: 0 0 6px 0 rgba(0, 0, 0, .05);
+            margin-bottom: 10px;
+
         }
 
         .room-user-head {
@@ -61,11 +66,181 @@
             padding: 0 10px;
         }
 
+
+
         .room-msg {
             width: 80%;
             height: 100%;
             float: left;
         }
+
+        .room-msg-content {
+            background-color: #f5f6f7;
+            border-radius: 5px;
+            height: calc(70% - 34px);
+            padding: 10px;
+            overflow-y: auto;
+            box-shadow: 0 0 6px 0 rgba(0, 0, 0, .05);
+        }
+
+        .room-msg-box {
+            width: 70%;
+            margin-bottom: 10px;
+        }
+
+        .room-msg-box-head {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+        }
+
+        .room-msg-box-main {
+            max-width: calc(100% - 50px);
+            background-color: #fff;
+            border-radius: 5px;
+            padding: 10px;
+            box-shadow: 0 0 6px 0 rgba(0, 0, 0, .05);
+        }
+
+        .room-msg-box-left {
+            float: left;
+        }
+        .room-msg-box-left .room-msg-box-head{
+            float: left;
+            margin-right: 10px;
+        }
+
+        .room-msg-box-left .room-msg-box-main{
+            float: left;
+        }
+
+
+        .room-msg-box-right {
+            float: right;
+        }
+        .room-msg-box-right .room-msg-box-head{
+            float: right;
+            margin-left: 10px;
+        }
+
+        .room-msg-box-right .room-msg-box-main{
+            float: right;
+        }
+
+        .room-msg-time {
+            float: left;
+            width: 100%;
+            margin-bottom: 10px;
+            text-align: center;
+
+        }
+        .room-msg-time-str {
+            display: inline-block;
+            padding: 5px 8px;
+            background-color: rgba(0,0,0,.1);
+            border-radius: 5px;
+            color: #fff;
+            font-size: 12px;
+            box-shadow: 0 0 6px 0 rgba(0, 0, 0, .05);
+        }
+
+        .room-msg-input {
+            border-radius: 5px;
+            margin-top: 15px;
+            height: calc(30% - 15px);
+            background-color: #f5f6f7;
+            box-shadow: 0 0 6px 0 rgba(0, 0, 0, .05);
+            position: relative;
+        }
+
+        .room-msg-input-tool {
+            height: 25px;
+            line-height: 25px;
+            cursor: pointer;
+            transition: color .5s;
+            padding: 10px 10px 5px;
+            box-sizing: content-box;
+        }
+        .room-msg-input-tool i{
+            line-height: inherit;
+            margin-right: 10px;
+            float: left;
+            font-size: 18px;
+        }
+        .room-msg-input-tool i:hover {
+            color: #000;
+        }
+
+        .room-msg-input-submit {
+            height: 100%;
+            float: right;
+        }
+        .room-msg-input-submit button {
+            height: 25px;
+            line-height: 25px;
+            background-color: #555666;
+            border-radius: 5px;
+            padding: 0 8px;
+            color: #fff;
+            box-shadow: 0 0 6px 0 rgba(0, 0, 0, .05);
+        }
+
+
+        .room-msg-input-content {
+            width: 100%;
+            height: calc(100% - 40px);
+            border: none;
+            resize: none;
+            background-color:transparent;
+            font-family: initial;
+            color: initial;
+            padding: 0 10px 10px;
+        }
+
+        .room-msg-input-emoji {
+            position: absolute;
+            top: 0;
+            left: 0;
+            transform: translateX(-20%) translateY(-100%);
+            border-radius: 5px;
+            background-color: #fff;
+            box-shadow: 0 0 6px 0 rgba(0, 0, 0, .05);
+            padding: 10px;
+            width: 470px;
+            height: 250px;
+            overflow-y: auto;
+            display: none;
+        }
+        .room-msg-input-emoji-item {
+            width: 30px;
+            height: 30px;
+            line-height: 30px;
+            text-align: center;
+            transition: background-color .5s;
+            cursor: pointer;
+            float: left;
+            z-index: 100;
+        }
+        .room-msg-input-emoji-item .emoji{
+            vertical-align: middle;
+            width: 20px;
+            height: 20px;
+        }
+        .room-msg-input-emoji-item:hover {
+            background-color: #f5f6f7;
+        }
+
+        .layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 99;
+            display: none;
+        }
+
+
     </style>
 </head>
 <body>
@@ -73,9 +248,17 @@
     <div class="wrap room-wrap">
         <div class="room clearfix">
             <ul class="room-user-list">
+
                 <div class="room-user-list-title">
-                    在线用户(111)
+                    在线用户 (111)
                 </div>
+                <li class="room-user clearfix">
+                    <img class="room-user-head" src="https://dss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=1906469856,4113625838&fm=26&gp=0.jpg" alt="">
+                    <div class="room-user-name">
+                        啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊
+                    </div>
+                </li>
+
                 <li class="room-user clearfix">
                     <img class="room-user-head" src="https://dss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=1906469856,4113625838&fm=26&gp=0.jpg" alt="">
                     <div class="room-user-name">
@@ -85,10 +268,277 @@
             </ul>
             <div class="room-msg">
 
+                <div class="room-user-list-title">
+                    我是聊天室名称
+                </div>
+                <div class="room-msg-content clearfix">
+                    <div class="room-msg-time">
+                        <div class="room-msg-time-str">
+                            20:30
+                        </div>
+                    </div>
+                    <div class="room-msg-box room-msg-box-left clearfix">
+                        <img class="room-msg-box-head" src="https://dss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=1906469856,4113625838&fm=26&gp=0.jpg" alt="">
+                        <div class="room-msg-box-main">
+                            啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊
+                        </div>
+                    </div>
+
+                    <div class="room-msg-time">
+                        <div class="room-msg-time-str">
+                            20:30
+                        </div>
+                    </div>
+
+                    <div class="room-msg-box room-msg-box-right">
+                        <img class="room-msg-box-head" src="https://dss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=1906469856,4113625838&fm=26&gp=0.jpg" alt="">
+                        <div class="room-msg-box-main">
+                            1
+                        </div>
+                    </div>
+                </div>
+
+                <div class="room-msg-input">
+                    <div class="room-msg-input-tool clearfix">
+                        <i id="openEmoji" class="fa fa-smile-o" aria-hidden="true" ></i>
+                        <i class="fa fa-picture-o" aria-hidden="true"></i>
+                        <div class="room-msg-input-submit">
+                            <button>发送</button>
+                        </div>
+                    </div>
+                    <textarea id="room-input" class="room-msg-input-content" autofocus wrap="hard"></textarea>
+
+                    <div class="room-msg-input-emoji clearfix">
+<!--                        <div class="room-msg-input-emoji-item">emoji</div>-->
+                    </div>
+
+                </div>
             </div>
         </div>
     </div>
+
 <script>
+    var defaultEmojiArray = ['\ud83d\ude00',
+        '\ud83d\ude03',
+        '\ud83d\ude04',
+        '\ud83d\ude01',
+        '\ud83d\ude06',
+        '\ud83d\ude05',
+        '\ud83d\ude02',
+        '\ud83d\ude42',
+        '\ud83d\ude42',
+        '\ud83d\ude43',
+        '\ud83d\ude09',
+        '\ud83d\ude0a',
+        '\ud83d\ude07',
+        '\ud83e\udd70',
+        '\ud83d\ude0d',
+        '\ud83e\udd29',
+        '\ud83d\ude18',
+        '\ud83d\ude17',
+        '\ud83d\ude19',
+        '\ud83d\ude0b',
+        '\ud83d\ude1b',
+        '\ud83d\ude1c',
+        '\ud83e\udd2a',
+        '\ud83d\ude1d',
+        '\ud83e\udd11',
+        '\ud83e\udd17',
+        '\ud83e\udd2d',
+        '\ud83e\udd2b',
+        '\ud83e\udd14',
+        '\ud83e\udd10',
+        '\ud83e\udd28',
+        '\ud83d\ude10',
+        '\ud83d\ude11',
+        '\ud83d\ude36',
+        '\ud83d\ude0f',
+        '\ud83d\ude12',
+        '\ud83d\ude44',
+        '\ud83d\ude2c',
+        '\ud83e\udd25',
+        '\ud83d\ude0c',
+        '\ud83d\ude14',
+        '\ud83d\ude2a',
+        '\ud83e\udd24',
+        '\ud83d\ude34',
+        '\ud83d\ude37',
+        '\ud83e\udd12',
+        '\ud83e\udd15',
+        '\ud83e\udd22',
+        '\ud83e\udd2e',
+        '\ud83d\ude15',
+        '\ud83d\ude1f',
+        '\ud83d\ude41',
+        '\ud83d\ude2f',
+        '\ud83d\ude32',
+        '\ud83d\ude33',
+        '\ud83d\ude26',
+        '\ud83d\ude27',
+        '\ud83d\ude28',
+        '\ud83d\ude30',
+        '\ud83d\ude25',
+        '\ud83d\ude22',
+        '\ud83d\ude2d',
+        '\ud83d\ude31',
+        '\ud83d\ude16',
+        '\ud83d\ude23',
+        '\ud83d\ude1e',
+        '\ud83d\ude13',
+        '\ud83d\ude29',
+        '\ud83d\ude2b',
+        '\ud83d\ude3a',
+        '\ud83d\ude38',
+        '\ud83d\ude39',
+        '\ud83d\ude3b',
+        '\ud83d\ude3c',
+        '\ud83d\ude3d',
+        '\ud83d\ude40',
+        '\ud83d\ude3f',
+        '\ud83d\ude3e',
+        '\ud83d\ude48',
+        '\ud83d\ude49',
+        '\ud83d\ude4a',
+        '\ud83d\udc8b',
+        '\ud83d\udc8c',
+        '\ud83d\udc98',
+        '\ud83d\udc9d',
+        '\ud83d\udc96',
+        '\ud83d\udc97',
+        '\ud83d\udc93',
+        '\ud83d\udc9e',
+        '\ud83d\udc95',
+        '\ud83d\udc9f',
+        '\ud83d\udc94',
+        '\ud83e\udde1',
+        '\ud83d\udc9b',
+        '\ud83d\udc9a',
+        '\ud83d\udc99',
+        '\ud83d\udc9c',
+        '\ud83e\udd0e',
+        '\ud83d\udda4',
+        '\ud83e\udd0d',
+        '\ud83d\udcaf',
+        '\ud83d\udca2',
+        '\ud83d\udca5',
+        '\ud83d\udcab',
+        '\ud83d\udca6',
+        '\ud83d\udca8',
+        '\ud83d\udd73',
+        '\ud83d\udca3',
+        '\ud83d\udcac',
+        // '\ud800\udc00',
+        '\ud83d\udde8',
+        '\ud83d\uddef',
+        '\ud83d\udcad',
+        '\ud83d\udca4',
+        '\ud83d\udc4c',
+        '\ud83e\udd0c',
+        '\ud83e\udd0f',
+        // '\ud7c9\udf0c',
+        '\ud83e\udd1e',
+        '\ud83e\udd1f',
+        '\ud83e\udd18',
+        '\ud83e\udd19',
+        '\ud83d\udc4d',
+        '\ud83d\udc4e',
+        // '\ud7c9\udf0a',
+        '\ud83d\udc4a',
+        '\ud83e\udd1b',
+        '\ud83e\udd1c',
+        '\ud83d\udc4f',
+        '\ud83d\ude4c',
+        '\ud83d\udc50',
+        '\ud83e\udd32',
+        '\ud83e\udd1d',
+        '\ud83d\ude4f',
+        '\ud83d\udc35',
+        '\ud83d\udc12',
+        '\ud83e\udd8d',
+        '\ud83e\udda7',
+        '\ud83d\udc36',
+        '\ud83d\udc15',
+        '\ud83e\uddae',
+        // '\ud800\udc00',
+        '\ud83d\udc29',
+        '\ud83d\udc3a',
+        '\ud83e\udd8a',
+        '\ud83e\udd9d',
+        '\ud83d\udc31',
+        '\ud83d\udc08',
+        // '\ud800\udc00',
+        '\ud83e\udd81',
+        '\ud83d\udc2f',
+        '\ud83d\udc05',
+        '\ud83d\udc06',
+        '\ud83d\udc34',
+        '\ud83d\udc0e',
+        '\ud83e\udd84',
+        '\ud83e\udd93',
+        '\ud83e\udd8c',
+        '\ud83e\uddac',
+        '\ud83d\udc2e',
+        '\ud83d\udc02',
+        '\ud83d\udc03',
+        '\ud83d\udc04',
+        '\ud83d\udc37',
+        '\ud83d\udc16',
+        '\ud83d\udc17',
+        '\ud83d\udc3d',
+        '\ud83d\udc0f',
+        '\ud83d\udc11',
+        '\ud83d\udc10',
+        '\ud83d\udc2a',
+        '\ud83d\udc2b',
+        '\ud83e\udd99',
+        '\ud83e\udd92',
+        '\ud83d\udc18',
+        '\ud83e\udda3',
+        '\ud83e\udd8f',
+        '\ud83e\udd9b',
+        '\ud83d\udc2d',
+        '\ud83d\udc01',
+        '\ud83d\udc00',
+        '\ud83d\udc39',
+        '\ud83d\udc30',
+        '\ud83d\udc07',
+        '\ud83d\udc3f',
+        '\ud83e\uddab',
+        '\ud83e\udd94',
+        '\ud83e\udd87',
+        '\ud83d\udc3b',
+        // '\ud800\udc00',
+        '\ud83d\udc28',
+        '\ud83d\udc3c',
+        '\ud83e\udda5',
+        '\ud83e\udda6',
+        '\ud83e\udda8',
+        '\ud83e\udd98',
+        '\ud83e\udda1',
+        '\ud83d\udc3e',
+    ];
+    addDefaultEmoji();
+
+    function addDefaultEmoji() {
+        for (var i = 0;i< defaultEmojiArray.length;i++) {
+            var str = '<div class="room-msg-input-emoji-item" onclick="addEmojiInput(\'' + defaultEmojiArray[i] + '\')" ' + '>';
+            str += twemoji.parse(defaultEmojiArray[i]);
+            str += '</div>';
+            $('.room-msg-input-emoji').append(str);
+        }
+    }
+
+    $('#openEmoji').click(function (event) {
+        event.stopPropagation();
+        $('.room-msg-input-emoji').fadeIn();
+        $(document).one('click',function () {
+            $('.room-msg-input-emoji').fadeOut();
+        });
+    })
+
+    function addEmojiInput(elm) {
+        $('#room-input').val($('#room-input').val() + '' + elm + '');
+    }
 
 </script>
 </body>
