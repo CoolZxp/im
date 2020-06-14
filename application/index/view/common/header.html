@@ -163,9 +163,9 @@
                     <button class="header-user-login" onclick="authOpen()">登录/注册</button>
                 {else/}
                     <div class="header-user-info">
-                        <a href=""><img class="header-user-face" src="{$userFace}" /></a>
+                        <a href="{:url('index/User/userInfo')}"><img class="header-user-face" src="{$userFace}" /></a>
                         <div class="header-user-control">
-                            <a href="" class="header-user-control-item">
+                            <a href="{:url('index/User/userInfo')}" class="header-user-control-item">
                                 <i class="fa fa-user" aria-hidden="true"></i>
                                 个人中心
                             </a>

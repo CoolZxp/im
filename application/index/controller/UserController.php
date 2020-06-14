@@ -78,8 +78,16 @@ class UserController extends BaseController
                 }
             }
         }
-
         return json($json);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function userInfo()
+    {
+        $this -> assign('navSelect','index');
+        return $this -> fetch();
     }
 
 
