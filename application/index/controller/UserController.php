@@ -96,7 +96,7 @@ class UserController extends BaseController
             "userId" => $userId
         ];
         $token = JWT::encode($info, config('user.key'),'HS256');
-        Cache::set("USER_TOKEN:{$userId}:{$token}", time(), time() + (7 * 24 * 60 * 60)); //过期时间1周
+        Cache::set("user:token:{$userId}:{$token}", time(), time() + (7 * 24 * 60 * 60)); //过期时间1周
         return $token;
     }
 
@@ -109,7 +109,7 @@ class UserController extends BaseController
     {
         JWT::$leeway = 60;
         $info = JWT::decode($token, config('user.key'),['HS256']);
-        $is_has = Cache::has("USER_TOKEN:{$info -> userId}:{$token}");
+        $is_has = Cache::has("user:token:{$info -> userId}:{$token}");
         if ($is_has) {
             return $info -> userId;
         } else {

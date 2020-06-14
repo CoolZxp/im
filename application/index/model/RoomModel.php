@@ -1,8 +1,7 @@
 <?php
 namespace app\index\model;
 
-use think\facade\Cache;
-use think\facade\Request;
+use redis\Redis;
 use think\Model;
 
 
@@ -36,20 +35,26 @@ class RoomModel extends Model
         if ($cateId != null) {
             $roomList -> where('cate_id',$cateId);
         }
-
-
         $pageConfig = [
             'query' => [
                 'cateId'=> input('get.cateId')
             ]
         ];
-        return $roomList -> paginate(16,false,$pageConfig) ;
+        return $roomList -> paginate(16,false,$pageConfig) -> each(function ($item,$key) {
+            $item['room_user_num'] = $this -> getRoomUserNum($item['id']);
+            return $item;
+        });
     }
 
-
+    /**
+     * getRoomUserNum 获取房间人数
+     * @param $roomId
+     * @return int
+     */
     public function getRoomUserNum($roomId) {
-
-//        Cache("room:{$roomId}");
+        $redis = Redis::getInstance();
+        $userNum = $redis -> hLen("room:{$roomId}");
+        return $userNum;
     }
 
 }

@@ -6,6 +6,7 @@ use app\index\model\RoomModel;
 use think\App;
 use think\Controller;
 use think\facade\Request;
+use redis\Redis;
 
 class IndexController extends BaseController
 {
@@ -38,14 +39,6 @@ class IndexController extends BaseController
         $cateId = Request::get('cateId');
         $cateId = $cateId == '0'?null:$cateId;
         $roomList = $roomModel -> getRoomList($cateId);
-
-//        if ($page > $roomList -> lastPage()) {
-//            $pageConfig['page'] = $roomList -> lastPage();
-//            $page = Request::get('page');
-//        }
-
-//        $roomModel -> getRoomUserNum(1);
-
         $roomListNum = $roomList -> count();
         $roomCateList = $roomCateModel -> getRoomCateList();
         $this -> assign('cateId',$cateId);
