@@ -10,8 +10,8 @@
 // +----------------------------------------------------------------------
 
 Route::get('', 'index/Index/index');
-Route::get('aaaa', 'index/Index/aaaa');
-Route::get('login', 'index/Index/login');
+Route::post('login', 'index/User/login');
+Route::post('register', 'index/User/register');
 
 return [
 

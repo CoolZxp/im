@@ -105,7 +105,7 @@ class UserController extends BaseController
      * @param $token
      * @return int|bool
      */
-    public function getUserTokenInfo($token)
+    protected function getUserTokenInfo($token)
     {
         JWT::$leeway = 60;
         $info = JWT::decode($token, config('user.key'),['HS256']);
@@ -122,7 +122,7 @@ class UserController extends BaseController
      * @param $userId
      * @return mixed
      */
-    public function getUserInfo($userId) {
+    protected function getUserInfo($userId) {
         $userInfo = UserModel::get($userId);
         unset($userInfo['user_pasw']);
         return $userInfo;
