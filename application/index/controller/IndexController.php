@@ -3,20 +3,21 @@ namespace app\index\controller;
 
 use app\index\model\RoomCateModel;
 use app\index\model\RoomModel;
-use app\index\model\UserModel;
-use think\App;
-use think\Controller;
 use think\facade\Request;
-use redis\Redis;
 
 class IndexController extends BaseController
 {
+    protected $viewAuth = [
+        'Index\index'
+    ];
+    protected $methodAuth = [
+        'Index\index'
+    ];
+
     public function __construct()
     {
         parent::__construct();
     }
-
-
 
     public function index(RoomModel $roomModel,RoomCateModel $roomCateModel)
     {

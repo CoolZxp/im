@@ -2,16 +2,17 @@
 
 namespace app\index\controller;
 
-use think\Controller;
 use app\index\model\UserModel;
-use think\facade\Cache;
-use Firebase\JWT\JWT;
-
-
 
 
 class UserController extends BaseController
 {
+    protected $viewAuth = [
+        'User\userInfo'
+    ];
+    protected $methodAuth = [
+        'User\editUser'
+    ];
 
     /**
      * login 登录
