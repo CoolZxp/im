@@ -7,12 +7,8 @@ use think\facade\Request;
 
 class IndexController extends BaseController
 {
-    protected $viewAuth = [
-        'Index\index'
-    ];
-    protected $methodAuth = [
-        'Index\index'
-    ];
+    protected $viewAuth = [];
+    protected $methodAuth = [];
 
     public function __construct()
     {

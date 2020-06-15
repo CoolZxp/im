@@ -32,7 +32,7 @@ class UserController extends BaseController
             if (!$userInfo) {
                 $json['code'] = ERROR_USER_NO;
                 $json['msg'] = get_code_msg(ERROR_USER_NO);
-            }else if ($userInfo['user_pasw'] != md5($postInfo['password'])) {
+            }else if (!password_verify($userInfo['user_pasw'],$postInfo['password'])) {
                 $json['code'] = ERROR_USER_PASW;
                 $json['msg'] = get_code_msg(ERROR_USER_PASW);
             }else if ($userInfo['user_status'] != 0) {
@@ -70,7 +70,7 @@ class UserController extends BaseController
                 $UserModel = new UserModel;
                 $UserModel->user_name = $postInfo['username'];
                 $UserModel->nick_name = $postInfo['nickname'];
-                $UserModel->user_pasw = md5($postInfo['password']);
+                $UserModel->user_pasw = password_hash($postInfo['password'],PASSWORD_BCRYPT);
                 if ($UserModel->save()) {
                     $json['code'] = SUCCESS;
                     $json['msg'] = get_code_msg(SUCCESS);
@@ -91,7 +91,7 @@ class UserController extends BaseController
         $this -> getHeaderUserInfo();
         $this -> assign('navSelect','index');
         $userModel = new UserModel;
-        $this -> assign('userModel',$userModel->getUserInfo($this -> userId));
+        $this -> assign('userInfo',$userModel->getUserInfo($this -> userId));
         return $this -> fetch();
     }
 
