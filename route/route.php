@@ -13,6 +13,7 @@ Route::get('', 'index/Index/index');
 Route::get('user', 'index/User/userInfo');
 Route::post('login', 'index/User/login');
 Route::post('register', 'index/User/register');
+Route::post('editUser','index/User/editUser');
 
 return [
 

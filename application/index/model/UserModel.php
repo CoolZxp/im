@@ -57,4 +57,20 @@ class UserModel extends Model
 
 
 
+    public function updateUserInfo($postInfo)
+    {
+        if($postInfo == null){
+            return false;
+        }
+        $userInfo = UserModel::where('user_name',$postInfo['username'])->find();
+        if($userInfo == null)
+        {
+            return false;
+        }else{
+            $userInfo['nick_name'] = $postInfo['nickname'];
+            $userInfo['user_autograph'] = $postInfo['qianming'];
+            return $userInfo->save();
+        }
+    }
+
 }

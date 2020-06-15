@@ -27,6 +27,9 @@ class UserValidate extends Validate
             'require',
             'length' => '6,18',
             'alphaDash'
+        ],
+        'usersex' =>[
+            'require'
         ]
     ];
     
@@ -46,10 +49,12 @@ class UserValidate extends Validate
         'password.require' => '密码不可为空',
         'password.length' => '密码长度为6-18',
         'password.alphaDash' => '密码仅限字母和数字，下划线_及破折号-',
+        'usersex.require' => '请选择性别',
     ];
 
 
     protected $scene = [
         'login'  =>  ['username','password'],
+        'edit'   =>  ['nickname','usersex']
     ];
 }

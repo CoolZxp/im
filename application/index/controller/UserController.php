@@ -90,5 +90,34 @@ class UserController extends BaseController
         return $this -> fetch();
     }
 
+    /**
+     * @return \think\response\Json
+     */
+    public function editUser()
+    {
+        $postInfo['nickname'] = input('post.nickname');
+        $postInfo['username'] = input('post.username');
+        $postInfo['qianming'] = input('post.qianming');
+        $postInfo['birthday'] = input('post.birthday');
+        $postInfo['usersex'] = input('post.usersex');
+        $result = $this -> validate($postInfo,'app\index\validate\UserValidate.edit');
+        if($result !== true) {
+            $json['code'] = ERROR_VALIDATE;
+            $json['msg'] = $result;
+        }else{
+            $UserModel = new UserModel;
+            $a = $UserModel ->updateUserInfo($postInfo);
+            if($a)
+            {
+                $json['code'] = SUCCESS;
+                $json['msg'] = get_code_msg(SUCCESS);
+            }else{
+                $json['code'] = ERROR_USER_REG;
+                $json['msg'] = get_code_msg(ERROR_USER_REG);
+            }
+            return json($json);
+        }
+        return json($json);
+    }
 
 }

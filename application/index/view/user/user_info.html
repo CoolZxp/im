@@ -12,12 +12,28 @@
             box-shadow: 0 0 6px 0 rgba(0, 0, 0, .05);
             margin-top:50px;
         }
+        .user-zhebi{
+            width:100%;
+            height:100vh;
+            position: fixed;
+            top: 0;
+            z-index: -99;
+            background: white;
+            opacity: 0;
+            transition:  .1s;
+        }
+        .user-zhebi-appear{
+            z-index: 99;
+            opacity: 1;
+        }
         .user-box-info{
             background-image: url("https://s1.ax1x.com/2020/06/14/tzsjDP.jpg");
             background-size: 100% 100%;
             width: 100%;
             height:200px;
             padding-top:10px;
+            border-radius: 5px 5px 0 0;
+            overflow: hidden;
         }
         .user-box-info-img{
             width:100px;
@@ -96,6 +112,8 @@
             margin-top:10px;
             border: 1px solid #e1e2e5;
             position: relative;
+            border-radius: 5px;
+            overflow: hidden;
         }
         .user-box-detailed-left{
             width: 20%;
@@ -119,11 +137,11 @@
             background: #e1e4ea;
         }
         .user-box-detailed-left-small-click{
-            background:#00a1d6;
+            background:#e33e33;
             color:white;
         }
         .user-box-detailed-left-small-click:hover{
-            background:#00a1d6;
+            background:#e33e33;
             color:white;
         }
         .user-box-detailed-right{
@@ -147,8 +165,8 @@
         .user-box-detailed-right-im span{
             margin-left:30px;
             padding-left:10px;
-            color:#00a1d6;
-            border-left:3px solid #00a1d6;
+            color:#e33e33;
+            border-left:3px solid #e33e33;
         }
         .user-box-detailed-right-info{
             width:100%;
@@ -181,7 +199,7 @@
             border-color: #8391a5;
         }
         .user-box-detailed-right-info-small-input input[type="text"]:focus,.user-box-detailed-right-info-small-input textarea:focus{
-            border-color: #00a1d6;
+            border-color: #e33e33;
         }
         .user-box-detailed-right-info-small-input textarea{
             width:80%;
@@ -208,7 +226,7 @@
         }
         .user-box-detailed-right-info-small-input-click{
             color:white;
-            background: #00a1d6;
+            background: #e33e33;
         }
         .user-box-detailed-right-info-small-hr{
             width:80%;
@@ -218,7 +236,7 @@
         .user-box-detailed-right-info-small-btn{
             width:20%;
             height:40px;
-            background: #00a1d6;
+            background: #e33e33;
             color:white;
             text-align: center;
             line-height: 40px;
@@ -230,9 +248,15 @@
             padding-bottom: 200px;
         }
     </style>
+    <script src="__STATIC__/libs/laydate/laydate.js"></script>
 </head>
 <body>
     {include file="common/header"}
+
+    <!--白色遮蔽层-->
+    <div class="user-zhebi"></div>
+    <!--白色遮蔽层-->
+
     <div class="wrap user-box">
         <div class="user-box-info">
             <div class="user-box-info-img">
@@ -254,7 +278,7 @@
                 <div class="user-box-detailed-left-geren">
                     个人中心
                 </div>
-                <div class="user-box-detailed-left-small">
+                <div class="user-box-detailed-left-small user-box-detailed-left-small-click">
                     <i class="fa fa-user-o" aria-hidden="true"></i>
                     <span>我的信息</span>
                 </div>
@@ -267,7 +291,7 @@
                 <div class="user-box-detailed-right-im">
                     <span id="user-title">我的信息</span>
                 </div>
-                <div class="user-box-detailed-right-info">
+                <!--<div class="user-box-detailed-right-info">
                     <div class="user-box-detailed-right-info-small clearfix">
                         <div class="user-box-detailed-right-info-small-text">
                             <span>昵称：</span>
@@ -323,25 +347,71 @@
                         <div class="user-box-detailed-right-info-small-btn">保存</div>
                     </div>
 
-                </div>
+                </div>-->
+                {include file="user/info"}
             </div>
         </div>
     </div>
 </body>
 <script>
+    //选项卡下标
+    var nowIndex = 0;
+    //性别下标
+    var sexNum = 0;
+    //切换选项卡
     $(".user-box-detailed-left-small").click(function(){
         var index = $(".user-box-detailed-left-small").index(this);
-        $(".user-box-detailed-left-small").attr("class","user-box-detailed-left-small");
-        $(".user-box-detailed-left-small").eq(index).attr("class","user-box-detailed-left-small user-box-detailed-left-small-click");
+        if(nowIndex == index){
+            return;
+        }
+        nowIndex = index;
+        $(".user-box-detailed-left-small").removeClass("user-box-detailed-left-small-click");
+        $(".user-box-detailed-left-small").eq(index).addClass("user-box-detailed-left-small-click");
+        $(".user-zhebi").addClass("user-zhebi-appear");
+        setTimeout(function(){$(".user-zhebi").removeClass("user-zhebi-appear");},150);
         var text = $("span",$(".user-box-detailed-left-small").eq(index)).html();
         $("#user-title").html(text);
     });
-    onLoadTimeChoiceDemo();
-    borainTimeChoice({
-        start: ".start",
-        // end: ".start-two",
-        level: "YMD",
-        less: false
+    //性别切换
+    $(".user-box-detailed-right-info-small-input-span").click(function(){
+        var index = $(".user-box-detailed-right-info-small-input-span").index(this);
+        sexNum = index;
+        $(".user-box-detailed-right-info-small-input-span").removeClass("user-box-detailed-right-info-small-input-click");
+        $(".user-box-detailed-right-info-small-input-span").eq(index).addClass("user-box-detailed-right-info-small-input-click");
     });
+
+    //个性签名摁下互回车
+    $("input",$(".user-box-qianming")).keypress(function(event){
+        var keycode = (event.keyCode ? event.keyCode : event.which);
+        if(keycode == '13'){
+            $("input",$(".user-box-qianming")).blur();
+        }
+    });
+    //时间控件
+    laydate.render({
+        elem: '.start',
+        theme: '#e33e33',
+        max:0
+    });
+
+    $("#sub_btn").click(function(){
+        var obj = new Object();
+        obj["nickname"] = $("input[name='nick_name']",$(".user-box-detailed-right-info-small-input")).val();
+        obj["username"] = $("input[name='user_name']",$(".user-box-detailed-right-info-small-input")).val();
+        obj["qianming"] = $("textarea",$(".user-box-detailed-right-info-small-input")).val();
+        obj["birthday"] = $("input[name='birthday']",$(".user-box-detailed-right-info-small-input")).val();
+        obj["usersex"] = sexNum;
+        //console.log(obj);
+        $.ajax({
+            type:"POST",
+            url:"{:url('index/User/editUser')}",
+            data:obj,
+            dataType:"json",
+            success:function(data){
+                console.log(data);
+            }
+        });
+    });
+
 </script>
 </html>
