@@ -58,7 +58,7 @@ class UserController extends BaseController
         $postInfo['username'] = input('post.username');
         $postInfo['nickname'] = input('post.nickname');
         $postInfo['password'] = input('post.password');
-        $result = $this -> validate($postInfo,'app\index\validate\UserValidate');
+        $result = $this -> validate($postInfo,'app\index\validate\UserValidate.register');
         if ($result !== true) {
             $json['code'] = ERROR_VALIDATE;
             $json['msg'] = $result;

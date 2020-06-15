@@ -29,7 +29,8 @@ class UserValidate extends Validate
             'alphaDash'
         ],
         'usersex' =>[
-            'require'
+            'require',
+            'number'
         ]
     ];
     
@@ -50,11 +51,13 @@ class UserValidate extends Validate
         'password.length' => '密码长度为6-18',
         'password.alphaDash' => '密码仅限字母和数字，下划线_及破折号-',
         'usersex.require' => '请选择性别',
+        'usersex.number' => '非法操作',
     ];
 
 
     protected $scene = [
         'login'  =>  ['username','password'],
-        'edit'   =>  ['nickname','usersex']
+        'edit'   =>  ['nickname','usersex'],
+        'register' => ['username','nickname','password']
     ];
 }
