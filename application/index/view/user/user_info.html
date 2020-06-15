@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>个人中心</title>
+    <title>{:config('app_name')}</title>
     {include file="common/require"}
     <style>
         .user-box{
@@ -252,7 +252,6 @@
 </head>
 <body>
     {include file="common/header"}
-
     <!--白色遮蔽层-->
     <div class="user-zhebi"></div>
     <!--白色遮蔽层-->
@@ -266,10 +265,10 @@
                 <img src="https://dss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=1906469856,4113625838&fm=26&gp=0.jpg" alt="">
             </div>
             <div class="user-box-username">
-                名为阿篮
+                {$userModel.nick_name}
             </div>
             <div class="user-box-qianming">
-                <input type="text" placeholder="编辑个性签名">
+                <input type="text" placeholder="编辑个性签名" value="{$userModel.user_autograph}">
             </div>
         </div>
 
@@ -412,6 +411,8 @@
             }
         });
     });
+
+
 
 </script>
 </html>

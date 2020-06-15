@@ -63,14 +63,14 @@ class UserModel extends Model
             return false;
         }
         $userInfo = UserModel::where('user_name',$postInfo['username'])->find();
-        if($userInfo == null)
+        if(empty($userInfo))
         {
             return false;
         }else{
             $userInfo['nick_name'] = $postInfo['nickname'];
             $userInfo['user_autograph'] = $postInfo['qianming'];
+            $userInfo['user_sex'] = $postInfo['usersex'];
             return $userInfo->save();
         }
     }
-
 }

@@ -16,10 +16,10 @@ class BaseController extends Controller
     public function __construct()
     {
         parent::__construct();
-        $actionUrl = Request::controller() . '\\' . Request::action();
+        $actionUrl = strtolower(Request::controller() . '\\' . Request::action());
         $userModel = new UserModel;
         foreach ($this -> viewAuth as $v) {
-            if ($actionUrl == $v) {
+            if ($actionUrl == strtolower($v)) {
                 $token = cookie('token');
                 if (!empty($token)) {
                     $userId = $userModel -> getUserTokenInfo($token);

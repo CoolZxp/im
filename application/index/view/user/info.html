@@ -4,7 +4,7 @@
             <span>昵称：</span>
         </div>
         <div class="user-box-detailed-right-info-small-input">
-            <input type="text" name="nick_name">
+            <input type="text" name="nick_name" value="{$userModel.nick_name}">
         </div>
     </div>
 
@@ -13,7 +13,7 @@
             <span>账号：</span>
         </div>
         <div class="user-box-detailed-right-info-small-input">
-            <input type="text" name="user_name">
+            <input type="text" name="user_name" value="{$userModel.user_name}">
         </div>
     </div>
 
@@ -22,7 +22,7 @@
             <span>个性签名：</span>
         </div>
         <div class="user-box-detailed-right-info-small-input">
-            <textarea name="qianming"></textarea>
+            <textarea name="qianming">{$userModel.user_autograph}</textarea>
         </div>
     </div>
 
@@ -31,9 +31,9 @@
             <span>性别：</span>
         </div>
         <div class="user-box-detailed-right-info-small-input clearfix">
-            <span class="user-box-detailed-right-info-small-input-span user-box-detailed-right-info-small-input-click">男</span>
-            <span class="user-box-detailed-right-info-small-input-span">女</span>
-            <span class="user-box-detailed-right-info-small-input-span">保密</span>
+            <span class="user-box-detailed-right-info-small-input-span {eq name='$userModel.usersex' value='0'}user-box-detailed-right-info-small-input-click{/eq}">男</span>
+            <span class="user-box-detailed-right-info-small-input-span {eq name='$userModel.usersex' value='1'}user-box-detailed-right-info-small-input-click{/eq}">女</span>
+            <span class="user-box-detailed-right-info-small-input-span {eq name='$userModel.usersex' value='2'}user-box-detailed-right-info-small-input-click{/eq}">保密</span>
         </div>
     </div>
 

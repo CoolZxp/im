@@ -8,7 +8,8 @@ use app\index\model\UserModel;
 class UserController extends BaseController
 {
     protected $viewAuth = [
-        'User\userInfo'
+        'User\userInfo',
+
     ];
     protected $methodAuth = [
         'User\editUser'
@@ -88,6 +89,9 @@ class UserController extends BaseController
     public function userInfo()
     {
         $this -> assign('navSelect','index');
+        $userId = $this -> userId;
+        $userModel = new UserModel;
+        $this -> assign('userModel',$userModel->getUserInfo($userId));
         return $this -> fetch();
     }
 
@@ -106,8 +110,8 @@ class UserController extends BaseController
             $json['code'] = ERROR_VALIDATE;
             $json['msg'] = $result;
         }else{
-            $UserModel = new UserModel;
-            $a = $UserModel ->updateUserInfo($postInfo);
+            $userModel = new UserModel;
+            $a = $userModel -> updateUserInfo($postInfo);
             if($a)
             {
                 $json['code'] = SUCCESS;
