@@ -32,7 +32,8 @@ class UserController extends BaseController
             if (!$userInfo) {
                 $json['code'] = ERROR_USER_NO;
                 $json['msg'] = get_code_msg(ERROR_USER_NO);
-            }else if (!password_verify($userInfo['user_pasw'],$postInfo['password'])) {
+            }else if (!password_verify($postInfo['password'],$userInfo['user_pasw'])) {
+                //ALNB
                 $json['code'] = ERROR_USER_PASW;
                 $json['msg'] = get_code_msg(ERROR_USER_PASW);
             }else if ($userInfo['user_status'] != 0) {
