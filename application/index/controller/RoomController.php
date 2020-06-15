@@ -13,6 +13,7 @@ class RoomController extends BaseController
     protected $methodAuth = [];
 
     public function index() {
+        $this -> getHeaderUserInfo();
         $this -> assign('navSelect','index');
         return $this -> fetch();
     }

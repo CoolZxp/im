@@ -21,6 +21,7 @@ class IndexController extends BaseController
 
     public function index(RoomModel $roomModel,RoomCateModel $roomCateModel)
     {
+        $this -> getHeaderUserInfo();
         $page = Request::get('page');
         $cateId = Request::get('cateId');
         $cateId = $cateId == '0'?null:$cateId;

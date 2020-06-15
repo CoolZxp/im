@@ -88,10 +88,10 @@ class UserController extends BaseController
      */
     public function userInfo()
     {
+        $this -> getHeaderUserInfo();
         $this -> assign('navSelect','index');
-        $userId = $this -> userId;
         $userModel = new UserModel;
-        $this -> assign('userModel',$userModel->getUserInfo($userId));
+        $this -> assign('userModel',$userModel->getUserInfo($this -> userId));
         return $this -> fetch();
     }
 
@@ -124,5 +124,4 @@ class UserController extends BaseController
         }
         return json($json);
     }
-
 }

@@ -14,6 +14,7 @@ class CodeMsgBehavior
             define('SUCCESS',1); //成功
             define('ERROR',-1); //错误
             define('ERROR_VALIDATE',-2); //验证错误
+            define('ERROR_AUTH',-3); //权限验证错误 非法操作
             define('ERROR_USER_NO',-1000); //用户不存在
             define('ERROR_USER_PASW',-1001); //密码错误
             define('ERROR_USER_STATUS',-1002); //状态不正确
