@@ -248,6 +248,12 @@
             padding-bottom: 200px;
         }
     </style>
+
+    <link rel="stylesheet" href="__STATIC__/libs/head_portrait/css/index.css">
+    <link rel="stylesheet" href="__STATIC__/libs/head_portrait/css/cropper.min.css">
+
+    <script src="__STATIC__/libs/head_portrait/js/cropper.min.js"></script>
+
     <script src="__STATIC__/libs/laydate/laydate.js"></script>
 </head>
 <body>
@@ -255,14 +261,13 @@
     <!--白色遮蔽层-->
     <div class="user-zhebi"></div>
     <!--白色遮蔽层-->
-
     <div class="wrap user-box">
         <div class="user-box-info">
             <div class="user-box-info-img">
-                <div class="user-box-info-img-hidden">
+                <div class="user-box-info-img-hidden" >
                     更换头像
                 </div>
-                <img src="https://dss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=1906469856,4113625838&fm=26&gp=0.jpg" alt="">
+                <img src="{$userInfo.user_face}" alt="">
             </div>
             <div class="user-box-username">
                 {$userInfo.nick_name}
@@ -351,6 +356,9 @@
             </div>
         </div>
     </div>
+
+    {include file="user/head_portrait"}
+
 </body>
 <script>
     //选项卡下标
@@ -386,6 +394,32 @@
             $("input",$(".user-box-qianming")).blur();
         }
     });
+    //个性签名失去焦点
+    $("input",$(".user-box-qianming")).blur(function(){
+        $.ajax({
+            type:"POST",
+            url:"{:url('index/User/editUser')}",
+            data:{
+                'username':$("input[name='user_name']",$(".user-box-detailed-right-info-small-input")).val(),
+                'qianming':$("input",$(".user-box-qianming")).val(),
+                'num':1
+            },
+            headers: {
+                token: $.cookie('im_token'),
+            },
+            dataType:"json",
+            success:function(data){
+                console.log(data);
+                if(data.code != 1){
+                    humane.log(data.msg);
+                } else {
+                    humane.log(data.msg);
+                    $("textarea",$(".user-box-detailed-right-info-small-input")).val($("input",$(".user-box-qianming")).val());
+                }
+            }
+        });
+    });
+
     //时间控件
     laydate.render({
         elem: '.start',
@@ -411,11 +445,15 @@
             dataType:"json",
             success:function(data){
                 console.log(data);
+                if(data.code != 1){
+                    humane.log(data.msg);
+                } else {
+                    humane.log(data.msg);
+                    $("input",$(".user-box-qianming")).val(obj["qianming"]);
+                }
             }
         });
     });
-
-
 
 </script>
 </html>

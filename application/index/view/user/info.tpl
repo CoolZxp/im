@@ -13,7 +13,7 @@
             <span>账号：</span>
         </div>
         <div class="user-box-detailed-right-info-small-input">
-            <input type="text" name="user_name" value="{$userInfo.user_name}">
+            <input type="text" name="user_name" value="{$userInfo.user_name}" disabled="disabled" style="border:none;background: none;">
         </div>
     </div>
 
@@ -42,7 +42,7 @@
             <span>出生日期：</span>
         </div>
         <div class="user-box-detailed-right-info-small-input clearfix">
-            <input class="start" type="text" name="birthday" placeholder="请选择时间">
+            <input class="start" type="text" name="birthday" placeholder="请选择时间" value="{:date('Y-m-d',$userInfo.user_birthday)}">
         </div>
     </div>
 

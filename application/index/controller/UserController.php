@@ -3,6 +3,7 @@
 namespace app\index\controller;
 use app\index\model\UserModel;
 use think\facade\Cache;
+use think\facade\Env;
 
 class UserController extends BaseController
 {
@@ -83,26 +84,64 @@ class UserController extends BaseController
     }
 
     /**
+     * @param UserModel $userModel
+     * @param int $num
      * @return \think\response\Json
      */
-    public function editUser(UserModel $userModel)
+    public function editUser(UserModel $userModel,$num = 0)
     {
+        if(Cache::has("user:{$this -> request -> userId}:edituser_visittime"))
+        {
+            return generate_json(ERROR_FREQUENTLY);
+        }
+
+        $arr = ["expire"=>30];
+        cache("user:{$this -> request -> userId}:edituser_visittime",time(),$arr);
+
         $postInfo['nickname'] = input('post.nickname');
         $postInfo['username'] = input('post.username');
         $postInfo['qianming'] = input('post.qianming');
         $postInfo['birthday'] = input('post.birthday');
         $postInfo['usersex'] = input('post.usersex');
-        $result = $this -> validate($postInfo,'app\index\validate\UserValidate.edit');
+        $result = $num == 0 ? $this -> validate($postInfo,'app\index\validate\UserValidate.edit') : true;
         if($result !== true) {
             return generate_json(ERROR_VALIDATE);
         }else{
-            $a = $userModel -> updateUserInfo($postInfo);
+            $a = null;
+            if($num == 1)
+            {
+                $a = $userModel -> updateUserInfo($postInfo,$num);
+            }else{
+                $a = $userModel -> updateUserInfo($postInfo);
+            }
             if($a)
             {
                 return generate_json(SUCCESS);
             }else{
-                return generate_json(ERROR_USER_REG);
+                return generate_json(ERROR_AUTH);
             }
+        }
+    }
+
+    public function uploadImg(UserModel $userModel)
+    {
+        $file = $this -> request ->file('photoFile');
+        $upDir = Env::get('root_path')  .'public' . DIRECTORY_SEPARATOR . 'uploads' . DIRECTORY_SEPARATOR . 'user' . DIRECTORY_SEPARATOR .'face';
+
+        $info = $file -> validate(['size'=>2048576,'type' => ['image/png','image/jpeg']]) ->move($upDir);
+        if($info)
+        {
+            $imgUrl = 'uploads/user/face/' . $info -> getSaveName();
+            $result = $userModel -> updateUserFace($this -> request -> userId , $imgUrl);
+            if($result)
+            {
+                return generate_json(SUCCESS);
+            }else{
+                return generate_json(ERROR_USER_UPLOAD);
+            }
+
+        }else{
+            return generate_json(ERROR_USER_UPLOAD,$file->getError());
         }
     }
 }

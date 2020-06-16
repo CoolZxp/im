@@ -19,6 +19,8 @@ Route::get('outLogin','index/User/outLogin')
 Route::post('register', 'index/User/register');
 Route::post('editUser','index/User/editUser')
     -> middleware('Auth');
+Route::post('uploadImg','index/User/uploadImg')
+    -> middleware('Auth');
 Route::rule('room/:id', 'index/Room/index')
     -> middleware('ViewAuth');
 return [

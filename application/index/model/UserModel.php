@@ -55,9 +55,16 @@ class UserModel extends Model
         return $userInfo;
     }
 
+    public function getUserFaceAttr($value) {
+        if (filter_var($value, FILTER_VALIDATE_URL)) {
+            return $value;
+        } else {
+            return request() -> domain() . '/' . $value;
+        }
+    }
 
 
-    public function updateUserInfo($postInfo)
+    public function updateUserInfo($postInfo,$num = 0)
     {
         if($postInfo == null){
             return false;
@@ -67,10 +74,28 @@ class UserModel extends Model
         {
             return false;
         }else{
-            $userInfo['nick_name'] = $postInfo['nickname'];
-            $userInfo['user_autograph'] = $postInfo['qianming'];
-            $userInfo['user_sex'] = $postInfo['usersex'];
+            if($num == 1){
+                $userInfo['user_autograph'] = $postInfo['qianming'];
+            }else{
+                $userInfo['nick_name'] = $postInfo['nickname'];
+                $userInfo['user_autograph'] = $postInfo['qianming'];
+                $userInfo['user_sex'] = $postInfo['usersex'];
+                $userInfo['user_birthday'] = strtotime($postInfo['birthday']);
+            }
             return $userInfo->save();
         }
     }
+
+    public function updateUserFace($userId,$facePath)
+    {
+        $userInfo = UserModel::where('id',$userId)->find();
+        if(empty($userInfo))
+        {
+            return false;
+        }else{
+            $userInfo['user_face'] = $facePath;
+            return $userInfo->save();
+        }
+    }
+
 }

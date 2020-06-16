@@ -11,6 +11,4 @@ class BaseController extends Controller
     {
         parent::__construct();
     }
-
-
 }

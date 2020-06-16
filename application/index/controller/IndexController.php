@@ -29,6 +29,4 @@ class IndexController extends BaseController
         $this -> assign('navSelect','index');
         return $this -> fetch();
     }
-
-
 }
