@@ -1,7 +1,7 @@
 <?php
 namespace app\index\model;
 
-use redis\Redis;
+use think\Cache;
 use think\Model;
 
 
@@ -41,20 +41,95 @@ class RoomModel extends Model
             ]
         ];
         return $roomList -> paginate(16,false,$pageConfig) -> each(function ($item,$key) {
-            $item['room_user_num'] = $this -> getRoomUserNum($item['id']);
             return $item;
         });
     }
 
     /**
-     * getRoomUserNum 获取聊天室人数
-     * @param $roomId
-     * @return int
+     * 获取在线人数
+     * getRoomUserNumAttr
+     * @param $value
+     * @param $data
+     * @return bool|int
      */
-    public function getRoomUserNum($roomId) {
-        $redis = Redis::getInstance();
-        $userNum = $redis -> hLen("room:{$roomId}");
+    public function getRoomUserNumAttr($value,$data) {
+        $redis = app('Redis');
+        $userNum = $redis -> hLen("room:{$data['id']}");
         return $userNum;
+    }
+
+    /**
+     * 获取在线用户列表（获取器）
+     * getRoomUserListAttr
+     * @param $value
+     * @param $data
+     * @return bool|int
+     */
+    public function getRoomUserListAttr($value,$data) {
+        $redis = app('Redis');
+        $userList = $this -> getRoomUserList($data['id']);
+        $userIdList = array_values($userList);
+        return UserModel::field(['id','nick_name','user_face']) -> where(['id' => $userIdList]) -> all();
+    }
+
+    /**
+     * 获取房间在线用户列表
+     * getRoomUserList
+     * @param $roomId
+     * @return mixed
+     */
+    public function getRoomUserList($roomId) {
+        $redis = app('Redis');
+        $userList = $redis -> hGetAll("room:{$roomId}");
+        return $userList;
+    }
+
+    /**
+     * 添加房间用户
+     * addRoomUser
+     * @param $roomId
+     * @param $userId
+     * @param $fd
+     */
+    public function addRoomUser($roomId,$userId,$fd) {
+        $redis = app('Redis');
+        $redis -> hSet("room:{$roomId}",$fd,$userId);
+        $redis -> set("room:fd:{$fd}",$roomId);
+    }
+
+    /**
+     * 移除房间用户
+     * removeRoomUser
+     * @param $fd
+     */
+    public function removeRoomUser($fd) {
+        $redis = app('Redis');
+        $roomId = $this -> getRoomIdByFd($fd);
+        $redis -> hDel("room:{$roomId}",$fd);
+        $redis -> del("room:fd:{$fd}");
+    }
+
+    /**
+     * 通过Fd获取UserId
+     * getUserIdByFd
+     * @param $fd
+     * @return mixed
+     */
+    public function getUserIdByFd($fd) {
+        $redis = app('Redis');
+        $roomId = $this -> getRoomIdByFd($fd);
+        return $redis -> hGet("room:{$roomId}",$fd);
+    }
+
+    /**
+     * 通过Fd获取房间ID
+     * getRoomIdByFd
+     * @param $fd
+     * @return string
+     */
+    public function getRoomIdByFd($fd) {
+        $redis = app('Redis');
+        return $redis -> get("room:fd:{$fd}");
     }
 
 }

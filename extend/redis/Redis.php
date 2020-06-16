@@ -9,27 +9,14 @@ namespace redis;
 class Redis
 {
     private $redis;
-
     //当前数据库ID号
     protected $dbId = 0;
-
     //当前权限认证码
     protected $auth;
-
-    /**
-     * 实例化的对象,单例模式.
-     * @var Redis
-     */
-    static private $_instance = [];
-
-    private $k;
-
     // 连接过期时间
     protected $expireTime;
-
     // host
     protected $host;
-
     // 端口
     protected $port;
 
@@ -38,8 +25,18 @@ class Redis
      * @param       $config
      * @param array $attr
      */
-    private function __construct($config)
+    public function __construct($config = [])
     {
+
+        $config['host'] = isset($config['host'])?$config['host']:config('redis.host');
+        $config['port'] = isset($config['port'])?$config['port']:config('redis.port');
+        $config['port'] = !empty($config['port'])?$config['port']:6379;
+        $config['password'] = isset($config['password'])?$config['password']:config('redis.password');
+        $config['db_id'] = isset($config['db_id'])?$config['db_id']:config('redis.db_id');
+        $config['db_id'] = !empty($config['db_id'])?$config['db_id']:0;
+        $config['timeout'] = isset($config['timeout'])?$config['timeout']:config('redis.timeout');
+        $config['timeout'] = !empty($config['timeout'])?$config['timeout']:30;
+
         $this->redis = new \Redis;
         $this->host = $config['host'];
         $this->port = $config['port'];
@@ -55,41 +52,6 @@ class Redis
         $this->expireTime = time() + $config['timeout'];
     }
 
-    /**
-     * 得到实例化的对象.
-     * 为每个数据库建立一个连接
-     * 如果连接超时，将会重新建立一个连接
-     * @param array $config
-     * @param array $attr
-     * @return Redis
-     */
-    public static function getInstance($config = [])
-    {
-
-        $config['host'] = isset($config['host'])?$config['host']:config('redis.host');
-        $config['port'] = isset($config['port'])?$config['port']:config('redis.port');
-        $config['port'] = !empty($config['port'])?$config['port']:6379;
-        $config['password'] = isset($config['password'])?$config['password']:config('redis.password');
-        $config['db_id'] = isset($config['db_id'])?$config['db_id']:config('redis.db_id');
-        $config['db_id'] = !empty($config['db_id'])?$config['db_id']:0;
-        $config['timeout'] = isset($config['timeout'])?$config['timeout']:config('redis.timeout');
-        $config['timeout'] = !empty($config['timeout'])?$config['timeout']:30;
-
-        $k = md5(implode('', $config));
-        if (!isset(static::$_instance[$k]) || !(static::$_instance[$k] instanceof self)) {
-            static::$_instance[$k] = new self($config);
-            static::$_instance[$k]->k = $k;
-        } elseif (time() > static::$_instance[$k]->expireTime) {
-            static::$_instance[$k]->close();
-            static::$_instance[$k] = new self($config);
-            static::$_instance[$k]->k = $k;
-        }
-        return static::$_instance[$k];
-    }
-
-    private function __clone()
-    {
-    }
 
     /**
      * getRedis 执行原生的redis操作

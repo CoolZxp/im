@@ -18,7 +18,7 @@ class CommonWidget extends Controller
                 $userInfo = $userModel -> getUserInfo($userId);
                 $this -> assign('isLogin',true);
                 $this -> assign('userFace',$userInfo['user_face']);
-                $this -> assign('userName',$userInfo['user_name']);
+                $this -> assign('nickName',$userInfo['nick_name']);
             } else {
                 $this -> assign('isLogin',false);
             }

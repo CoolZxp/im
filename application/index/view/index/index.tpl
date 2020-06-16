@@ -195,14 +195,14 @@
             </div>
             {eq name="roomListNum" value="0"}
                 <div class="im-title im-room-no">暂无聊天室...</div>
-            {else/}
+            {else /}
                 <ul class="im-room-list">
                     {volist name='roomList' id='room'}
-                        <li class="im-room-list-item">
+                        <li class="im-room-list-item" onclick="location.href = '{:url('index/Room/index',['id' => $room.id])}';">
                             <div class="im-room-list-item-img">
                                 <img src="{$room.room_img}">
                                 <div class="im-room-list-item-img-layer">
-                                    <div class="im-room-list-item-img-layer-title">
+                   `                 <div class="im-room-list-item-img-layer-title">
                                         进入聊天室
                                     </div>
                                 </div>

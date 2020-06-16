@@ -23,26 +23,16 @@ return [
     'sock_type'    => '', // sock type 默认为SWOOLE_SOCK_TCP
     'swoole_class' => '', // 自定义服务类名称
 
+
     // 可以支持swoole的所有配置参数
-    'daemonize'    => true,
+    'daemonize'    => false,
     'pid_file'     => Env::get('runtime_path') . 'swoole_server.pid',
     'log_file'     => Env::get('runtime_path') . 'swoole_server.log',
 
     // 事件回调定义
-    'onOpen'       => function ($server, $request) {
-        echo "server: handshake success with fd{$request->fd}\n";
-    },
+    'onOpen'     =>  [app('SwooleSocket'),'onOpen'],
 
-    'onMessage' => function ($server, $frame) {
-        echo "receive from {$frame->fd}:{$frame->data},opcode:{$frame->opcode},fin:{$frame->finish}\n";
-        $server->push($frame->fd, "this is server");
-    },
+    'onMessage' =>  [app('SwooleSocket'),'onMessage'],
 
-    'onRequest' => function ($request, $response) {
-        $response->end("<h1>Hello Swoole. #" . rand(1000, 9999) . "</h1>");
-    },
-
-    'onClose' => function ($ser, $fd) {
-        echo "client {$fd} closed\n";
-    },
+    'onClose'  =>  [app('SwooleSocket'),'onClose'],
 ];

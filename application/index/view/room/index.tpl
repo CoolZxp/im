@@ -248,54 +248,19 @@
     <div class="wrap room-wrap">
         <div class="room clearfix">
             <ul class="room-user-list">
-
                 <div class="room-user-list-title">
-                    在线用户 (111)
+                    在线用户 <span id="user-num">0</span>
                 </div>
-                <li class="room-user clearfix">
-                    <img class="room-user-head" src="https://dss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=1906469856,4113625838&fm=26&gp=0.jpg" alt="">
-                    <div class="room-user-name">
-                        啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊
-                    </div>
-                </li>
-
-                <li class="room-user clearfix">
-                    <img class="room-user-head" src="https://dss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=1906469856,4113625838&fm=26&gp=0.jpg" alt="">
-                    <div class="room-user-name">
-                        啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊
-                    </div>
-                </li>
+                <div id="user-list"></div>
             </ul>
             <div class="room-msg">
 
                 <div class="room-user-list-title">
-                    我是聊天室名称
+                    {$roomInfo.room_name}
                 </div>
-                <div class="room-msg-content clearfix">
-                    <div class="room-msg-time">
-                        <div class="room-msg-time-str">
-                            20:30
-                        </div>
-                    </div>
-                    <div class="room-msg-box room-msg-box-left clearfix">
-                        <img class="room-msg-box-head" src="https://dss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=1906469856,4113625838&fm=26&gp=0.jpg" alt="">
-                        <div class="room-msg-box-main">
-                            啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊
-                        </div>
-                    </div>
+                <div id="room-msg" class="room-msg-content clearfix">
 
-                    <div class="room-msg-time">
-                        <div class="room-msg-time-str">
-                            20:30
-                        </div>
-                    </div>
 
-                    <div class="room-msg-box room-msg-box-right">
-                        <img class="room-msg-box-head" src="https://dss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=1906469856,4113625838&fm=26&gp=0.jpg" alt="">
-                        <div class="room-msg-box-main">
-                            1
-                        </div>
-                    </div>
                 </div>
 
                 <div class="room-msg-input">
@@ -303,7 +268,7 @@
                         <i id="openEmoji" class="fa fa-smile-o" aria-hidden="true" ></i>
                         <i class="fa fa-picture-o" aria-hidden="true"></i>
                         <div class="room-msg-input-submit">
-                            <button>发送</button>
+                            <button onclick="sendRoomMsg()">发送</button>
                         </div>
                     </div>
                     <textarea id="room-input" class="room-msg-input-content" autofocus wrap="hard"></textarea>
@@ -517,6 +482,7 @@
         '\ud83e\udda1',
         '\ud83d\udc3e',
     ];
+    var msgLastTime = parseInt(new Date().getTime() / 1000);
     addDefaultEmoji();
 
     function addDefaultEmoji() {
@@ -539,6 +505,130 @@
     function addEmojiInput(elm) {
         $('#room-input').val($('#room-input').val() + '' + elm + '');
     }
+
+
+    function addRoomMsgElm(Elm) {
+        var roomMsg = $("#room-msg");
+        roomMsg.append(Elm);
+        roomMsg.scrollTop(roomMsg.prop("scrollHeight"));
+    }
+    function addRoomMsgTime(time) {
+        var strTime = dateFormat('YYYY-mm-dd HH:MM:SS',new Date(time * 1000));
+        var str = '<div class="room-msg-time">';
+        str += '<div class="room-msg-time-str">' + strTime + '</div>';
+        str += '</div>';
+        addRoomMsgElm(str);
+    }
+
+    function addRoomUserMsg(selfUser,userInfo,msg,time) {
+        if (selfUser) {
+            var str = '<div class="room-msg-box room-msg-box-right">';
+        } else {
+            var str = '<div class="room-msg-box room-msg-box-left">';
+        }
+        str += '<img class="room-msg-box-head" src="' + userInfo.user_face + '" alt="">';
+        str += '<div class="room-msg-box-main">' + twemoji.parse(msg) + '</div>';
+        str += '</div>';
+        var timeDiff = time - msgLastTime;
+        if (timeDiff >= 180) {
+            addRoomMsgTime(time);
+        }
+        msgLastTime = parseInt(new Date().getTime() / 1000)
+        addRoomMsgElm(str);
+    }
+
+
+
+
+
+
+    /**
+     * 刷新在线用户
+     */
+    function refreshRoomUserNum() {
+        $('#user-num').html($('.user-info-num').length);
+    }
+
+    /**
+     * 添加在线用户
+     * @param id
+     * @param nickName
+     * @param userFace
+     */
+    function addRoomUser(id,nickName,userFace) {
+        var str = '<li class="room-user user-info-num clearfix" id="user-info-' + id + '">';
+        str += '    <img class="room-user-head" src="' + userFace + '" alt="">'
+        str += '    <div class="room-user-name">' + nickName + '</div>';
+        str += '</li>';
+        $('#user-list').prepend(str);
+    }
+
+    /**
+     * 删除在线用户
+     * @param id
+     */
+    function removeRoomUser(id) {
+        $('#user-info-' + id).remove();
+    }
+
+
+
+    var socket;
+    if (!window.WebSocket) {
+        window.WebSocket = window.MozWebSocket;
+    }
+    if (window.WebSocket) {
+        socket = new WebSocket("ws://{$wsUrl}:9508?token=" + $.cookie('im_token') + "&roomId={$roomInfo.id}");
+        socket.onmessage = function(event) {
+            var jsonDate = JSON.parse(event.data);
+            switch (jsonDate.type) {
+                case 'roomUserList':
+                    for (var i = 0;i < jsonDate.data.length;i++) {
+                        console.log(jsonDate.data[i]);
+                        addRoomUser(jsonDate.data[i].id,jsonDate.data[i].nick_name,jsonDate.data[i].user_face)
+                    }
+                    refreshRoomUserNum();
+                    break;
+                case 'addRoomUser':
+                    addRoomUser(jsonDate.data.id,jsonDate.data.nick_name,jsonDate.data.user_face);
+                    refreshRoomUserNum();
+                    break;
+                case 'removeRoomUser':
+                    removeRoomUser(jsonDate.data.id);
+                    refreshRoomUserNum();
+                    break;
+                case 'newRoomMsg':
+                    addRoomUserMsg(false,jsonDate.data.userInfo,jsonDate.data.msg,jsonDate.data.time)
+                    break;
+            }
+        };
+        socket.onopen = function(event) {
+            console.log('open');
+        };
+        socket.onclose = function(event) {
+            console.log('close');
+        };
+    } else {
+        alert("你的浏览器不支持 WebSocket！");
+    }
+
+    function sendRoomMsg() {
+        if (!window.WebSocket) {
+            return;
+        }
+        if (socket.readyState == WebSocket.OPEN) {
+            socket.send($('#room-input').val());
+            addRoomUserMsg(true,{
+                nick_name:'{$nickName}',
+                user_face:'{$userFace}',
+            },$('#room-input').val(),parseInt(new Date().getTime() / 1000));
+            $('#room-input').val('');
+        } else {
+            alert("连接没有开启.");
+        }
+    }
+
+
 
 </script>
 </body>
