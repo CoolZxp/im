@@ -12,6 +12,7 @@ class ViewAuth
             $userId = $userModel -> getUserTokenInfo($token);
             if ($userId !== false) {
                 $request -> userId = $userId;
+                $request -> token = $token;
             } else {
                 return redirect('/');
             }

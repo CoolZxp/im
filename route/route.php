@@ -10,11 +10,15 @@
 // +----------------------------------------------------------------------
 
 Route::get('/', 'index/Index/index');
+
 Route::get('user', 'index/User/userInfo')
     -> middleware('ViewAuth');
 Route::post('login', 'index/User/login');
+Route::get('outLogin','index/User/outLogin')
+    -> middleware('ViewAuth');
 Route::post('register', 'index/User/register');
 Route::post('editUser','index/User/editUser')
+
     -> middleware('Auth');
 return [
 

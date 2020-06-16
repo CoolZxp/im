@@ -12,6 +12,7 @@ class Auth
             $userId = $userModel -> getUserTokenInfo($token);
             if ($userId !== false) {
                 $request -> userId = $userId;
+                $request -> token = $token;
             } else {
                 return generate_json(ERROR_AUTH);
             }

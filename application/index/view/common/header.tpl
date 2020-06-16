@@ -169,7 +169,7 @@
                                 <i class="fa fa-user" aria-hidden="true"></i>
                                 个人中心
                             </a>
-                            <a href="javascript:void(0)" onclick="userOut()" class="header-user-control-item">
+                            <a href="{:url('index/User/outLogin')}?from={:request()->url(true)}" class="header-user-control-item">
                                 <i class="fa fa-sign-out" aria-hidden="true"></i>
                                 退出登录
                             </a>

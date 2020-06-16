@@ -2,6 +2,7 @@
 
 namespace app\index\controller;
 use app\index\model\UserModel;
+use think\facade\Cache;
 
 class UserController extends BaseController
 {
@@ -57,6 +58,17 @@ class UserController extends BaseController
                     return generate_json(ERROR_USER_REG);
                 }
             }
+        }
+    }
+
+    public function outLogin() {
+        $fromUrl = input('get.from');
+        cookie('token',null);
+        Cache::rm("user:token:{$this -> request -> userId}:{$this -> request -> token}");
+        if (!empty($fromUrl)) {
+            $this -> redirect($fromUrl);
+        } else {
+            $this -> redirect('/');
         }
     }
 
