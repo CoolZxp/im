@@ -199,29 +199,29 @@
                 <ul class="im-room-list">
                     {volist name='roomList' id='room'}
                         <li class="im-room-list-item">
-                        <div class="im-room-list-item-img">
-                            <img src="{$room.room_img}">
-                            <div class="im-room-list-item-img-layer">
-                                <div class="im-room-list-item-img-layer-title">
-                                    进入聊天室
+                            <div class="im-room-list-item-img">
+                                <img src="{$room.room_img}">
+                                <div class="im-room-list-item-img-layer">
+                                    <div class="im-room-list-item-img-layer-title">
+                                        进入聊天室
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="im-room-list-item-main">
-                            <div class="im-room-list-item-title">{$room.room_name}</div>
-                            <div class="im-room-list-item-user clearfix">
-                                <div class="im-room-list-item-user-info">
-                                    <img src="{$room.user_face}" class="im-room-list-item-user-face">
-                                    <span class="im-room-list-item-user-name">{$room.nick_name}</span>
-                                </div>
+                            <div class="im-room-list-item-main">
+                                <div class="im-room-list-item-title">{$room.room_name}</div>
+                                <div class="im-room-list-item-user clearfix">
+                                    <div class="im-room-list-item-user-info">
+                                        <img src="{$room.user_face}" class="im-room-list-item-user-face">
+                                        <span class="im-room-list-item-user-name">{$room.nick_name}</span>
+                                    </div>
 
-                                <div class="im-room-list-item-user-num">
-                                    <i class="fa fa-user" aria-hidden="true"></i>
-                                    {$room.room_user_num}
+                                    <div class="im-room-list-item-user-num">
+                                        <i class="fa fa-user" aria-hidden="true"></i>
+                                        {$room.room_user_num}
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    </li>
+                        </li>
                     {/volist}
                     {for start="0" end="$roomListAddNum"}
                         <li class="im-room-list-item" style="visibility:hidden;"></li>
