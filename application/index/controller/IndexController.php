@@ -7,8 +7,6 @@ use think\facade\Request;
 
 class IndexController extends BaseController
 {
-    protected $viewAuth = [];
-    protected $methodAuth = [];
 
     public function __construct()
     {
@@ -17,7 +15,6 @@ class IndexController extends BaseController
 
     public function index(RoomModel $roomModel,RoomCateModel $roomCateModel)
     {
-        $this -> getHeaderUserInfo();
         $page = Request::get('page');
         $cateId = Request::get('cateId');
         $cateId = $cateId == '0'?null:$cateId;

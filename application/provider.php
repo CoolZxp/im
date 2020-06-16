@@ -11,4 +11,7 @@
 
 // 应用容器绑定定义
 return [
+    'UserModel' => \app\index\model\UserModel::class,
+    'RoomModel' => \app\index\model\RoomModel::class,
+    'RoomCateModel' => \app\index\model\RoomCateModel::class,
 ];

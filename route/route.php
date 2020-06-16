@@ -9,12 +9,13 @@
 // | Author: liu21st <liu21st@gmail.com>
 // +----------------------------------------------------------------------
 
-Route::get('', 'index/Index/index');
-Route::get('user', 'index/User/userInfo');
+Route::get('/', 'index/Index/index');
+Route::get('user', 'index/User/userInfo')
+    -> middleware('viewAuth');
 Route::post('login', 'index/User/login');
 Route::post('register', 'index/User/register');
-Route::post('editUser','index/User/editUser');
-
+Route::post('editUser','index/User/editUser')
+    -> middleware('auth');
 return [
 
 ];

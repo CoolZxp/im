@@ -251,7 +251,7 @@
     <script src="__STATIC__/libs/laydate/laydate.js"></script>
 </head>
 <body>
-    {include file="common/header"}
+    {:widget('common/header')}
     <!--白色遮蔽层-->
     <div class="user-zhebi"></div>
     <!--白色遮蔽层-->
@@ -405,6 +405,9 @@
             type:"POST",
             url:"{:url('index/User/editUser')}",
             data:obj,
+            headers: {
+                token: $.cookie('im_token'),
+            },
             dataType:"json",
             success:function(data){
                 console.log(data);
