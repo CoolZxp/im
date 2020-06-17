@@ -23,6 +23,10 @@ Route::post('uploadImg','index/User/uploadImg')
     -> middleware('Auth');
 Route::rule('room/:id', 'index/Room/index')
     -> middleware('ViewAuth');
+
+Route::post('user/:tel', 'index/User/getCode')
+    -> middleware('Auth');
+
 return [
 
 ];

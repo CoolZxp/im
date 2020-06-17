@@ -112,14 +112,11 @@
             margin-top:10px;
             border: 1px solid #e1e2e5;
             position: relative;
-            border-radius: 5px;
-            overflow: hidden;
         }
         .user-box-detailed-left{
             width: 20%;
-            height: 100%;
-            position: absolute;
-            border-right: 1px solid #e1e2e5;
+            height: auto;
+            float: left;
             background: rgb(250,250,250);
         }
         .user-box-detailed-left-small{
@@ -145,8 +142,10 @@
             color:white;
         }
         .user-box-detailed-right{
-            padding-left: 20%;
-            width: 100%;
+            float: left;
+            width: 80%;
+            border-left: 1px solid #e1e2e5;
+
         }
         .user-box-detailed-left-geren{
             width: 100%;
@@ -253,7 +252,7 @@
     <link rel="stylesheet" href="__STATIC__/libs/head_portrait/css/cropper.min.css">
 
     <script src="__STATIC__/libs/head_portrait/js/cropper.min.js"></script>
-
+    <script src="__STATIC__/libs/pjax/jquery.pjax.min.js"></script>
     <script src="__STATIC__/libs/laydate/laydate.js"></script>
 </head>
 <body>
@@ -282,77 +281,27 @@
                 <div class="user-box-detailed-left-geren">
                     个人中心
                 </div>
-                <div class="user-box-detailed-left-small user-box-detailed-left-small-click">
+                <div data-pjax="info" class="user-box-detailed-left-small user-box-detailed-left-small-click">
                     <i class="fa fa-user-o" aria-hidden="true"></i>
                     <span>我的信息</span>
                 </div>
-                <div class="user-box-detailed-left-small">
+                <div data-pjax="la" class="user-box-detailed-left-small">
                     <i class="fa fa-user-o" aria-hidden="true"></i>
                     <span>啦啦啦啦</span>
+                </div>
+                <div class="user-box-detailed-left-small" id="test">
+                    <i class="fa fa-user-o" aria-hidden="true"></i>
+                    <span>Test</span>
                 </div>
             </div>
             <div class="user-box-detailed-right">
                 <div class="user-box-detailed-right-im">
                     <span id="user-title">我的信息</span>
                 </div>
-                <!--<div class="user-box-detailed-right-info">
-                    <div class="user-box-detailed-right-info-small clearfix">
-                        <div class="user-box-detailed-right-info-small-text">
-                            <span>昵称：</span>
-                        </div>
-                        <div class="user-box-detailed-right-info-small-input">
-                            <input type="text">
-                        </div>
-                    </div>
+                <div id="pjax_re" class="user-box-detailed-right-info">
+                    {include file="user/info"}
+                </div>
 
-                    <div class="user-box-detailed-right-info-small clearfix">
-                        <div class="user-box-detailed-right-info-small-text ">
-                            <span>账号：</span>
-                        </div>
-                        <div class="user-box-detailed-right-info-small-input">
-                            <input type="text">
-                        </div>
-                    </div>
-
-                    <div class="user-box-detailed-right-info-small clearfix">
-                        <div class="user-box-detailed-right-info-small-text">
-                            <span>个性签名：</span>
-                        </div>
-                        <div class="user-box-detailed-right-info-small-input">
-                            <textarea name="qianming"></textarea>
-                        </div>
-                    </div>
-
-                    <div class="user-box-detailed-right-info-small clearfix">
-                        <div class="user-box-detailed-right-info-small-text">
-                            <span>性别：</span>
-                        </div>
-                        <div class="user-box-detailed-right-info-small-input clearfix">
-                            <span class="user-box-detailed-right-info-small-input-span user-box-detailed-right-info-small-input-click">男</span>
-                            <span class="user-box-detailed-right-info-small-input-span">女</span>
-                            <span class="user-box-detailed-right-info-small-input-span">保密</span>
-                        </div>
-                    </div>
-
-                    <div class="user-box-detailed-right-info-small clearfix">
-                        <div class="user-box-detailed-right-info-small-text">
-                            <span>出生日期：</span>
-                        </div>
-                        <div class="user-box-detailed-right-info-small-input clearfix">
-                            <input class="start" type="text" name="datetime" placeholder="请选择时间">
-                        </div>
-                    </div>
-
-                    <div class="user-box-detailed-right-info-small">
-                        <div class="user-box-detailed-right-info-small-hr"></div>
-                    </div>
-
-                    <div class="user-box-detailed-right-info-small">
-                        <div class="user-box-detailed-right-info-small-btn">保存</div>
-                    </div>
-
-                </div>-->
-                {include file="user/info"}
             </div>
         </div>
     </div>
@@ -444,7 +393,7 @@
             },
             dataType:"json",
             success:function(data){
-                console.log(data);
+                //console.log(data);
                 if(data.code != 1){
                     humane.log(data.msg);
                 } else {
@@ -452,6 +401,40 @@
                     $("input",$(".user-box-qianming")).val(obj["qianming"]);
                 }
             }
+        });
+    });
+    $("#test").click(function(){
+        $.ajax({
+            type:"POST",
+            url:"{:url('index/User/getCode',['tel' => 'la'])}",
+            headers: {
+                token: $.cookie('im_token'),
+            },
+            data:{
+                'template_name':'la'
+            },
+            dataType:"json",
+            success:function(data){
+                console.log(data);
+            }
+        });
+    });
+    $('div[data-pjax]').click(function(){
+        var index = $("div[data-pjax]").index(this);
+        var attrName = $("div[data-pjax]").eq(index).attr("data-pjax");
+        var url = "user" + "/" + attrName + ".html";
+        $.pjax({
+            headers: {
+                token: $.cookie('im_token'),
+            },
+            type:'post',
+            push:false,
+            data:{
+                'template_name':attrName,
+            },
+            dataType:'html',
+            url:url,
+            container: '#pjax_re',
         });
     });
 

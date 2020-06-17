@@ -4,6 +4,7 @@ namespace app\index\controller;
 use app\index\model\UserModel;
 use think\facade\Cache;
 use think\facade\Env;
+use think\facade\Request;
 
 class UserController extends BaseController
 {
@@ -143,5 +144,14 @@ class UserController extends BaseController
         }else{
             return generate_json(ERROR_USER_UPLOAD,$file->getError());
         }
+    }
+
+    public function getCode($template_name,UserModel $userModel)
+    {
+        if($template_name == 'info'){
+            $this -> assign('navSelect','');
+            $this -> assign('userInfo',$userModel -> getUserInfo($this -> request -> userId));
+        }
+        return $this -> fetch("user/{$template_name}");
     }
 }
