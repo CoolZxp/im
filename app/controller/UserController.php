@@ -4,8 +4,11 @@ namespace app\controller;
 
 use app\BaseController;
 use app\model\User;
+use think\exception\ValidateException;
 use think\facade\Cache;
 use think\facade\Env;
+use think\facade\Filesystem;
+use think\facade\Validate;
 use think\facade\View;
 
 class UserController extends BaseController
@@ -126,26 +129,39 @@ class UserController extends BaseController
         }
     }
 
+    public function upload(){
+        // 获取表单上传文件
+        $files = request()->file();
+        try {
+            $savename = [];
+            foreach($files as $file) {
+            }
+        } catch (\think\exception\ValidateException $e) {
+            echo $e->getMessage();
+        }
+    }
+
     public function uploadImg(User $userModel)
     {
         $file = $this -> request ->file('photoFile');
-        $upDir = Env::get('root_path')  .'public' . DIRECTORY_SEPARATOR . 'uploads' . DIRECTORY_SEPARATOR . 'user' . DIRECTORY_SEPARATOR .'face';
-
-        $info = $file -> validate(['size'=>2048576,'type' => ['image/png','image/jpeg']]) ->move($upDir);
-        if($info)
-        {
-            $imgUrl = 'uploads/user/face/' . $info -> getSaveName();
-            $result = $userModel -> updateUserFace($this -> request -> userId , $imgUrl);
-            if($result)
-            {
-                return generate_json(SUCCESS);
-            }else{
-                return generate_json(ERROR_USER_UPLOAD);
-            }
-
-        }else{
-            return generate_json(ERROR_USER_UPLOAD,$file->getError());
+        try {
+            validate(['imgFile'=>[
+                    'fileSize' => 1048576,
+                    'fileExt' => 'jpg,jpeg,png,bmp,gif',
+                    'fileMime' => 'image/jpeg,image/png,image/gif',
+            ]])->check(['photoFile' => $file]);
+            $savename = Filesystem::disk('public') -> putFile( 'user_face', $file);
+            $imgUrl = 'uploads/' . $savename;
+        } catch (ValidateException $e) {
+            return generate_json(ERROR_USER_UPLOAD,$e -> getError());
         }
+
+        $result = $userModel -> updateUserFace($this -> request -> userId , $imgUrl);
+        if (!$result) {
+            return generate_json(ERROR_USER_UPLOAD);
+        }
+
+        return generate_json(SUCCESS);
     }
 
     public function getCode($template_name, User $userModel)
