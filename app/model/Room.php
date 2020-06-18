@@ -34,12 +34,12 @@ class Room extends Model
         if ($cateId != null) {
             $roomList -> where('cate_id',$cateId);
         }
-        $pageConfig = [
+        return $roomList -> paginate([
+            'list_rows' => 16,
             'query' => [
                 'cateId'=> input('get.cateId')
             ]
-        ];
-        return $roomList -> paginate(16,false,$pageConfig) -> each(function ($item,$key) {
+        ],false) -> each(function ($item,$key) {
             return $item;
         });
     }
@@ -130,5 +130,7 @@ class Room extends Model
         $redis = app('Redis');
         return $redis -> get("room:fd:{$fd}");
     }
+
+
 
 }
