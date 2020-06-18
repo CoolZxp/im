@@ -199,7 +199,7 @@
             {else /}
                 <ul class="im-room-list">
                     {volist name='roomList' id='room'}
-                        <li class="im-room-list-item" onclick="location.href = '{:url('index/Room/index',['id' => $room.id])}';">
+                        <li class="im-room-list-item" onclick="location.href = '{:url('Room/index',['id' => $room.id])}';">
                             <div class="im-room-list-item-img">
                                 <img src="{$room.room_img}">
                                 <div class="im-room-list-item-img-layer">

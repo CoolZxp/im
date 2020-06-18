@@ -12,7 +12,7 @@ return [
         'options'   => [
             'pid_file'              => runtime_path() . 'swoole.pid',
             'log_file'              => runtime_path() . 'swoole.log',
-            'daemonize'             => true,
+            'daemonize'             => false,
             // Normally this value should be 1~4 times larger according to your cpu cores.
             'reactor_num'           => swoole_cpu_num(),
             'worker_num'            => swoole_cpu_num(),
@@ -46,9 +46,7 @@ return [
             ],
         ],
         'listen'        => [],
-        'subscribe'     => [
-            \app\subscribe\WebSocket::class
-        ],
+        'subscribe'     => [\app\subscribe\WebSocket::class],
     ],
     'rpc'        => [
         'server' => [

@@ -348,7 +348,7 @@
     $("input",$(".user-box-qianming")).blur(function(){
         $.ajax({
             type:"POST",
-            url:"{:url('index/User/editUser')}",
+            url:"{:url('User/editUser')}",
             data:{
                 'username':$("input[name='user_name']",$(".user-box-detailed-right-info-small-input")).val(),
                 'qianming':$("input",$(".user-box-qianming")).val(),
@@ -387,7 +387,7 @@
         //console.log(obj);
         $.ajax({
             type:"POST",
-            url:"{:url('index/User/editUser')}",
+            url:"{:url('User/editUser')}",
             data:obj,
             headers: {
                 token: $.cookie('token'),
@@ -407,7 +407,7 @@
     $("#test").click(function(){
         $.ajax({
             type:"POST",
-            url:"{:url('index/User/getCode',['tel' => 'la'])}",
+            url:"{:url('User/getCode',['tel' => 'la'])}",
             headers: {
                 token: $.cookie('token'),
             },

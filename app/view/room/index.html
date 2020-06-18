@@ -242,6 +242,7 @@
 
 
     </style>
+    <script src="__STATIC__/libs/socket.io/socket.io.slim.js"></script>
 </head>
 <body>
     {include file="common/header"}
@@ -571,63 +572,55 @@
         $('#user-info-' + id).remove();
     }
 
+    const socketio = io("", {
+        transports: ['websocket'],
+        query: {
+            token: $.cookie('token'),
+        }
+    });
+    socketio.on('connect', () => {
+        socketio.emit('join',{
+            'roomId':{$roomInfo.id},
+        });
+    });
+    socketio.on('connect_error', (error) => {
+        // ...
+    });
+    socketio.on('disconnect', (timeout) => {
+        // ...
+    });
 
-
-    var socket;
-    if (!window.WebSocket) {
-        window.WebSocket = window.MozWebSocket;
-    }
-    if (window.WebSocket) {
-        socket = new WebSocket("ws://{$wsUrl}:9508?token=" + $.cookie('im_token') + "&roomId={$roomInfo.id}");
-        socket.onmessage = function(event) {
-            var jsonDate = JSON.parse(event.data);
-            switch (jsonDate.type) {
-                case 'roomUserList':
-                    for (var i = 0;i < jsonDate.data.length;i++) {
-                        console.log(jsonDate.data[i]);
-                        addRoomUser(jsonDate.data[i].id,jsonDate.data[i].nick_name,jsonDate.data[i].user_face)
-                    }
-                    refreshRoomUserNum();
-                    break;
-                case 'addRoomUser':
-                    addRoomUser(jsonDate.data.id,jsonDate.data.nick_name,jsonDate.data.user_face);
-                    refreshRoomUserNum();
-                    break;
-                case 'removeRoomUser':
-                    removeRoomUser(jsonDate.data.id);
-                    refreshRoomUserNum();
-                    break;
-                case 'newRoomMsg':
-                    addRoomUserMsg(false,jsonDate.data.userInfo,jsonDate.data.msg,jsonDate.data.time)
-                    break;
-            }
-        };
-        socket.onopen = function(event) {
-            console.log('open');
-        };
-        socket.onclose = function(event) {
-            console.log('close');
-        };
-    } else {
-        alert("你的浏览器不支持 WebSocket！");
-    }
 
     function sendRoomMsg() {
-        if (!window.WebSocket) {
-            return;
-        }
-        if (socket.readyState == WebSocket.OPEN) {
-            socket.send($('#room-input').val());
-            addRoomUserMsg(true,{
-                nick_name:'{$nickName}',
-                user_face:'{$userFace}',
-            },$('#room-input').val(),parseInt(new Date().getTime() / 1000));
-            $('#room-input').val('');
-        } else {
-            alert("连接没有开启.");
-        }
+        socketio.emit('sendMsg',{
+            'msg':$('#room-input').val(),
+        });
+        addRoomUserMsg(true,{
+            nick_name:'{$nickName}',
+            user_face:'{$userFace}',
+        },$('#room-input').val(),parseInt(new Date().getTime() / 1000));
+        $('#room-input').val('');
     }
 
+    socketio.on("roomUserList", function (res) {
+        for (var i = 0;i < res.length;i++) {
+            console.log(res[i]);
+            addRoomUser(res[i].id,res[i].nick_name,res[i].user_face)
+        }
+        refreshRoomUserNum();
+    });
+    socketio.on("addRoomUser", function (res) {
+        addRoomUser(res.id,res.nick_name,res.user_face);
+        refreshRoomUserNum();
+    });
+    socketio.on("removeRoomUser", function (res) {
+        removeRoomUser(res.id);
+        refreshRoomUserNum();
+    });
+    socketio.on("newRoomMsg", function (res) {
+        addRoomUserMsg(false,res.userInfo,res.msg,res.time)
+
+    });
 
 
 </script>

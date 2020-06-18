@@ -11,29 +11,29 @@
 use think\facade\Route;
 
 Route::group(function () {
-    Route::get('outLogin','index/User/outLogin');
+    Route::get('outLogin','User/outLogin');
 
     Route::group(function () {
-        Route::get('user', 'index/User/userInfo');
-        Route::rule('room/:id', 'index/Room/index');
+        Route::get('user', 'User/userInfo');
+        Route::rule('room/:id', 'Room/index');
     }) -> middleware(\app\middleware\Header::class);
 
 }) -> middleware(\app\middleware\ViewAuth::class);
 
 Route::group(function () {
-    Route::post('editUser','index/User/editUser');
-    Route::post('uploadImg','index/User/uploadImg');
-    Route::post('user/:tel', 'index/User/getCode');
+    Route::post('editUser','User/editUser');
+    Route::post('uploadImg','User/uploadImg');
+    Route::post('user/:tel', 'User/getCode');
 
 }) -> middleware(\app\middleware\Auth::class);
 
 
-Route::get('/', 'index/Index/index')
+Route::get('/', 'Index/index')
     -> middleware(\app\middleware\Header::class);
 
 
-Route::post('login', 'index/User/login');
-Route::post('register', 'index/User/register');
+Route::post('login', 'User/login');
+Route::post('register', 'User/register');
 
 
 

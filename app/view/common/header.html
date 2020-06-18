@@ -141,11 +141,11 @@
         <div class="header-left clearfix">
             <ul class="header-nav clearfix">
                 <li {eq name="navSelect" value="index" }class="header-nav-active"{/eq}>
-                <a href="{:url('index/Index/index')}">聊天室</a>
+                <a href="{:url('Index/index')}">聊天室</a>
                 </li>
 
                 <li {eq name="navSelect" value="aaaa" }class="header-nav-active"{/eq}>
-                <a href="{:url('index/Index/aaaa')}">好友</a>
+                <a href="{:url('Index/aaaa')}">好友</a>
                 </li>
 
             </ul>
@@ -163,13 +163,13 @@
                     <button class="header-user-login" onclick="authOpen()">登录/注册</button>
                 {else/}
                     <div class="header-user-info">
-                        <a href="{:url('index/User/userInfo')}"><img class="header-user-face" src="{$userFace}" /></a>
+                        <a href="{:url('User/userInfo')}"><img class="header-user-face" src="{$userFace}" /></a>
                         <div class="header-user-control">
-                            <a href="{:url('index/User/userInfo')}" class="header-user-control-item">
+                            <a href="{:url('User/userInfo')}" class="header-user-control-item">
                                 <i class="fa fa-user" aria-hidden="true"></i>
                                 个人中心
                             </a>
-                            <a href="{:url('index/User/outLogin')}?from={:request()->url(true)}" class="header-user-control-item">
+                            <a href="{:url('User/outLogin')}?from={:request()->url(true)}" class="header-user-control-item">
                                 <i class="fa fa-sign-out" aria-hidden="true"></i>
                                 退出登录
                             </a>
@@ -461,7 +461,7 @@
         $('#auth-btn-login').attr('disabled','disabled');
         $.ajax({
             type:"POST",
-            url:"{:url('index/User/login')}",
+            url:"{:url('User/login')}",
             data: {
                 'username':$('#auth-login-username').val(),
                 'password':$('#auth-login-password').val(),
@@ -488,7 +488,7 @@
         $('#auth-btn-register').attr('disabled','disabled');
         $.ajax({
             type:"POST",
-            url:"{:url('index/User/register')}",
+            url:"{:url('User/register')}",
             data: {
                 'username':$('#auth-register-username').val(),
                 'nickname':$('#auth-register-nickname').val(),

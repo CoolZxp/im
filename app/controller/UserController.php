@@ -73,9 +73,9 @@ class UserController extends BaseController
         cookie('token',null);
         Cache::delete("user:token:{$this -> request -> userId}:{$this -> request -> token}");
         if (!empty($fromUrl)) {
-            redirect($fromUrl) -> send();
+            return redirect($fromUrl);
         } else {
-            redirect('/') -> send();
+            return redirect('/');
         }
     }
 

@@ -186,7 +186,7 @@
                 var formData = new FormData();
                 formData.append('photoFile', blob,'tmp.png');
                 $.ajax({
-                    url: '{:url("index/User/uploadImg")}',
+                    url: '{:url('User/uploadImg')}',
                     method: "POST",
                     headers: {
                         token: $.cookie('token'),
