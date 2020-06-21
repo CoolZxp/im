@@ -9,6 +9,7 @@ use think\Model;
 class User extends Model
 {
 
+
     /**
      * getUserToken 获取用户TOKEN
      * @param $userId
@@ -34,6 +35,9 @@ class User extends Model
      */
     public function getUserTokenInfo($token)
     {
+        if (empty($token)) {
+            return false;
+        }
         JWT::$leeway = 60;
         $info = JWT::decode($token, config('user.key'),['HS256']);
         $is_has = Cache::has("user:{$info -> userId}:token:{$token}");
@@ -123,6 +127,15 @@ class User extends Model
      */
     public function getUserIdByFd($fd) {
         return Cache::get("user:fd:{$fd}");
+    }
+    /**
+     * 通过Fd刪除用户Id
+     * getUserIdByFd
+     * @param $fd
+     * @return mixed
+     */
+    public function removeUserIdByFd($fd) {
+        return Cache::delete("user:fd:{$fd}");
     }
 
 

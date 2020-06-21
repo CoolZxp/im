@@ -23,3 +23,48 @@ function addEmojiInput(elm) {
     $('#room-input').val($('#room-input').val() + elm.innerText);
 }
 
+
+
+
+var chatVue = new Vue({
+    el:'#chat',
+    data: {
+        imSocket:null,
+        msgList:[],
+        msgInfo:{ }
+    },
+    methods:{
+        getMsgList() {
+            this.imSocket.emit('getUserMsgList');
+        }
+    },
+    created:function () {
+        var self = this;
+        self.imSocket = io({
+            transports: ['websocket'],
+            query:{
+                'token' : $.cookie('token'),
+            },
+        });
+        self.imSocket.on('connect',function () {
+            console.log('connect');
+        });
+        self.imSocket.on('connect_error',function () {
+            console.log('connect_error');
+        });
+        self.imSocket.on('disconnect',function () {
+            console.log('disconnect');
+        });
+        self.imSocket.on('user_error',function (data) {
+            humane.log(data);
+            self.imSocket.close();
+        });
+        self.imSocket.on('user_msg_list',function (data) {
+            self.msgList = data;
+        });
+        self.getMsgList();
+    }
+});
+
+
+

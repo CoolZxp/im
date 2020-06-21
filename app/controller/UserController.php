@@ -7,7 +7,6 @@ use app\model\User;
 use think\exception\ValidateException;
 use think\facade\Cache;
 use think\facade\Filesystem;
-use think\facade\Validate;
 use think\facade\View;
 
 class UserController extends BaseController

@@ -6,70 +6,92 @@ namespace app\subscribe;
 
 use app\model\Room;
 use app\model\User;
+use app\model\UserMsg;
+use Swoole\Server;
 
 class WebSocket
 {
-    public $websocket = null;
-    public $user = null;
-    public $room = null;
-    public function __construct(\think\swoole\Websocket $websocket,User $user,Room $room)
+    public $websocket;
+    public $user;
+    public $room;
+    public $server;
+    public $userMsg;
+
+    public function __construct(\think\swoole\Websocket $websocket,Server $server,User $user,Room $room,UserMsg $userMsg)
     {
         $this -> websocket = $websocket;
+        $this -> server = $server;
         $this -> user = $user;
         $this -> room = $room;
+        $this -> userMsg = $userMsg;
+
     }
 
     public function onConnect($event) {
         $fd = $this -> websocket -> getSender();
         $token = $event -> get('token');
-
         $userId = $this -> user -> getUserTokenInfo($token);
         if ($userId === false) {
-            $this -> websocket -> emit('error','非法操作');
-            $this -> websocket -> close($fd);
+            $this -> websocket -> emit('user_error','非法操作');
+//            $this -> websocket -> close();
+        } else {
+            $this -> user -> setUserFd($userId,$fd);
         }
-        $this -> user -> setUserFd($userId,$fd);
     }
 
-    
 
-//    public function onClose($event) {
-//        $fd = $this -> websocket -> getSender();
-//        $roomId = $this -> room -> getRoomIdByFd($fd);
-//        $userId = $this -> room -> getUserIdByFd($fd);
-//        $this -> room -> removeRoomUser($fd);
-//        $this -> websocket -> leave($roomId);
-//        $this -> websocket -> to($roomId) -> emit('removeRoomUser',[
-//            'id' => $userId,
-//        ]);
+    public function onClose($event) {
+        $fd = $this -> websocket -> getSender();
+        $this -> user -> removeUserIdByFd($fd);
+    }
+
+    /**
+     * 检测是否通过权限验证
+     * checkLogin
+     * @param null $fd
+     * @return bool
+     */
+    protected function checkLogin($fd = null) {
+        if (is_null($fd)) {
+            $fd = $this -> websocket -> getSender();
+        }
+        return is_null($this -> user -> getUserIdByFd($fd))?false:true;
+    }
+
+    /**
+     * 获取用户ID
+     * getUserId
+     * @param null $fd
+     * @return mixed
+     */
+    protected function getUserId($fd = null) {
+        if (is_null($fd)) {
+            $fd = $this -> websocket -> getSender();
+        }
+        return $this -> user -> getUserIdByFd($fd);
+    }
+
+    public function onGetUserMsgList($event) {
+        if ($this -> checkLogin()) {
+            $msgList = $this -> userMsg -> getUserMsgList($this -> getUserId());
+            var_dump($msgList);
+            $this -> websocket -> emit('user_msg_list',$msgList);
+        } else {
+            $this -> websocket -> emit('user_error','非法操作');
+        }
+    }
+
+
+//    public function onGetUserMsgInfo($event) {
+//        if ($this -> checkLogin()) {
+//            $msgInfo = $this -> userMsg -> getUserMsgInfo($event['id']);
+//            $this -> websocket -> emit('UserMsgInfo',$msgInfo);
+//        } else {
+//            $this -> websocket -> emit('user_error','非法操作');
+//        }
 //    }
 //
-//    public function onJoin($event) {
-//        $fd = $this -> websocket -> getSender();
-//        $roomId = $event['roomId'];
-//        $userId = $this -> room -> getUserIdByFd($fd);
-//
-//        $this -> room -> addRoomUser($roomId,$userId,$fd);
-//        $this -> websocket -> join($roomId);
-//        $roomUserList = $this -> room -> getRoomUserList($roomId);
-//        $this -> websocket -> emit('roomUserList',$roomUserList);
-//
-//        $this -> websocket -> to($roomId) -> emit('addRoomUser',
-//            $this -> user -> field(['id','nick_name','user_face']) -> find($userId)
-//        );
-//    }
-//
-//    public function onSendMsg($event) {
-//        $fd = $this -> websocket -> getSender();
-//        $roomId = $this -> room -> getRoomIdByFd($fd);
-//        $userId = $this -> room -> getUserIdByFd($fd);
-//
-//        $userInfo = $this -> user -> field(['id','nick_name','user_face']) -> find($userId);
-//        $this -> websocket -> to($roomId) -> emit('newRoomMsg',[
-//            'userInfo' => $userInfo,
-//            'time' => time(),
-//            'msg' => $event['msg'],
-//        ]);
-//    }
+
+
 
 }

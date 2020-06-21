@@ -2,14 +2,19 @@
 namespace app\model;
 
 use think\Model;
+use think\model\concern\SoftDelete;
 
 
 class Room extends Model
 {
+    //软删除
+    use SoftDelete;
+    protected $deleteTime = 'delete_time';
+
     //关联User
     public function user()
     {
-        return $this -> belongsTo(User::class) -> bind([
+        return $this -> belongsTo(User::class,'user_id') -> bind([
             'user_name',
             'nick_name',
             'user_face',

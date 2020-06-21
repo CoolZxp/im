@@ -38,10 +38,10 @@
             transform: translateY(-50%);
         }
     </style>
+    <script src="__STATIC__/libs/socket.io/socket.io.slim.js"></script>
     <script src="__STATIC__/libs/jq-paginator/jq-paginator.min.js"></script>
     <script src="__STATIC__/libs/tween-max/tween-max.min.js"></script>
     <script src="__STATIC__/libs/pjax/jquery.pjax.min.js"></script>
-
 </head>
 <body>
 <div id="header">
@@ -102,55 +102,42 @@
                     <div class="box clearfix">
                         <div class="msg-list">
                             <div class="msg-title">消息列表</div>
-                            <div class="msg-list-main">
+
+                            <div class="msg-list-main" v-for="msgItem in msgList" :key="msgItem.id">
                                 <div class="msg-list-item msg-list-item-active">
                                     <div class="msg-list-item-left">
                                         <img class="msg-list-item-head"
-                                             src="https://thirdqq.qlogo.cn/g?b=sdk&k=l29k21ibXTL1rHRygjFhIIA&s=100&t=1592194906"
-                                             alt="">
+                                             :src="msgItem.to_user_face">
                                     </div>
 
-                                    <div class="msg-list-item-right">
-                                        <div class="msg-list-item-title">我是一个用户名</div>
-                                        <div class="msg-list-item-msg">我是刚才说的消息</div>
-                                    </div>
-                                </div>
+                                    <div
+                                            class="msg-list-item-right"
+                                            :class="{'msg-list-item-count-show':msgItem.msg_count > 0}">
 
-                                <div class="msg-list-item">
-                                    <div class="msg-list-item-left">
-                                        <img class="msg-list-item-head"
-                                             src="https://thirdqq.qlogo.cn/g?b=sdk&k=l29k21ibXTL1rHRygjFhIIA&s=100&t=1592194906"
-                                             alt="">
-                                    </div>
-
-                                    <div class="msg-list-item-right">
-                                        <div class="msg-list-item-title">我是一个用户名</div>
-                                        <div class="msg-list-item-msg">我是刚才说的消息</div>
-                                    </div>
-                                </div>
-
-                                <div class="msg-list-item">
-                                    <div class="msg-list-item-left">
-                                        <img class="msg-list-item-head"
-                                             src="https://thirdqq.qlogo.cn/g?b=sdk&k=l29k21ibXTL1rHRygjFhIIA&s=100&t=1592194906"
-                                             alt="">
-                                    </div>
-
-                                    <div class="msg-list-item-right">
-                                        <div class="msg-list-item-title">我是一个用户名</div>
-                                        <div class="msg-list-item-msg">我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息</div>
+                                        <div class="msg-list-item-row clearfix">
+                                            <div class="msg-list-item-title">
+                                                {{msgItem.to_nick_name}}
+                                            </div>
+                                            <div class="msg-list-item-time">{{updateTimeShow(msgItem.update_time)}}</div>
+                                        </div>
+                                        <div class="msg-list-item-row  clearfix">
+                                            <div class="msg-list-item-msg">
+                                                {{msgItem.msg_content}}
+                                            </div>
+                                            <div class="msg-list-item-count">{{updateMsgCount(msgItem.msg_count)}}</div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
+
                         </div>
 
                         <div class="box-right">
-                            <div class="msg-title">我是一个用户名</div>
+                            <div class="msg-title">{{msgInfo.nick_name}}</div>
                             <div id="room-msg" class="room-msg-content clearfix">
                                 <div class="room-msg-box room-msg-box-left">
                                     <img class="room-msg-box-head"
-                                         src="https://thirdqq.qlogo.cn/g?b=sdk&k=l29k21ibXTL1rHRygjFhIIA&s=100&t=1592194906"
-                                         alt="">
+                                         src="https://thirdqq.qlogo.cn/g?b=sdk&k=l29k21ibXTL1rHRygjFhIIA&s=100&t=1592194906">
                                     <div class="room-msg-box-main">我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息</div>
                                 </div>
 
@@ -159,8 +146,7 @@
                                 </div>
                                 <div class="room-msg-box room-msg-box-right">
                                     <img class="room-msg-box-head"
-                                         src="https://thirdqq.qlogo.cn/g?b=sdk&k=l29k21ibXTL1rHRygjFhIIA&s=100&t=1592194906"
-                                         alt="">
+                                         src="https://thirdqq.qlogo.cn/g?b=sdk&k=l29k21ibXTL1rHRygjFhIIA&s=100&t=1592194906">
                                     <div class="room-msg-box-main">我是消息</div>
                                 </div>
                             </div>
@@ -180,6 +166,8 @@
                                 </div>
                             </div>
                         </div>
+
+
                     </div>
                 </div>
             </div>
@@ -195,7 +183,7 @@
                     <ul class="im-cate-list clearfix">
                         <li
                                 v-for="roomCateItem in roomCateList"
-                                :key="roomCateItem.id" class="im-cate-list-item"
+                                :key="roomCateItem.id"
                                 class="im-cate-list-item"
                                 :class="{'im-cate-list-item-active':roomCateItem.id==cateId}"
                                 @click="setCateId(roomCateItem.id)"

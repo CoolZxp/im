@@ -77,24 +77,54 @@
     line-height: normal;
 }
 
-#chat .msg-list-item-title {
+#chat .msg-list-item-row {
     height: 30px;
     line-height: 30px;
+}
+#chat .msg-list-item-title {
     font-size: 18px;
     font-weight: bold;
     color: #000;
-    padding-top: 5px;
+    overflow: hidden;
+    text-overflow:ellipsis;
+    white-space: nowrap;
+    float: left;
+}
+#chat .msg-list-item-time {
+    font-size: 12px;
+    float: right;
 }
 
 #chat .msg-list-item-msg {
     font-size: 15px;
-    height: 30px;
-    line-height: 30px;
-    padding-bottom: 2px;
     overflow: hidden;
     text-overflow:ellipsis;
     white-space: nowrap;
+    float: left;
+    width: 100%;
 }
+
+
+#chat .msg-list-item-count {
+    width: 20px;
+    height: 20px;
+    line-height: 20px;
+    text-align: center;
+    border-radius: 50%;
+    background-color: #f74c31;
+    color: #fff;
+    float: left;
+    margin-top: 5px;
+    display: none;
+    font-size: 10px;
+}
+#chat .msg-list-item-count-show .msg-list-item-msg{
+    width: calc(100% - 20px);
+}
+#chat .msg-list-item-count-show .msg-list-item-count{
+    display: block;
+}
+
 
 
 #chat .box-right {
@@ -270,4 +300,6 @@
 #chat .room-msg-input-emoji-item:hover {
     background-color: #f5f6f7;
 }
+
+
 
