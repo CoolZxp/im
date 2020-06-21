@@ -8,6 +8,7 @@ var roomVue = new Vue({
         init:false,
         page: 1,
         cateId: 0,
+        isShowNo:false,
     },
     methods: {
         getRoomCateList() {
@@ -46,16 +47,22 @@ var roomVue = new Vue({
                 success:function(data){
                     if (data.code === 1) {
                         var listNum = data.data.list.length % 3;
-                        if (data.data.list.length < 3) {
+                        if (data.data.list.length < 3 && data.data.list.length != 0) {
                             listNum = 3 - data.data.list.length;
                         }
-                        console.log(data.data.list.length);
-                        console.log(listNum);
                         for (var i = 0;i < listNum;i++) {
                             data.data.list.push({'isHidden':true});
                         }
                         self.roomList = data.data.list;
                         self.maxPage = data.data.maxPage;
+                        if (self.maxPage == 0) {
+                            console.log(1);
+                            self.maxPage = 1;
+                            self.isShowNo = true;
+                        } else {
+                            self.isShowNo = false;
+                        }
+
                         if (!self.init) {
                             self.initRoomListPage();
                             self.init = true

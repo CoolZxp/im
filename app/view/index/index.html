@@ -9,12 +9,12 @@
     <link rel="stylesheet" href="__STATIC__/css/msg.css">
     <link rel="stylesheet" href="__STATIC__/css/room.css">
     <style>
-        /*.base-swiper-container {*/
-        /*    height: calc(100% - 55px);*/
-        /*}*/
-        /*.room-swiper-slide {*/
-        /*    overflow-y: auto;*/
-        /*}*/
+        .base-swiper-container {
+            height: calc(100% - 55px);
+        }
+        .room-swiper-slide {
+            overflow-y: auto;
+        }
         #loading {
             position: fixed;
             top: 0;
@@ -96,6 +96,7 @@
 <div class="swiper-container base-swiper-container">
     <div class="swiper-wrapper">
         <div class="swiper-slide swiper-no-swiping">
+
             <div id="chat">
                 <div class="wrap">
                     <div class="box clearfix">
@@ -137,7 +138,7 @@
 
                                     <div class="msg-list-item-right">
                                         <div class="msg-list-item-title">我是一个用户名</div>
-                                        <div class="msg-list-item-msg">我是刚才说的消息</div>
+                                        <div class="msg-list-item-msg">我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息</div>
                                     </div>
                                 </div>
                             </div>
@@ -150,7 +151,7 @@
                                     <img class="room-msg-box-head"
                                          src="https://thirdqq.qlogo.cn/g?b=sdk&k=l29k21ibXTL1rHRygjFhIIA&s=100&t=1592194906"
                                          alt="">
-                                    <div class="room-msg-box-main">我是消息</div>
+                                    <div class="room-msg-box-main">我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息</div>
                                 </div>
 
                                 <div class="room-msg-time">
@@ -177,15 +178,13 @@
                                 <div class="room-msg-input-emoji clearfix">
                                     <!--                        <div class="room-msg-input-emoji-item">emoji</div>-->
                                 </div>
-
                             </div>
-
                         </div>
-
                     </div>
                 </div>
             </div>
         </div>
+
         <div class="swiper-slide swiper-no-swiping">Slide 2</div>
         <div class="swiper-slide swiper-no-swiping room-swiper-slide">
             <div id="room" class="wrap">
@@ -214,7 +213,7 @@
                             新建聊天室
                         </button>
                     </div>
-<!--                    <div class="im-title im-room-no">暂无聊天室...</div>-->
+                    <div class="im-title im-room-no" v-if="isShowNo">暂无聊天室...</div>
                     <ul class="im-room-list">
                         <li
                                 v-for="roomItem in roomList"
@@ -256,18 +255,8 @@
                                     {{roomItem.room_user_num}}
                                 </div>
                             </div>
-
-
-
-
-
-
-
                         </li>
-
-
                     </ul>
-
                 </div>
                 <div class="im-room-list-page-wrap" >
                     <ul class="im-room-list-page"></ul>
@@ -293,12 +282,6 @@
     var getRoomCateList = "{:url('Room/getRoomCateList')}";
     var baseSwiper = new Swiper('.base-swiper-container', {
         freeModeMomentumBounce: false,
-        autoHeight: true,
-        observer: true,
-        observeParents: true,
-        onSlideChangeEnd: function(swiper){
-            swiper.update();
-        }
     })
     // setHeaderNav(2);
 

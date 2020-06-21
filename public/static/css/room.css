@@ -99,11 +99,11 @@
 }
 
 
-.im-room-list-item-row {
+#room .im-room-list-item-row {
     margin-bottom: 5px;
 }
 
-.im-room-list-item-img {
+#room .im-room-list-item-img {
     width: 80px;
     height: 80px;
     border-radius: 50%;
@@ -111,27 +111,27 @@
     float: left;
     margin-right: 10px;
 }
-.im-room-list-item-img img {
+#room .im-room-list-item-img img {
     width: 100%;
     height: 100%;
 }
-.im-room-list-item-main {
+#room .im-room-list-item-main {
     float: left;
     width: calc(100% - 90px);
 }
-.im-room-list-item-title {
+#room .im-room-list-item-title {
     font-size: 24px;
     font-weight: bold;
 }
 
-.im-room-list-item-user {
+#room .im-room-list-item-user {
     height: 24px;
     line-height: 24px;
     display: inline-block;
     vertical-align: middle;
 }
 
-.im-room-list-item-user-info {
+#room .im-room-list-item-user-info {
     width: 24px;
     height: 100%;
     border-radius: 50%;
@@ -139,27 +139,27 @@
     display: inline-block;
     vertical-align: middle;
 }
-.im-room-list-item-user-info img {
+#room .im-room-list-item-user-info img {
     width: 100%;
     height: 100%;
     outline: 0;
 }
-.im-room-list-item-user-name {
+#room .im-room-list-item-user-name {
     display: inline-block;
     vertical-align: middle;
     font-size: 18px;
 }
-.im-room-list-item-user-num {
+#room .im-room-list-item-user-num {
     font-size: 18px;
     display: inline-block;
     vertical-align: middle;
     font-weight: bold;
 }
-.im-room-list-item-desc {
+#room .im-room-list-item-desc {
     font-size: 16px;
 
 }
-.im-room-list-item-user-num {
+#room .im-room-list-item-user-num {
     position: absolute;
     top: 0;
     right: 0;
