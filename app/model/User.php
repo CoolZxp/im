@@ -59,7 +59,11 @@ class User extends Model
         if (filter_var($value, FILTER_VALIDATE_URL)) {
             return $value;
         } else {
-            return request() -> domain() . '/' . $value;
+            if (request() -> isSsl()) {
+                return 'https://' . config('app.app_host') . '/' . $value;
+            } else {
+                return 'http://' . config('app.app_host') . '/' . $value;
+            }
         }
     }
 
@@ -97,5 +101,29 @@ class User extends Model
             return $userInfo->save();
         }
     }
+
+
+
+    /**
+     * 设置用户Websocket Fd
+     * setUserFd
+     * @param $userId
+     * @param $fd
+     * @return bool
+     */
+    public function setUserFd($userId,$fd) {
+        return Cache::set("user:fd:{$fd}",$userId);
+    }
+
+    /**
+     * 通过Fd获取用户Id
+     * getUserIdByFd
+     * @param $fd
+     * @return mixed
+     */
+    public function getUserIdByFd($fd) {
+        return Cache::get("user:fd:{$fd}");
+    }
+
 
 }

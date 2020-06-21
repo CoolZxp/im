@@ -3,24 +3,40 @@ namespace app\controller;
 
 use app\BaseController;
 use app\model\Room;
-use app\model\User;
-use think\facade\Session;
+use app\model\RoomCate;
+use think\facade\Request;
 use think\facade\View;
 
 class RoomController extends BaseController
 {
-    public function index(Room $roomModel, User $userModel) {
-        $roomId = input('param.id');
-        View::assign('navSelect','index');
-        $roomInfo = $roomModel -> find($roomId);
-        if (empty($roomInfo)) {
-            $this -> error('聊天室不存在');
+
+    public function getRoomList(Room $room) {
+        $page = !empty(input('post.page'))?input('post.page'):1;
+        $cateId = !empty(input('post.cateId'))?input('post.cateId'):null;
+
+        $roomList = $room -> with(['user','roomCate']);
+        if ($cateId != null) {
+            $roomList -> where('cate_id',$cateId);
         }
-        View::assign('roomInfo',$roomInfo);
-        $userInfo = $userModel -> getUserInfo($this -> request -> userId);
-        View::assign('userFace',$userInfo['user_face']);
-        View::assign('nickName',$userInfo['nick_name']);
-        View::assign('wsUrl',$this -> request -> host());
-        return View::fetch();
+        $roomCount = $roomList -> count();
+        $maxPage = intval(ceil($roomCount / 18));
+        $roomList = $roomList
+            -> page($page,18)
+            -> select()
+            -> each(function ($item, $key) {
+                $item['room_user_num'] = $item -> getAttr('room_user_num');
+            });
+        return generate_json(SUCCESS,null,[
+            'maxPage' => $maxPage,
+            'list' => $roomList,
+        ]);
     }
+
+    public function getRoomCateList(RoomCate $roomCate) {
+        $roomList = $roomCate -> getRoomCateList();
+        return generate_json(SUCCESS,null,$roomList);
+    }
+
+
+
 }

@@ -1,0 +1,225 @@
+#room .im-box {
+    width: 100%;
+    background-color: #fff;
+    border-radius: 5px;
+    padding: 20px;
+    margin-top: 20px;
+    box-shadow: 0 0 6px 0 rgba(0, 0, 0, .05);
+}
+
+#room .im-title {
+    font-size: 28px;
+    font-weight: bold;
+}
+
+#room .im-cate-list-item {
+    float: left;
+    height: 35px;
+    line-height: 35px;
+    padding: 0 10px;
+    margin-top: 15px;
+    margin-right: 15px;
+    background-color: #F0F0F5;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color .5s;
+    font-size: 18px;
+}
+
+#room .im-cate-list-item:hover {
+    background-color: #E8E8EE;
+}
+
+#room .im-cate-list-item-active {
+    background-color: #3580eb;
+    color: #fff;
+    font-weight: bold;
+}
+#room .im-cate-list-item-active:hover {
+    background-color: #3580eb;
+}
+
+
+#room .im-room {
+    padding-bottom: 60px;
+    margin-bottom: 10px;
+}
+#room .im-room-top {
+    height: 50px;
+}
+
+#room .im-room-top-title {
+    float: left;
+}
+
+#room .im-room-top-new {
+    float: right;
+    height: 40px;
+    line-height: 40px;
+    padding: 0 15px;
+    margin-top: 5px;
+    background-color: #3580eb;
+    color: #ffffff;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color .5s;
+    font-size: 20px;
+}
+
+#room .im-room-top-new:hover {
+    background-color: #2b72ff;
+}
+
+#room .im-room-top-new:active {
+    background-color: #2b72ff;
+}
+
+
+#room .im-room-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+#room .im-room-list-item {
+    width: 32%;
+    border-radius: 5px;
+    overflow: hidden;
+    margin-top: 20px;
+    cursor: pointer;
+    transition: box-shadow .5s;
+    box-shadow: 0 0 6px 0 rgba(0, 0, 0, .05);
+    background-color: #f5f6f7;
+    position: relative;
+    padding: 10px;
+}
+
+#room .im-room-list-item-hidden {
+    visibility: hidden;
+}
+
+
+.im-room-list-item-row {
+    margin-bottom: 5px;
+}
+
+.im-room-list-item-img {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    overflow: hidden;
+    float: left;
+    margin-right: 10px;
+}
+.im-room-list-item-img img {
+    width: 100%;
+    height: 100%;
+}
+.im-room-list-item-main {
+    float: left;
+    width: calc(100% - 90px);
+}
+.im-room-list-item-title {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.im-room-list-item-user {
+    height: 24px;
+    line-height: 24px;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.im-room-list-item-user-info {
+    width: 24px;
+    height: 100%;
+    border-radius: 50%;
+    overflow: hidden;
+    display: inline-block;
+    vertical-align: middle;
+}
+.im-room-list-item-user-info img {
+    width: 100%;
+    height: 100%;
+    outline: 0;
+}
+.im-room-list-item-user-name {
+    display: inline-block;
+    vertical-align: middle;
+    font-size: 18px;
+}
+.im-room-list-item-user-num {
+    font-size: 18px;
+    display: inline-block;
+    vertical-align: middle;
+    font-weight: bold;
+}
+.im-room-list-item-desc {
+    font-size: 16px;
+
+}
+.im-room-list-item-user-num {
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 10px;
+    border-bottom-left-radius: 5px;
+    background-color: #3580eb;
+    color: #fff;
+    font-size: 16px;
+}
+
+
+
+
+#room .im-room-no {
+    width: 100%;
+    text-align: center;
+    margin: 10% 0;
+}
+
+#room .im-room .pagination {
+    margin-top: 20px;
+}
+
+
+#room .im-room-list-page-wrap {
+    display: flex;
+    justify-content: center;
+}
+#room .im-room-list-page {
+    display: flex;
+    justify-content: center;
+    position: fixed;
+    bottom: 20px;
+    z-index: 99;
+}
+
+#room .im-room-list-page .first{
+    flex-shrink: 0;
+    background-color: #f5f6f7;
+    border-radius: 5px;
+    cursor: pointer;
+    height: 40px;
+    line-height:40px;
+    padding: 0 15px;
+    margin: 0 10px;
+    font-size: 18px;
+    box-shadow: 0 0 6px 0 rgba(0, 0, 0, .05);
+    transition: background-color .3s;
+}
+#room .im-room-list-page .first:hover {
+    background-color: #E8E8EE;
+}
+#room .im-room-list-page .active {
+    background-color: #3580eb;
+    color: #fff;
+    font-weight: bold;
+}
+#room .im-room-list-page .active:hover {
+    background-color: #3580eb;
+}
+#room .im-room-list-page .disabled {
+    display: none;
+}

@@ -2,243 +2,330 @@
 <html lang="zh">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>{:env('app_name')}</title>
     {include file="common/require"}
+    <link rel="stylesheet" href="__STATIC__/css/header.css">
+    <link rel="stylesheet" href="__STATIC__/css/msg.css">
+    <link rel="stylesheet" href="__STATIC__/css/room.css">
     <style>
-        .im-box {
+        /*.base-swiper-container {*/
+        /*    height: calc(100% - 55px);*/
+        /*}*/
+        /*.room-swiper-slide {*/
+        /*    overflow-y: auto;*/
+        /*}*/
+        #loading {
+            position: fixed;
+            top: 0;
+            left: 0;
             width: 100%;
+            height: 100%;
+            z-index: 9999;
             background-color: #fff;
-            border-radius: 5px;
-            padding: 20px;
-            margin-top: 20px;
-            box-shadow: 0 0 6px 0 rgba(0, 0, 0, .05);
-        }
-        .im-title {
-            font-size: 26px;
+            display: none;
         }
 
-        .im-cate-list-item {
-            float: left;
-            height: 30px;
-            line-height: 30px;
-            padding: 0 10px;
-            margin-top: 10px;
-            margin-right: 10px;
-            background-color: #F0F0F5;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color .5s;
-        }
-        .im-cate-list-item:hover {
-            background-color: #E8E8EE;
-        }
-        .im-cate-list-item-active {
-            background-color: #E33E33;
-            color: #fff;
-        }
-        .im-room-top {
-            height: 40px;
-        }
-
-        .im-room-top-title {
-            float: left;
-        }
-        .im-room-top-new {
-            float: right;
-            height: 30px;
-            line-height: 30px;
-            padding: 0 10px;
-            margin-top: 5px;
-            background-color: #e33e33;
-            color: #ffffff;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color .5s;
-        }
-        .im-room-top-new:hover {
-            background-color: #ea6a62;
-        }
-        .im-room-top-new:active {
-            background-color: #de291d;
-        }
-
-
-
-        .im-room-list {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content:space-between;
-        }
-        .im-room-list-item {
-            width: 24%;
-            border-radius: 5px;
-            overflow: hidden;
-            margin-top: 20px;
-            cursor: pointer;
-            transition: box-shadow .5s;
-            box-shadow: 2px 2px 10px #ddd;
-        }
-        .im-room-list-item:hover {
-        }
-        .im-room-list-item-img {
-            width: 100%;
-            padding-top: 65%;
-            position: relative;
-        }
-        .im-room-list-item-img img {
-            position: absolute;
-            top:0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-        }
-
-        .im-room-list-item-img-layer {
-            position: absolute;
-            top:0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0,0,0,.4);
-            opacity: 0;
-            transition: opacity .5s;
-
-            z-index: 99;
-        }
-        .im-room-list-item-img-layer-title {
+        #loading svg {
+            width: 90%;
+            height: 90%;
+            visibility: hidden;
             position: absolute;
             top: 50%;
-            z-index:99;
+            left: 0;
+            right: 0;
+            margin: 0 auto;
             transform: translateY(-50%);
-            width: 100%;
-            color: #fff;
-            text-align: center;
         }
-
-        .im-room-list-item:hover .im-room-list-item-img-layer {
-            opacity: 1;
-        }
-        .im-room-list-item-main {
-            background-color: #f5f6f7;
-            padding: 10px;
-        }
-        .im-room-list-item-title {
-        }
-        .im-room-list-item-user {
-            height: 20px;
-            line-height: 20px;
-            color: #999;
-            margin-top: 5px;
-        }
-        .im-room-list-item-user-info {
-            float: left;
-        }
-        .im-room-list-item-user-face {
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            display: inline-block;
-            vertical-align: middle;
-        }
-        .im-room-list-item-user-name {
-            display: inline-block;
-            vertical-align: middle;
-            font-size: 14px;
-        }
-        .im-room-list-item-user-num {
-            height: 100%;
-            float: right;
-        }
-
-        .im-room-no {
-            width: 100%;
-            text-align: center;
-            margin: 10% 0;
-        }
-
-        .im-room .pagination {
-            margin-top: 20px;
-        }
-
     </style>
+    <script src="__STATIC__/libs/jq-paginator/jq-paginator.min.js"></script>
+    <script src="__STATIC__/libs/tween-max/tween-max.min.js"></script>
+    <script src="__STATIC__/libs/pjax/jquery.pjax.min.js"></script>
 
 </head>
 <body>
-    {include file="common/header"}
-
-    <div class="wrap im">
-        <div class="im-box im-cate">
-            <div class="im-title">
-                分类
-            </div>
-            <ul class="im-cate-list clearfix">
-                {volist name='roomCateList' id='roomCate'}
-                    <li
-                            class="im-cate-list-item
-                            {eq name="cateId" value="$roomCate.id"}im-cate-list-item-active{/eq}"
-                            onclick="setCate('{$roomCate.id}')"
-                    >
-                        {$roomCate.cate_name}
-                    </li>
-                {/volist}
+<div id="header">
+    <div class="wrap clearfix">
+        <div class="header-left clearfix">
+            <ul class="header-nav clearfix">
+                <li class="header-nav-item header-nav-active" >
+                    <a href="javascript:void(0)" data-index="0">消息列表</a>
+                </li>
+                <li class="header-nav-item" >
+                    <a href="javascript:void(0)" data-index="1">好友</a>
+                </li>
+                <li class="header-nav-item">
+                    <a href="javascript:void(0)" data-index="2">聊天室</a>
+                </li>
             </ul>
-        </div>
-        <div class="im-box im-room">
-            <div class="im-room-top clearfix">
-                <div class="im-title im-room-top-title">
-                    聊天室
-                </div>
-                <button class="im-room-top-new">
-                    新建聊天室
-                </button>
+
+            <div class="header-search clearfix">
+                <input type="text" class="header-search-input" placeholder="搜索用户、聊天室">
+                <a class="header-search-btn" href="">
+                    <i class="fa fa-search" aria-hidden="true"></i>
+                </a>
             </div>
-            {eq name="roomListNum" value="0"}
-                <div class="im-title im-room-no">暂无聊天室...</div>
-            {else /}
-                <ul class="im-room-list">
-                    {volist name='roomList' id='room'}
-                        <li class="im-room-list-item" onclick="location.href = '{:url('Room/index',['id' => $room.id])}';">
-                            <div class="im-room-list-item-img">
-                                <img src="{$room.room_img}">
-                                <div class="im-room-list-item-img-layer">
-                   `                 <div class="im-room-list-item-img-layer-title">
-                                        进入聊天室
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="im-room-list-item-main">
-                                <div class="im-room-list-item-title">{$room.room_name}</div>
-                                <div class="im-room-list-item-user clearfix">
-                                    <div class="im-room-list-item-user-info">
-                                        <img src="{$room.user_face}" class="im-room-list-item-user-face">
-                                        <span class="im-room-list-item-user-name">{$room.nick_name}</span>
-                                    </div>
-
-                                    <div class="im-room-list-item-user-num">
-                                        <i class="fa fa-user" aria-hidden="true"></i>
-                                        {$room.room_user_num}
-                                    </div>
-                                </div>
-                            </div>
-                        </li>
-                    {/volist}
-                    {for start="0" end="$roomListAddNum"}
-                        <li class="im-room-list-item" style="visibility:hidden;"></li>
-                    {/for}
-                </ul>
-                {$roomList|raw}
-            {/eq}
         </div>
 
+        <div class="header-right clearfix">
+            <div class="header-user">
+                {eq name="isLogin" value="0"}
+                <button class="header-user-login" onclick="authOpen()">登录/注册</button>
+                {else/}
+                <div class="header-user-info">
+                    <a href="{:url('User/userInfo')}"><img class="header-user-face" src="{$userFace}"/></a>
+                    <div class="header-user-control">
+                        <a href="{:url('User/userInfo')}" class="header-user-control-item">
+                            <i class="fa fa-user" aria-hidden="true"></i>
+                            个人中心
+                        </a>
+                        <a href="{:url('User/outLogin')}?from={:request()->url(true)}" class="header-user-control-item">
+                            <i class="fa fa-sign-out" aria-hidden="true"></i>
+                            退出登录
+                        </a>
+                    </div>
+                </div>
+
+                {/eq}
+            </div>
+        </div>
     </div>
+</div>
+
+
+<div class="swiper-container base-swiper-container">
+    <div class="swiper-wrapper">
+        <div class="swiper-slide swiper-no-swiping">
+            <div id="chat">
+                <div class="wrap">
+                    <div class="box clearfix">
+                        <div class="msg-list">
+                            <div class="msg-title">消息列表</div>
+                            <div class="msg-list-main">
+                                <div class="msg-list-item msg-list-item-active">
+                                    <div class="msg-list-item-left">
+                                        <img class="msg-list-item-head"
+                                             src="https://thirdqq.qlogo.cn/g?b=sdk&k=l29k21ibXTL1rHRygjFhIIA&s=100&t=1592194906"
+                                             alt="">
+                                    </div>
+
+                                    <div class="msg-list-item-right">
+                                        <div class="msg-list-item-title">我是一个用户名</div>
+                                        <div class="msg-list-item-msg">我是刚才说的消息</div>
+                                    </div>
+                                </div>
+
+                                <div class="msg-list-item">
+                                    <div class="msg-list-item-left">
+                                        <img class="msg-list-item-head"
+                                             src="https://thirdqq.qlogo.cn/g?b=sdk&k=l29k21ibXTL1rHRygjFhIIA&s=100&t=1592194906"
+                                             alt="">
+                                    </div>
+
+                                    <div class="msg-list-item-right">
+                                        <div class="msg-list-item-title">我是一个用户名</div>
+                                        <div class="msg-list-item-msg">我是刚才说的消息</div>
+                                    </div>
+                                </div>
+
+                                <div class="msg-list-item">
+                                    <div class="msg-list-item-left">
+                                        <img class="msg-list-item-head"
+                                             src="https://thirdqq.qlogo.cn/g?b=sdk&k=l29k21ibXTL1rHRygjFhIIA&s=100&t=1592194906"
+                                             alt="">
+                                    </div>
+
+                                    <div class="msg-list-item-right">
+                                        <div class="msg-list-item-title">我是一个用户名</div>
+                                        <div class="msg-list-item-msg">我是刚才说的消息</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="box-right">
+                            <div class="msg-title">我是一个用户名</div>
+                            <div id="room-msg" class="room-msg-content clearfix">
+                                <div class="room-msg-box room-msg-box-left">
+                                    <img class="room-msg-box-head"
+                                         src="https://thirdqq.qlogo.cn/g?b=sdk&k=l29k21ibXTL1rHRygjFhIIA&s=100&t=1592194906"
+                                         alt="">
+                                    <div class="room-msg-box-main">我是消息</div>
+                                </div>
+
+                                <div class="room-msg-time">
+                                    <div class="room-msg-time-str">10:30</div>
+                                </div>
+                                <div class="room-msg-box room-msg-box-right">
+                                    <img class="room-msg-box-head"
+                                         src="https://thirdqq.qlogo.cn/g?b=sdk&k=l29k21ibXTL1rHRygjFhIIA&s=100&t=1592194906"
+                                         alt="">
+                                    <div class="room-msg-box-main">我是消息</div>
+                                </div>
+                            </div>
+
+                            <div class="room-msg-input">
+                                <div class="room-msg-input-tool clearfix">
+                                    <i id="openEmoji" class="fa fa-smile-o" aria-hidden="true"></i>
+                                    <i class="fa fa-picture-o" aria-hidden="true"></i>
+                                    <div class="room-msg-input-submit">
+                                        <button onclick="sendRoomMsg()">发送</button>
+                                    </div>
+                                </div>
+                                <textarea id="room-input" class="room-msg-input-content" autofocus wrap="hard"></textarea>
+
+                                <div class="room-msg-input-emoji clearfix">
+                                    <!--                        <div class="room-msg-input-emoji-item">emoji</div>-->
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="swiper-slide swiper-no-swiping">Slide 2</div>
+        <div class="swiper-slide swiper-no-swiping room-swiper-slide">
+            <div id="room" class="wrap">
+                <div class="im-box im-cate">
+                    <div class="im-title">
+                        分类
+                    </div>
+                    <ul class="im-cate-list clearfix">
+                        <li
+                                v-for="roomCateItem in roomCateList"
+                                :key="roomCateItem.id" class="im-cate-list-item"
+                                class="im-cate-list-item"
+                                :class="{'im-cate-list-item-active':roomCateItem.id==cateId}"
+                                @click="setCateId(roomCateItem.id)"
+                        >
+                               {{ roomCateItem.cate_name }}
+                        </li>
+                    </ul>
+                </div>
+                <div class="im-box im-room">
+                    <div class="im-room-top clearfix">
+                        <div class="im-title im-room-top-title">
+                            聊天室
+                        </div>
+                        <button class="im-room-top-new">
+                            新建聊天室
+                        </button>
+                    </div>
+<!--                    <div class="im-title im-room-no">暂无聊天室...</div>-->
+                    <ul class="im-room-list">
+                        <li
+                                v-for="roomItem in roomList"
+                                :key="roomItem.id"
+                                class="im-room-list-item clearfix"
+                                :class="{'im-room-list-item-hidden':roomItem.isHidden}"
+                        >
+                            <div class="im-room-list-item-img" >
+                                <img :src="roomItem.room_img">
+                            </div>
+                            <div class="im-room-list-item-main"  >
+                                <div class="im-room-list-item-row clearfix">
+                                    <div class="im-room-list-item-title">
+                                        {{roomItem.room_name}}
+                                    </div>
+                                </div>
+
+                                <div class="im-room-list-item-row clearfix">
+                                    <div class="im-room-list-item-user">
+                                        <div class="im-room-list-item-user-info">
+                                            <img :src="roomItem.user_face" class="im-room-list-item-user-face">
+                                        </div>
+                                        <div class="im-room-list-item-user-name">{{roomItem.nick_name}}</div>
+                                    </div>
+                                </div>
+
+                                <div class="im-room-list-item-row clearfix">
+                                    <div class="im-room-list-item-desc">
+                                        {{roomItem.room_desc}}
+                                    </div>
+                                </div>
+
+
+                            </div>
+
+                            <div class="im-room-list-item-row clearfix">
+                                <div class="im-room-list-item-user-num">
+                                    <i class="fa fa-user" aria-hidden="true"></i>
+                                    {{roomItem.room_user_num}}
+                                </div>
+                            </div>
+
+
+
+
+
+
+
+                        </li>
+
+
+                    </ul>
+
+                </div>
+                <div class="im-room-list-page-wrap" >
+                    <ul class="im-room-list-page"></ul>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="loading">
+    <svg viewBox="0 0 800 600" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+            <line class="mark" x1="0" y1="0" x2="0" y2="0" fill="none" stroke="#3580eb" stroke-miterlimit="10" stroke-linecap="none" stroke-width="12"/>
+        </defs>
+        <g class="container1"/>
+        <g class="container2"/>
+    </svg>
+</div>
+
 <script>
-    function setCate(id) {
-        var url = location.href;
-        url = updateUrlParam(url,'cateId',id);
-        location.href = updateUrlParam(url,'page',1);
+    var getRoomListUrl = "{:url('Room/getRoomList')}";
+    var getRoomCateList = "{:url('Room/getRoomCateList')}";
+    var baseSwiper = new Swiper('.base-swiper-container', {
+        freeModeMomentumBounce: false,
+        autoHeight: true,
+        observer: true,
+        observeParents: true,
+        onSlideChangeEnd: function(swiper){
+            swiper.update();
+        }
+    })
+    // setHeaderNav(2);
+
+    $('#header .header-nav-item').click(function () {
+        setHeaderNav($('a',this).attr('data-index'));
+    })
+    function setHeaderNav(index) {
+        if (baseSwiper.activeIndex == index) {
+            return;
+        }
+        $('#header .header-nav-item').removeClass('header-nav-active');
+        $('#header .header-nav-item').eq(index).addClass('header-nav-active');
+        baseSwiper.slideTo(index);
+    }
+    function openLoading() {
+        $('#loading').fadeIn(0);
+        mainTl.play(0);
+    }
+
+    function closeLoading() {
+        $('#loading').fadeOut();
+        mainTl.pause(0);
     }
 </script>
+<script src="__STATIC__/js/header.js"></script>
+<script src="__STATIC__/js/msg.js"></script>
+<script src="__STATIC__/js/room.js"></script>
+<script src="__STATIC__/js/loading.js"></script>
 </body>
 </html>

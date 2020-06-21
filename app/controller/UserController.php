@@ -6,37 +6,43 @@ use app\BaseController;
 use app\model\User;
 use think\exception\ValidateException;
 use think\facade\Cache;
-use think\facade\Env;
 use think\facade\Filesystem;
 use think\facade\Validate;
 use think\facade\View;
 
 class UserController extends BaseController
 {
+    public function login() {
+        return View::fetch();
+    }
+
+
     /**
      * login 登录
      * @return \think\response\Json
      */
-    public function login(User $userModel) {
+    public function userLogin(User $userModel) {
         $postInfo['username'] = input('post.username');
         $postInfo['password'] = input('post.password');
-        $result = $this -> validate($postInfo,'app\validate\UserValidate.login');
-        if ($result !== true) {
-            return generate_json(ERROR_VALIDATE);
+        try {
+            $result = $this -> validate($postInfo,'app\validate\UserValidate.login');
+        } catch (ValidateException $e) {
+            return generate_json(ERROR_VALIDATE,$e -> getError());
+        }
+
+
+        $userInfo = User::where('user_name', $postInfo['username'])->find();
+        if (!$userInfo) {
+            return generate_json(ERROR_USER_NO);
+        }else if (!password_verify($postInfo['password'],$userInfo['user_pasw'])) {
+            //ALNB
+            return generate_json(ERROR_USER_PASW);
+        }else if ($userInfo['user_status'] != 0) {
+            return generate_json(ERROR_USER_STATUS);
         } else {
-            $userInfo = User::where('user_name', $postInfo['username'])->find();
-            if (!$userInfo) {
-                return generate_json(ERROR_USER_NO);
-            }else if (!password_verify($postInfo['password'],$userInfo['user_pasw'])) {
-                //ALNB
-                return generate_json(ERROR_USER_PASW);
-            }else if ($userInfo['user_status'] != 0) {
-                return generate_json(ERROR_USER_STATUS);
-            } else {
-                return generate_json(SUCCESS,null,[
-                    'token' => $userModel -> getUserToken($userInfo['id']),
-                ]);
-            }
+            return generate_json(SUCCESS,null,[
+                'token' => $userModel -> getUserToken($userInfo['id']),
+            ]);
         }
     }
 
@@ -44,30 +50,36 @@ class UserController extends BaseController
      * regUser 注册
      * @return \think\response\Json
      */
-    public function register(User $userModel)
+    public function userRegister(User $userModel)
     {
         $postInfo['username'] = input('post.username');
         $postInfo['nickname'] = input('post.nickname');
         $postInfo['password'] = input('post.password');
-        $result = $this -> validate($postInfo,'app\validate\UserValidate.register');
-        if ($result !== true) {
-            return generate_json(ERROR_VALIDATE);
+        try {
+            $this -> validate($postInfo,'app\validate\UserValidate.register');
+        } catch (ValidateException $e) {
+            return generate_json(ERROR_VALIDATE,$e -> getError());
+        }
+
+        if (User::where('user_name', $postInfo['username'])->find()) {
+            return generate_json(ERROR_USER_REG_EXIST);
         } else {
-            if (User::where('user_name', $postInfo['username'])->find()) {
-                return generate_json(ERROR_USER_REG_EXIST);
+            $userModel->user_name = $postInfo['username'];
+            $userModel->nick_name = $postInfo['nickname'];
+            $userModel->user_pasw = password_hash($postInfo['password'],PASSWORD_DEFAULT);
+            if ($userModel->save()) {
+                return generate_json(SUCCESS);
             } else {
-                $userModel->user_name = $postInfo['username'];
-                $userModel->nick_name = $postInfo['nickname'];
-                $userModel->user_pasw = password_hash($postInfo['password'],PASSWORD_DEFAULT);
-                if ($userModel->save()) {
-                    return generate_json(SUCCESS);
-                } else {
-                    return generate_json(ERROR_USER_REG);
-                }
+                return generate_json(ERROR_USER_REG);
             }
         }
     }
 
+    /**
+     * 退出登录
+     * outLogin
+     * @return \think\response\Redirect
+     */
     public function outLogin() {
         $fromUrl = input('get.from');
         cookie('token',null);
@@ -78,6 +90,9 @@ class UserController extends BaseController
             return redirect('/');
         }
     }
+
+
+
 
     /**
      * @return mixed
@@ -172,4 +187,7 @@ class UserController extends BaseController
         }
         return View::fetch("user/{$template_name}");
     }
+
+
+
 }

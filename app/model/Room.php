@@ -9,7 +9,7 @@ class Room extends Model
     //关联User
     public function user()
     {
-        return $this -> belongsTo('User') -> bind([
+        return $this -> belongsTo(User::class) -> bind([
             'user_name',
             'nick_name',
             'user_face',
@@ -18,31 +18,11 @@ class Room extends Model
     //关联RoomCate
     public function roomCate()
     {
-        return $this -> belongsTo('RoomCate','cate_id') -> bind([
+        return $this -> belongsTo(RoomCate::class,'cate_id') -> bind([
             'cate_name',
         ]);
     }
 
-
-    /**
-     * getRoomList 获取聊天室列表
-     * @param null $cateId 分类Id
-     * @return \think\Paginator
-     */
-    public function getRoomList($cateId = null) {
-        $roomList = $this -> with(['user','roomCate']);
-        if ($cateId != null) {
-            $roomList -> where('cate_id',$cateId);
-        }
-        return $roomList -> paginate([
-            'list_rows' => 16,
-            'query' => [
-                'cateId'=> input('get.cateId')
-            ]
-        ],false) -> each(function ($item,$key) {
-            return $item;
-        });
-    }
 
     /**
      * 获取在线人数
@@ -65,7 +45,6 @@ class Room extends Model
      * @return \think\Collection
      */
     public function getRoomUserListAttr($value,$data) {
-        $redis = app('Redis');
         $userList = $this -> getRoomUserList($data['id']);
         $userIdList = array_values($userList);
         return User::field(['id','nick_name','user_face']) -> where(['id' => $userIdList]) -> select();

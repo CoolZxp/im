@@ -13,22 +13,30 @@ class ViewAuth
      * @param \Closure       $next
      * @return Response
      */
-    public function handle($request, \Closure $next)
+    public function handle($request, \Closure $next,$ifLogin = false)
     {
         $token = cookie('token');
         if (!empty($token)) {
             $userModel = new User;
             $userId = $userModel -> getUserTokenInfo($token);
             if ($userId !== false) {
-                $request -> userId = $userId;
-                $request -> token = $token;
-                $userInfo = $userModel -> getUserInfo($userId);
+                if (!$ifLogin) {
+                    $request->userId = $userId;
+                    $request->token = $token;
+                } else {
+                    return redirect(url('/') -> build());
+                }
             } else {
-                return redirect('/');
+                if (!$ifLogin) {
+                    return redirect(url('User/login') -> build());
+                }
             }
         } else {
-            return redirect('/');
+            if (!$ifLogin) {
+                return redirect(url('User/login') -> build());
+            }
         }
+
         return $next($request);
     }
 }

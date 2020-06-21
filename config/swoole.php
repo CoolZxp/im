@@ -32,12 +32,12 @@ return [
         'ping_timeout'  => 60000,
         'room'          => [
             'type'  => 'table',
-            'table' => [
-                'room_rows'   => 4096,
-                'room_size'   => 2048,
-                'client_rows' => 8192,
-                'client_size' => 2048,
-            ],
+//            'table' => [
+//                'room_rows'   => 4096,
+//                'room_size'   => 2048,
+//                'client_rows' => 8192,
+//                'client_size' => 2048,
+//            ],
             'redis' => [
                 'host'          => '127.0.0.1',
                 'port'          => 6379,

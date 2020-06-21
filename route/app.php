@@ -10,14 +10,16 @@
 // +----------------------------------------------------------------------
 use think\facade\Route;
 
+
+Route::get('login','User/login')
+    -> middleware(\app\middleware\ViewAuth::class,true);;
+
 Route::group(function () {
     Route::get('outLogin','User/outLogin');
-
     Route::group(function () {
+        Route::get('/', 'Index/index');
         Route::get('user', 'User/userInfo');
-        Route::rule('room/:id', 'Room/index');
     }) -> middleware(\app\middleware\Header::class);
-
 }) -> middleware(\app\middleware\ViewAuth::class);
 
 Route::group(function () {
@@ -28,12 +30,11 @@ Route::group(function () {
 }) -> middleware(\app\middleware\Auth::class);
 
 
-Route::get('/', 'Index/index')
-    -> middleware(\app\middleware\Header::class);
 
 
-Route::post('login', 'User/login');
-Route::post('register', 'User/register');
+
+Route::post('userLogin', 'User/userLogin');
+Route::post('userRegister', 'User/userRegister');
 
 
 

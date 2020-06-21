@@ -15,30 +15,28 @@ body {
 }
 .humane,
 .humane-flatty {
-  top: 0;
+  top: 0%;
   left: 0;
   right: 0;
   margin: 0 auto;
   opacity: 0;
-  width: 360px;
+  width: 80%;
   color: #555666;
   cursor: pointer;
-  padding: 10px;
+  padding: 15px 0;
   text-align: center;
   background-color: #fff;
-  -webkit-border-bottom-left-radius: 5px;
-  -webkit-border-bottom-right-radius: 5px;
-  -moz-border-bottom-left-radius: 5px;
-  -moz-border-bottom-right-radius: 5px;
-  border-bottom-left-radius: 5px;
-  border-bottom-right-radius: 5px;
-  -webkit-box-shadow: 0 1px 2px rgba(0,0,0,0.5);
-  box-shadow: 0 1px 2px rgba(0,0,0,0.5);
-  -moz-transform: translateY(-100px);
-  -webkit-transform: translateY(-100px);
-  -ms-transform: translateY(-100px);
-  -o-transform: translateY(-100px);
-  transform: translateY(-100px);
+  -webkit-border-bradius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+  box-shadow: 0 0 6px 0 rgba(0, 0, 0, .05);
+  font-size: 20px;
+  font-weight: bold;
+  -moz-transform: translateY(-100%);
+  -webkit-transform: translateY(-100%);
+  -ms-transform: translateY(-100%);
+  -o-transform: translateY(-100%);
+  transform: translateY(-100%);
 }
 .humane p,
 .humane-flatty p,
@@ -69,11 +67,11 @@ body {
 .humane-animate,
 .humane-flatty.humane-flatty-animate {
   opacity: 1;
-  -moz-transform: translateY(0);
-  -webkit-transform: translateY(0);
-  -ms-transform: translateY(0);
-  -o-transform: translateY(0);
-  transform: translateY(0);
+  -moz-transform: translateY(10px);
+  -webkit-transform: translateY(10px);
+  -ms-transform: translateY(10px);
+  -o-transform: translateY(10px);
+  transform: translateY(10px);
 }
 .humane-animate:hover,
 .humane-flatty.humane-flatty-animate:hover {
@@ -82,11 +80,11 @@ body {
 .humane-js-animate,
 .humane-flatty.humane-flatty-js-animate {
   opacity: 1;
-  -moz-transform: translateY(0);
-  -webkit-transform: translateY(0);
-  -ms-transform: translateY(0);
-  -o-transform: translateY(0);
-  transform: translateY(0);
+  -moz-transform: translateY(10px);
+  -webkit-transform: translateY(10px);
+  -ms-transform: translateY(10px);
+  -o-transform: translateY(10px);
+  transform: translateY(10px);
 }
 .humane-js-animate:hover,
 .humane-flatty.humane-flatty-js-animate:hover {
