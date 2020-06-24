@@ -11,8 +11,8 @@ function dateFormat(fmt, date) {
         "m+": (date.getMonth() + 1).toString(),     // 月
         "d+": date.getDate().toString(),            // 日
         "H+": date.getHours().toString(),           // 时
-        "M+": date.getMinutes().toString(),         // 分
-        "S+": date.getSeconds().toString()          // 秒
+        "i+": date.getMinutes().toString(),         // 分
+        "s+": date.getSeconds().toString()
         // 有其他格式化字符需求可以继续添加，必须转化成字符串
     };
     for (var k in opt) {
@@ -24,7 +24,6 @@ function dateFormat(fmt, date) {
 
     return fmt;
 }
-
 
 
 /**
@@ -69,59 +68,75 @@ function getUrlParam(name) {//封装方法
 }
 
 
+//获取QQ消息列表样式时间
+const IN_DAY = 1000 * 60 * 60 * 24; //1天
+var weeks = ["星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六"];
+function getDiffTimeStr(time,isCompleteTime) {
+    var localTime = new Date(); //当前系统时间
+    var createTime = new Date(time) //消息创建时间
+    var diff = localTime.getTime() - createTime.getTime();
+    var timeStr = '';
+    if (diff <= IN_DAY) {
+        timeStr = getTwoTime(createTime.getHours()) + ':' + getTwoTime(createTime.getMinutes());
+    } else if (diff <= IN_DAY * 2) {
+        timeStr = '昨天';
+    } else if (diff <= IN_DAY * 7) {
+        timeStr = weeks[createTime.getDay()];
+    } else if(localTime.getFullYear() - createTime.getFullYear() < 1) {
+        timeStr = getTwoTime(createTime.getMonth() + 1) + "-" + getTwoTime(createTime.getDate());
+    } else {
+        timeStr = createTime.getFullYear() + "-" + getTwoTime(createTime.getMonth() + 1) + "-" + getTwoTime(createTime.getDate());
+    }
+    if (diff > IN_DAY && isCompleteTime) {
+        return timeStr + ' ' + getTwoTime(createTime.getHours()) + ':' + getTwoTime(createTime.getMinutes());
+    } else {
+        return timeStr;
+    }
+}
+//把一位数的时间填充0
+function getTwoTime(num) {
+    if (num.toString().length < 2) {
+        return '0' + num;
+    }
+    return num;
+}
 
-const JUST_NOW = 3000; //3s内
-const IN_SECOND = 1000 * 60; //一分钟
-const IN_MINUTE = 1000 * 60 * 60; //一小时
-const IN_HOUR = 1000 * 60 * 60 * 12; //12小时
-const IN_DAY = 1000 * 60 * 60 * 24 * 1; //1天
-const IN_MONTH = 1000 * 60 * 60 * 24 * 30; //1个月
 
+//消息大于99显示99+
 function updateMsgCount(count) {
     if (count > 99) {
         return '99+'
     }
     return count;
 }
-function updateTimeShow(time) {
-    var localTime = new Date(); //当前系统时间
-    var createTime = new Date(time) //消息创建时间
-    var diff = localTime - createTime;
-    if (diff <= JUST_NOW)
-        return '刚刚';
-    else if (diff <= IN_SECOND)
-        return "1分钟内";
-    else if (diff <= IN_MINUTE)
-        return parseInt(diff / IN_SECOND) + '分钟前';
-    else if (diff <= IN_MINUTE)
-        return parseInt(diff / IN_MINUTE) + '小时前';
-    else if (diff <= IN_HOUR * 2) {
-        const list = createTime.toString().split(" ");
-        const lastIndex = list[4].lastIndexOf(":")
-        const realtime = list[4].toString().substring(0, lastIndex);
-        return realtime;
-    } else if (diff < IN_DAY * 7) {
-        if (diff < IN_DAY) {
-            return parseInt(diff / IN_HOUR) + '天前';
+
+//获取时间差 (分钟)
+function timeDifference(time1,time2) {
+    var time1Date = new Date(time1);
+    var time2Date = new Date(time2);
+    var diffTime = Math.abs(time1Date.getTime() - time2Date.getTime());
+    return parseInt(diffTime / 1000 / 60);
+}
+
+//根据数组内ID返回数组
+function getArrayValueById(arr,id) {
+    for (var i = 0; i < arr.length; i++) {
+        if (arr[i].id === id) {
+            return arr[i];
         }
-        const t = createTime.toString().slice(0, 3);
-        switch (t) {
-            case "Mon":
-                return '星期一';
-            case "Tue":
-                return '星期二';
-            case "Wed":
-                return '星期三';
-            case "Thu":
-                return '星期四';
-            case "Fri":
-                return '星期五';
-            case "Sat":
-                return '星期六';
-            case "Sun":
-                return '星期日';
-        }
-    } else {
-        return createTime.getFullYear() + "-" + (createTime.getMonth() + 1) + "-" + createTime.getDate();
     }
+}
+
+//生成UUID
+function createUuid() {
+    var s = [];
+    var hexDigits = "0123456789abcdef";
+    for (var i = 0; i < 36; i++) {
+        s[i] = hexDigits.substr(Math.floor(Math.random() * 0x10), 1);
+    }
+    s[14] = "4"; // bits 12-15 of the time_hi_and_version field to 0010
+    s[19] = hexDigits.substr((s[19] & 0x3) | 0x8, 1); // bits 6-7 of the clock_seq_hi_and_reserved to 01
+    s[8] = s[13] = s[18] = s[23] = "-";
+
+    return s.join("");
 }

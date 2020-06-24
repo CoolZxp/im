@@ -11,13 +11,13 @@ function addDefaultEmoji() {
     }
 }
 
-$('#openEmoji').click(function (event) {
-    event.stopPropagation();
+function openEmoji() {
+    window.event.cancelBubble = true;
     $('.room-msg-input-emoji').fadeIn();
     $(document).one('click',function () {
         $('.room-msg-input-emoji').fadeOut();
     });
-})
+}
 
 function addEmojiInput(elm) {
     $('#room-input').val($('#room-input').val() + elm.innerText);
@@ -31,11 +31,117 @@ var chatVue = new Vue({
     data: {
         imSocket:null,
         msgList:[],
-        msgInfo:{ }
+        msgInfo:{
+            id:-1,
+            title:'',
+            msgList:[],
+        },
+        init:false,
+        newActiveMsg:true,
+        isMsgOldNo:false, //暂无消息记录
+        isMsgLoading:false, //消息记录加载中
     },
     methods:{
-        getMsgList() {
-            this.imSocket.emit('getUserMsgList');
+        //已读消息
+        activeUserMsg(id) {
+            this.imSocket.emit('active_user_msg',{id:id});
+            for (var i = 0; i < this.msgList.length; i++) {
+                if (this.msgList[i]['id'] === id) {
+                    this.msgList[i]['msg_count'] = 0;
+                    break;
+                }
+            }
+        },
+        joinWebSocketRoom(roomId) {
+            this.imSocket.emit('join_websocket_room',{roomId:roomId});
+        },
+        leaveWebSocketRoom(roomId) {
+            this.imSocket.emit('leave_websocket_room',{roomId:roomId});
+        },
+        //发送获取消息列表请求
+        getUserMsgList() {
+            this.imSocket.emit('get_user_msg_list');
+        },
+        //发送获取聊天记录请求
+        getUserMsgRecordList(id,msgType,msgId) {
+            if (!msgId) {
+                msgId = '';
+            }
+            this.imSocket.emit('get_user_msg_record_list',{id:id,msgType:msgType,msgId:msgId});
+        },
+        //选中消息列表
+        setActiveMsg(id,index) {
+            if (id === this.msgInfo['id']) {
+                return;
+            }
+            $('.msg-list-item').removeClass('msg-list-item-active');
+            $('.msg-list-item').eq(index).addClass('msg-list-item-active');
+            this.isMsgOldNo = false;
+            this.newActiveMsg = true;
+            this.msgInfo['id'] = id;
+            this.msgInfo.msgList = [];
+            this.isMsgLoading = true;
+            var msgListInfo = getArrayValueById(this.msgList,this.msgInfo['id']);
+            switch (msgListInfo['msg_type']) {
+                case 0:
+                    this.msgInfo['title'] = msgListInfo['to_nick_name'];
+                    break;
+                case 1:
+                    this.msgInfo['title'] = msgListInfo['to_room_name'];
+                    break;
+            }
+            this.activeUserMsg(this.msgInfo['id']);
+            this.getMsgRecord();
+        },
+        //获取聊天记录
+        getMsgRecord(old) {
+            var msgListInfo = getArrayValueById(this.msgList,this.msgInfo['id']);
+            var id;
+            switch (msgListInfo['msg_type']) {
+                case 0:
+                    id = msgListInfo['to_user_id'];
+                    break;
+                case 1:
+                    id = msgListInfo['to_room_id'];
+                    break;
+            }
+            //是否是获取以前的消息
+            if (old) {
+                this.isMsgLoading = true;
+                this.getUserMsgRecordList(id,msgListInfo['msg_type'],this.msgInfo['msgList'][0]['id']);
+            } else {
+                this.getUserMsgRecordList(id,msgListInfo['msg_type']);
+            }
+        },
+        //发送消息
+        sendMsg() {
+            var msgStr = $('#room-input').val();
+            var msgListInfo = getArrayValueById(this.msgList,this.msgInfo['id'])
+            var uuid = createUuid();
+            var toMsg = {msg_type:msgListInfo['msg_type'],msg:msgStr,uuid:uuid};
+            switch (msgListInfo['msg_type']) {
+                case 0:
+                    toMsg.to_user_id = msgListInfo['to_user_id'];
+                    break;
+                case 1:
+                    toMsg.to_room_id = msgListInfo['to_room_id'];
+                    break;
+            }
+            this.msgInfo['msgList'] = this.msgInfo['msgList'].concat({
+                nick_name:userInfo.nickName,
+                update_time:dateFormat('Y-m-d H:i:s',new Date()),
+                user_face:userInfo.userFace,
+                user_msg:msgStr,
+                is_self:true,
+                is_loading:true,
+                uuid:uuid,
+            });
+            this.$nextTick(function(){
+                //滚动到底部
+                $('.room-msg-content').scrollTop($('.room-msg-content')[0].scrollHeight);
+            });
+            this.imSocket.emit('send_msg',toMsg);
+            $('#room-input').val('');
         }
     },
     created:function () {
@@ -44,6 +150,7 @@ var chatVue = new Vue({
             transports: ['websocket'],
             query:{
                 'token' : $.cookie('token'),
+                'uuid' : createUuid(),
             },
         });
         self.imSocket.on('connect',function () {
@@ -56,13 +163,169 @@ var chatVue = new Vue({
             console.log('disconnect');
         });
         self.imSocket.on('user_error',function (data) {
-            humane.log(data);
+            humane.error(data);
             self.imSocket.close();
         });
+        self.imSocket.on('error',function (data) {
+            humane.error(data);
+        });
+        self.imSocket.on('user_login_error',function (data) {
+            if (data.uuid !== self.imSocket.query.uuid) {
+                alert(data.msg);
+                location.reload();
+            }
+        });
+        //获取到消息列表
         self.imSocket.on('user_msg_list',function (data) {
             self.msgList = data;
+            if (!self.init) {
+                self.init = true;
+                self.$nextTick(function(){
+                    if (data.length > 0) {
+                        // self.setActiveMsg(data[0].id,0);
+                    }
+                    //滚动到顶获取旧消息
+                    $('.room-msg-content').scroll(function () {
+                        if(($('.room-msg-content')[0].scrollHeight !== $('.room-msg-content')[0].offsetHeight) &&
+                            self.isMsgOldNo !== true &&
+                            $('.room-msg-content').scrollTop() < 1) {
+                            self.getMsgRecord(true);
+                        }
+                    })
+                    closeLoading();
+                });
+            }
         });
-        self.getMsgList();
+        //单个消息列表
+        self.imSocket.on('get_user_msg_info',function (data) {
+            self.msgList.push(data);
+            self.msgList.sort(function(a, b) {
+                var x = b.msg_update_time;
+                var y = a.msg_update_time;
+                if (x < y) {return -1;}
+                if (x > y) {return 1;}
+                return 0;
+            });
+        });
+
+
+        //获取到消息记录
+        self.imSocket.on('user_msg_record_list',function (data) {
+            if (self.newActiveMsg) {
+                //是否为新窗口
+                self.newActiveMsg = false;
+                self.msgInfo['msgList'] = data;
+                self.$nextTick(function(){
+                    //滚动到底部
+                    $('.room-msg-content').scrollTop($('.room-msg-content')[0].scrollHeight)
+                });
+            } else {
+                self.isMsgLoading = false;
+                //暂无消息记录
+                if (data.length < 1) {
+                    self.isMsgOldNo = true;
+                }
+                self.msgInfo['msgList'] = data.concat(self.msgInfo['msgList']);
+
+                var msgTempHieght = $('.room-msg-content')[0].scrollHeight;
+                self.$nextTick(function(){
+                    //滚动到相应消息未知
+                    $('.room-msg-content').scrollTop($('.room-msg-content')[0].scrollHeight - msgTempHieght);
+                });
+
+            }
+        });
+
+        //收到新消息
+        self.imSocket.on('new_msg',function (data) {
+            var msgListInfo = getArrayValueById(self.msgList,self.msgInfo['id']);
+            var isActive;
+            var isSelectMsg;
+            var is_self = false;
+
+            for (var i = 0; i < self.msgList.length; i++) {
+                //查找消息列表
+                if (data.msg_type == 0) {
+                    if (self.msgList[i]['to_user_id'] == data.record_info.to_user_id || self.msgList[i]['to_user_id'] == data.record_info.from_user_id) {
+                        //消息存在
+                        isSelectMsg = true;
+                        if (msgListInfo) {
+                            //如果是当前选中的消息列表
+                            if (msgListInfo['to_user_id'] == data.record_info.to_user_id || msgListInfo['to_user_id'] == data.record_info.from_user_id) {
+                                isActive = true;
+                            }
+                        }
+                        break;
+                    }
+                } else if (data.msg_type == 1) {
+                    if (self.msgList[i]['to_room_id'] == data.record_info.room_id) {
+                        //消息存在
+                        isSelectMsg = true;
+                        //如果是当前选中的消息列表
+                        if (msgListInfo) {
+                            if (msgListInfo['to_room_id'] == data.record_info.room_id) {
+                                isActive = true;
+                            }
+                        }
+                        break;
+                    }
+                }
+            }
+
+            if (isSelectMsg) {
+                //找到消息列表
+                self.msgList[i]['msg_content'] = data['record_info']['user_msg'];
+                self.msgList[i]['msg_update_time'] = data['record_info']['update_time'];
+                if (isActive) {
+                    //如果是当前选中的消息列表
+                    self.msgList[i]['msg_count'] = 0;
+                    self.activeUserMsg(self.msgInfo['id']);
+                    //获取新消息
+                    for (var x = 0; x < self.msgInfo['msgList'].length; x++) {
+                        //查找消息是否存在
+                        if (self.msgInfo['msgList'][x]['uuid'] === data.uuid) {
+                            $.each(data.record_info, function (k, v) {
+                                Vue.set(self.msgInfo['msgList'][x],k, v);
+                            });
+                            self.msgInfo['msgList'][x].is_loading = false;
+                            is_self = true;
+                        }
+                    }
+                    if (!is_self) {
+                        self.msgInfo['msgList'] = self.msgInfo['msgList'].concat(data.record_info);
+                        self.$nextTick(function(){
+                            //滚动到底部
+                            $('.room-msg-content').scrollTop($('.room-msg-content')[0].scrollHeight);
+                        });
+                    }
+                } else {
+                    self.msgList[i]['msg_count'] = self.msgList[i]['msg_count'] + 1;
+                }
+
+                self.msgList.sort(function(a, b) {
+                    var x = b.msg_update_time;
+                    var y = a.msg_update_time;
+                    if (x < y) {return -1;}
+                    if (x > y) {return 1;}
+                    return 0;
+                });
+
+            } else {
+                //没找到消息列表 获取
+                if (data.msg_type == 0) {
+                    if(is_self) {
+                        self.imSocket.emit('get_user_msg_info',{msgType:data.msg_type,mixedId:data.record_info.to_user_id});
+                    } else {
+                        self.imSocket.emit('get_user_msg_info',{msgType:data.msg_type,mixedId:data.record_info.from_user_id});
+                    }
+                } else if (data.msg_type == 1) {
+                    self.imSocket.emit('get_user_msg_info',{msgType:data.msg_type,mixedId:data.record_info.room_id});
+                }
+            }
+
+        });
+
+        self.getUserMsgList();
     }
 });
 

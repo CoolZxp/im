@@ -3081,7 +3081,7 @@
     <div class="auth-box">
         <div class="auth-wrap">
             <div class="swiper-container auth-swiper-container">
-                <div class="swiper-wrapper" style="height: 502px;">
+                <div class="swiper-wrapper" style="height: 471px;">
                     <div class="swiper-slide swiper-no-swiping">
                         <div class="auth-main">
                             <div class="auth-login">
@@ -3216,7 +3216,7 @@
                 dataType: "json",
                 success: function (data) {
                     if (data.code != 1) {
-                        humane.log(data.msg);
+                        humane.error(data.msg);
                     } else {
                         $.cookie('token', data.data.token, {expires: 7, path: '/'});
                         location.href = '{:url('/')}';
@@ -3244,10 +3244,11 @@
                 dataType: "json",
                 success: function (data) {
                     if (data.code != 1) {
-                        humane.log(data.msg);
+                        humane.error(data.msg);
                     } else {
-                        humane.log('注册成功');
+                        humane.success('注册成功');
                         $('#auth-login-username').val($('#auth-register-username').val());
+                        $('#auth-login-password').val('');
                         $('#auth-register-username').val('');
                         $('#auth-register-nickname').val('');
                         $('#auth-register-password').val('');

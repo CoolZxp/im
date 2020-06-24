@@ -8,14 +8,17 @@ use think\Model;
 
 class User extends Model
 {
-
+    public function __construct(array $data = [])
+    {
+        parent::__construct($data);
+    }
 
     /**
-     * getUserToken 获取用户TOKEN
+     * createUserToken 生成用户TOKEN
      * @param $userId
      * @return string
      */
-    public function getUserToken($userId)
+    public function createUserToken($userId)
     {
         $info = [
             "iat" => time(), //签发时间
@@ -24,10 +27,21 @@ class User extends Model
             "userId" => $userId
         ];
         $token = JWT::encode($info, config('user.key'),'HS256');
-        Cache::set("user:{$userId}:token:{$token}", time(), time() + (7 * 24 * 60 * 60)); //过期时间1周
+        //生成新token时移除旧Token
+        $this -> removeUserToken($userId);
+        Cache::set("user:{$userId}:token", $token, time() + (7 * 24 * 60 * 60)); //过期时间1周
         return $token;
     }
 
+    /**
+     * 移除用户Token
+     * removeUserToken
+     * @param $userId
+     * @return bool
+     */
+    public function removeUserToken($userId){
+        return Cache::delete("user:{$userId}:token");
+    }
     /**
      * getUserTokenInfo 获取TOKEN中用户ID 无效返回false
      * @param $token
@@ -40,8 +54,7 @@ class User extends Model
         }
         JWT::$leeway = 60;
         $info = JWT::decode($token, config('user.key'),['HS256']);
-        $is_has = Cache::has("user:{$info -> userId}:token:{$token}");
-        if ($is_has) {
+        if (Cache::get("user:{$info -> userId}:token") == $token) {
             return $info -> userId;
         } else {
             return false;
@@ -106,17 +119,15 @@ class User extends Model
         }
     }
 
-
-
     /**
      * 设置用户Websocket Fd
      * setUserFd
      * @param $userId
      * @param $fd
-     * @return bool
      */
     public function setUserFd($userId,$fd) {
-        return Cache::set("user:fd:{$fd}",$userId);
+        Cache::set("user:fd:fd_{$fd}",$userId);
+        Cache::set("user:fd:id_{$userId}",$fd);
     }
 
     /**
@@ -126,16 +137,29 @@ class User extends Model
      * @return mixed
      */
     public function getUserIdByFd($fd) {
-        return Cache::get("user:fd:{$fd}");
+        return Cache::get("user:fd:fd_{$fd}");
     }
+
+    /**
+     * 通过用户Id获取Fd
+     * getFdByUserId
+     * @param $userId
+     * @return mixed
+     */
+    public function getFdByUserId($userId) {
+        return Cache::get("user:fd:id_{$userId}");
+    }
+
+
     /**
      * 通过Fd刪除用户Id
      * getUserIdByFd
      * @param $fd
-     * @return mixed
      */
     public function removeUserIdByFd($fd) {
-        return Cache::delete("user:fd:{$fd}");
+        $userId = $this -> getUserIdByFd($fd);
+        Cache::delete("user:fd:fd_{$fd}");
+        Cache::delete("user:fd:id_{$userId}");
     }
 
 

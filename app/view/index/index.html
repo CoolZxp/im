@@ -6,7 +6,6 @@
     <title>{:env('app_name')}</title>
     {include file="common/require"}
     <link rel="stylesheet" href="__STATIC__/css/header.css">
-    <link rel="stylesheet" href="__STATIC__/css/msg.css">
     <link rel="stylesheet" href="__STATIC__/css/room.css">
     <style>
         .base-swiper-container {
@@ -15,39 +14,21 @@
         .room-swiper-slide {
             overflow-y: auto;
         }
-        #loading {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 9999;
-            background-color: #fff;
-            display: none;
-        }
-
-        #loading svg {
-            width: 90%;
-            height: 90%;
-            visibility: hidden;
-            position: absolute;
-            top: 50%;
-            left: 0;
-            right: 0;
-            margin: 0 auto;
-            transform: translateY(-50%);
-        }
     </style>
     <script src="__STATIC__/libs/socket.io/socket.io.slim.js"></script>
     <script src="__STATIC__/libs/jq-paginator/jq-paginator.min.js"></script>
-    <script src="__STATIC__/libs/tween-max/tween-max.min.js"></script>
     <script src="__STATIC__/libs/pjax/jquery.pjax.min.js"></script>
 </head>
 <body>
+{include file="index/loading"}
+<script>
+    openLoading();
+</script>
 <div id="header">
     <div class="wrap clearfix">
         <div class="header-left clearfix">
             <ul class="header-nav clearfix">
+
                 <li class="header-nav-item header-nav-active" >
                     <a href="javascript:void(0)" data-index="0">消息列表</a>
                 </li>
@@ -56,6 +37,12 @@
                 </li>
                 <li class="header-nav-item">
                     <a href="javascript:void(0)" data-index="2">聊天室</a>
+                </li>
+                <li class="header-nav-item">
+                    <a href="javascript:void(0)" data-index="3">个人中心</a>
+                </li>
+                <li class="header-nav-item">
+                    <a href="javascript:void(0)" data-index="4">搜索</a>
                 </li>
             </ul>
 
@@ -90,90 +77,24 @@
             </div>
         </div>
     </div>
+    <script>
+        var userInfo = {
+            nickName:'{$nickName}',
+            userFace:'{$userFace}',
+        }
+    </script>
 </div>
 
 
 <div class="swiper-container base-swiper-container">
     <div class="swiper-wrapper">
         <div class="swiper-slide swiper-no-swiping">
-
-            <div id="chat">
-                <div class="wrap">
-                    <div class="box clearfix">
-                        <div class="msg-list">
-                            <div class="msg-title">消息列表</div>
-
-                            <div class="msg-list-main" v-for="msgItem in msgList" :key="msgItem.id">
-                                <div class="msg-list-item msg-list-item-active">
-                                    <div class="msg-list-item-left">
-                                        <img class="msg-list-item-head"
-                                             :src="msgItem.to_user_face">
-                                    </div>
-
-                                    <div
-                                            class="msg-list-item-right"
-                                            :class="{'msg-list-item-count-show':msgItem.msg_count > 0}">
-
-                                        <div class="msg-list-item-row clearfix">
-                                            <div class="msg-list-item-title">
-                                                {{msgItem.to_nick_name}}
-                                            </div>
-                                            <div class="msg-list-item-time">{{updateTimeShow(msgItem.update_time)}}</div>
-                                        </div>
-                                        <div class="msg-list-item-row  clearfix">
-                                            <div class="msg-list-item-msg">
-                                                {{msgItem.msg_content}}
-                                            </div>
-                                            <div class="msg-list-item-count">{{updateMsgCount(msgItem.msg_count)}}</div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                        </div>
-
-                        <div class="box-right">
-                            <div class="msg-title">{{msgInfo.nick_name}}</div>
-                            <div id="room-msg" class="room-msg-content clearfix">
-                                <div class="room-msg-box room-msg-box-left">
-                                    <img class="room-msg-box-head"
-                                         src="https://thirdqq.qlogo.cn/g?b=sdk&k=l29k21ibXTL1rHRygjFhIIA&s=100&t=1592194906">
-                                    <div class="room-msg-box-main">我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息</div>
-                                </div>
-
-                                <div class="room-msg-time">
-                                    <div class="room-msg-time-str">10:30</div>
-                                </div>
-                                <div class="room-msg-box room-msg-box-right">
-                                    <img class="room-msg-box-head"
-                                         src="https://thirdqq.qlogo.cn/g?b=sdk&k=l29k21ibXTL1rHRygjFhIIA&s=100&t=1592194906">
-                                    <div class="room-msg-box-main">我是消息</div>
-                                </div>
-                            </div>
-
-                            <div class="room-msg-input">
-                                <div class="room-msg-input-tool clearfix">
-                                    <i id="openEmoji" class="fa fa-smile-o" aria-hidden="true"></i>
-                                    <i class="fa fa-picture-o" aria-hidden="true"></i>
-                                    <div class="room-msg-input-submit">
-                                        <button onclick="sendRoomMsg()">发送</button>
-                                    </div>
-                                </div>
-                                <textarea id="room-input" class="room-msg-input-content" autofocus wrap="hard"></textarea>
-
-                                <div class="room-msg-input-emoji clearfix">
-                                    <!--                        <div class="room-msg-input-emoji-item">emoji</div>-->
-                                </div>
-                            </div>
-                        </div>
-
-
-                    </div>
-                </div>
-            </div>
+            {include file="index/chat"}
         </div>
 
         <div class="swiper-slide swiper-no-swiping">Slide 2</div>
+        <div class="swiper-slide swiper-no-swiping">Slide 3</div>
+        <div class="swiper-slide swiper-no-swiping">Slide 4</div>
         <div class="swiper-slide swiper-no-swiping room-swiper-slide">
             <div id="room" class="wrap">
                 <div class="im-box im-cate">
@@ -255,16 +176,6 @@
     </div>
 </div>
 
-<div id="loading">
-    <svg viewBox="0 0 800 600" xmlns="http://www.w3.org/2000/svg">
-        <defs>
-            <line class="mark" x1="0" y1="0" x2="0" y2="0" fill="none" stroke="#3580eb" stroke-miterlimit="10" stroke-linecap="none" stroke-width="12"/>
-        </defs>
-        <g class="container1"/>
-        <g class="container2"/>
-    </svg>
-</div>
-
 <script>
     var getRoomListUrl = "{:url('Room/getRoomList')}";
     var getRoomCateList = "{:url('Room/getRoomCateList')}";
@@ -284,19 +195,8 @@
         $('#header .header-nav-item').eq(index).addClass('header-nav-active');
         baseSwiper.slideTo(index);
     }
-    function openLoading() {
-        $('#loading').fadeIn(0);
-        mainTl.play(0);
-    }
-
-    function closeLoading() {
-        $('#loading').fadeOut();
-        mainTl.pause(0);
-    }
 </script>
 <script src="__STATIC__/js/header.js"></script>
-<script src="__STATIC__/js/msg.js"></script>
 <script src="__STATIC__/js/room.js"></script>
-<script src="__STATIC__/js/loading.js"></script>
 </body>
 </html>

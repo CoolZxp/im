@@ -1,25 +1,21 @@
-html,
-body {
-  min-height: 100%;
-}
 .humane,
 .humane-flatty {
   position: fixed;
-  -moz-transition: all 0.4s ease-in-out;
-  -webkit-transition: all 0.4s ease-in-out;
-  -ms-transition: all 0.4s ease-in-out;
-  -o-transition: all 0.4s ease-in-out;
-  transition: all 0.4s ease-in-out;
+  -moz-transition: opacity 0.4s ease-in-out,transform 0.4s ease-in-out;
+  -webkit-transition: opacity 0.4s ease-in-out,transform 0.4s ease-in-out;
+  -ms-transition: opacity 0.4s ease-in-out,transform 0.4s ease-in-out;
+  -o-transition: opacity 0.4s ease-in-out,transform 0.4s ease-in-out;
+  transition: opacity 0.4s ease-in-out,transform 0.4s ease-in-out;
   z-index: 100000;
   filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=100);
 }
+
 .humane,
 .humane-flatty {
-  top: 0%;
+  top: 0;
   left: 0;
   right: 0;
   margin: 0 auto;
-  opacity: 0;
   width: 80%;
   color: #555666;
   cursor: pointer;
@@ -66,7 +62,7 @@ body {
 }
 .humane-animate,
 .humane-flatty.humane-flatty-animate {
-  opacity: 1;
+  opacity: 0.9;
   -moz-transform: translateY(10px);
   -webkit-transform: translateY(10px);
   -ms-transform: translateY(10px);
@@ -79,7 +75,7 @@ body {
 }
 .humane-js-animate,
 .humane-flatty.humane-flatty-js-animate {
-  opacity: 1;
+  opacity: 0.9;
   -moz-transform: translateY(10px);
   -webkit-transform: translateY(10px);
   -ms-transform: translateY(10px);

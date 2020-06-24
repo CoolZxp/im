@@ -10,5 +10,4 @@ return [
     'Room' => \app\model\Room::class,
     'RoomCate' => \app\model\RoomCate::class,
     'Redis' => \redis\Redis::class,
-//    'SwooleSocket' => \app\http\SwooleSocket::class,
 ];

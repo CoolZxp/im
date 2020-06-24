@@ -40,7 +40,7 @@ class UserController extends BaseController
             return generate_json(ERROR_USER_STATUS);
         } else {
             return generate_json(SUCCESS,null,[
-                'token' => $userModel -> getUserToken($userInfo['id']),
+                'token' => $userModel -> createUserToken($userInfo['id']),
             ]);
         }
     }

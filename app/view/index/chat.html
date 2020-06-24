@@ -1,0 +1,81 @@
+<link rel="stylesheet" href="__STATIC__/css/msg.css">
+<div id="chat">
+    <div class="wrap">
+        <div class="box clearfix">
+            <div class="msg-list">
+                <div class="msg-title">消息列表</div>
+
+                <div class="msg-list-main" v-for="(msgItem,index) in msgList" :key="msgItem.id">
+                    <div class="msg-list-item" @click="setActiveMsg(msgItem.id,index)">
+                        <div class="msg-list-item-left">
+                            <img class="msg-list-item-head"
+                                 :src="msgItem.msg_type===0?msgItem.to_user_face:msgItem.to_room_img">
+                        </div>
+                        <div
+                                class="msg-list-item-right"
+                                :class="{'msg-list-item-count-show':msgItem.msg_count > 0}">
+
+                            <div class="msg-list-item-row clearfix">
+                                <div class="msg-list-item-title">
+                                    {{msgItem.msg_type===0?msgItem.to_nick_name:msgItem.to_room_name}}
+                                </div>
+                                <div class="msg-list-item-time">{{getDiffTimeStr(msgItem.msg_update_time)}}</div>
+                            </div>
+                            <div class="msg-list-item-row  clearfix">
+                                <div class="msg-list-item-msg">
+                                    {{msgItem.msg_content}}
+                                </div>
+                                <div class="msg-list-item-count">{{updateMsgCount(msgItem.msg_count)}}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="box-right" v-show="msgInfo.id !== -1">
+                <div class="msg-title">{{msgInfo.title}}</div>
+                <div class="room-msg-content clearfix">
+
+                    <div class="room-msg-time" v-if="isMsgLoading"><div class="room-msg-time-str">加载中...</div></div>
+                    <div class="room-msg-time" v-if="isMsgOldNo"><div class="room-msg-time-str">暂无消息记录</div></div>
+
+                    <div class="room-msg-list" v-for="(msgItem,index) in msgInfo.msgList" :key="msgItem.id">
+
+                        <div class="room-msg-time" v-if="index == 0 || timeDifference(msgItem.update_time,msgInfo.msgList[index - 1].update_time) > 2">
+                            <div class="room-msg-time-str">{{getDiffTimeStr(msgItem.update_time,msgInfo.msgList[index - 1 < 0?0:index - 1].update_time,true)}}</div>
+                        </div>
+
+                        <div class="room-msg-box"
+                             :class="{'room-msg-box-right':msgItem.is_self,'room-msg-box-left':!msgItem.is_self}">
+                            <img class="room-msg-box-head"
+                                 :src="msgItem.user_face">
+                            <div class="room-msg-box-wrap">
+                                <img src="__STATIC__/imgs/loading.gif" class="room-msg-box-loading" v-show="msgItem.is_loading === true">
+                                <div class="room-msg-box-main">{{msgItem.user_msg}}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="room-msg-input">
+                    <div class="room-msg-input-tool clearfix">
+                        <i id="openEmoji" class="fa fa-smile-o" aria-hidden="true" onclick="openEmoji()"></i>
+                        <i class="fa fa-picture-o" aria-hidden="true"></i>
+                        <div class="room-msg-input-submit">
+                            <button  @click="sendMsg()">发送</button>
+                        </div>
+                    </div>
+                    <textarea id="room-input" class="room-msg-input-content" autofocus wrap="hard"></textarea>
+
+                    <div class="room-msg-input-emoji clearfix">
+                        <!--                        <div class="room-msg-input-emoji-item">emoji</div>-->
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+</div>
+<script src="__STATIC__/js/msg.js"></script>

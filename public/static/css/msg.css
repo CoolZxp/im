@@ -12,11 +12,6 @@
 #chat .box {
     width: 100%;
     height: 100%;
-    background-color: #fff;
-    border-radius: 5px;
-    box-shadow: 0 0 6px 0 rgba(0, 0, 0, .05);
-    overflow: hidden;
-    padding: 15px;
 }
 
 #chat .msg-title {
@@ -28,9 +23,13 @@
 
 #chat .msg-list {
     float: left;
-    width: 22%;
+    width: 23%;
     height: 100%;
-    padding-right: 15px;
+    padding: 15px;
+    box-shadow: 0 0 6px 0 rgba(0, 0, 0, .05);
+    background-color: #fff;
+    border-radius: 5px;
+    overflow: hidden;
 }
 
 #chat .msg-list-item {
@@ -128,9 +127,14 @@
 
 
 #chat .box-right {
-    float: left;
-    width: 78%;
+    float: right;
+    width: 76%;
     height: 100%;
+    padding: 15px;
+    box-shadow: 0 0 6px 0 rgba(0, 0, 0, .05);
+    background-color: #fff;
+    border-radius: 5px;
+    overflow: hidden;
 }
 
 #chat .room-msg-content {
@@ -152,14 +156,26 @@
     height: 50px;
     border-radius: 50%;
 }
-
-#chat .room-msg-box-main {
+#chat .room-msg-box-wrap {
     max-width: calc(100% - 60px);
+    position: relative;
+}
+#chat .room-msg-box-main {
+    max-width: 100%;
     background-color: #fff;
     border-radius: 5px;
     padding: 10px;
     box-shadow: 0 0 6px 0 rgba(0, 0, 0, .05);
     font-size: 18px;
+    white-space: pre-wrap;
+    word-wrap:break-word;
+}
+#chat .room-msg-box-loading {
+    width: 20px;
+    height: 20px;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
 }
 
 #chat .room-msg-box-left {
@@ -171,8 +187,15 @@
     margin-right: 10px;
 }
 
-#chat .room-msg-box-left .room-msg-box-main {
+#chat .room-msg-box-left .room-msg-box-wrap {
     float: left;
+}
+
+#chat .room-msg-box-left .room-msg-box-loading {
+    right: 0;
+}
+#chat .room-msg-box-left .room-msg-box-main {
+    margin-right: 30px;
 }
 
 
@@ -185,9 +208,18 @@
     margin-left: 10px;
 }
 
-#chat .room-msg-box-right .room-msg-box-main {
+#chat .room-msg-box-right .room-msg-box-wrap {
     float: right;
 }
+
+#chat .room-msg-box-right .room-msg-box-loading {
+    left: 0;
+}
+#chat .room-msg-box-right .room-msg-box-main {
+    margin-left: 30px;
+}
+
+
 
 #chat .room-msg-time {
     float: left;
@@ -301,5 +333,10 @@
     background-color: #f5f6f7;
 }
 
+
+#chat .room-msg-content-title {
+    font-size: 18px;
+    text-align: center;
+}
 
 
