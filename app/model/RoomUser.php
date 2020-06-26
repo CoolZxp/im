@@ -11,6 +11,15 @@ class RoomUser extends Model
     use SoftDelete;
     protected $deleteTime = 'delete_time';
 
+    //关联User模型
+    public function user() {
+        return $this -> belongsTo(User::class,'user_id') -> bind([
+            'user_name',
+            'nick_name',
+            'user_face',
+        ]);
+    }
+
     /**
      * 获取用户是否加入聊天室
      * isUserInRoom
@@ -42,4 +51,30 @@ class RoomUser extends Model
         }
         return $userFdList;
     }
+
+    /**
+     * 获取房间内用户信息 分页
+     * getRoomUserByPage
+     * @param $roomId
+     * @param null $page
+     * @return \think\Collection
+     */
+    public function getRoomUserByPage($roomId,$page = null) {
+        $pageSize = 20;
+        return $this -> with('user')
+            -> where(['room_id' => $roomId])
+            -> page($page,$pageSize)
+            -> select();
+    }
+
+    /**
+     * 获取房间用户人数
+     * getRoomUserCount
+     * @param $roomId
+     * @return int
+     */
+    public function getRoomUserCount($roomId) {
+        return $this -> where(['room_id' => $roomId]) -> count();
+    }
+
 }

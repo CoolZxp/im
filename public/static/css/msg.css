@@ -17,7 +17,6 @@
 #chat .msg-title {
     font-size: 26px;
     font-weight: bold;
-    padding-bottom: 15px;
     height: 50px;
 }
 
@@ -30,6 +29,7 @@
     background-color: #fff;
     border-radius: 5px;
     overflow: hidden;
+    overflow-y: auto;
 }
 
 #chat .msg-list-item {
@@ -134,16 +134,88 @@
     box-shadow: 0 0 6px 0 rgba(0, 0, 0, .05);
     background-color: #fff;
     border-radius: 5px;
-    overflow: hidden;
+}
+
+#chat .chat-box {
+    height: calc(100% - 50px);
+}
+#chat .chat-msg {
+    float: left;
+    width: 100%;
+    height: 100%;
 }
 
 #chat .room-msg-content {
     background-color: #f5f6f7;
     border-radius: 5px;
-    height: calc(70% - 50px);
+    width: 100%;
+    height: 70%;
     padding: 10px;
     overflow-y: auto;
     box-shadow: 0 0 6px 0 rgba(0, 0, 0, .05);
+}
+
+
+#chat .chat-room-user {
+    background-color: #f5f6f7;
+    border-radius: 5px;
+    height: 100%;
+    box-shadow: 0 0 6px 0 rgba(0, 0, 0, .05);
+    display: none;
+    float: left;
+    position: relative;
+    padding-top: 10px;
+    flex-direction:column;
+}
+.chat-room-user-list {
+    /*height: calc(100% - 40px);*/
+    overflow-y: auto;
+    padding: 0 10px;
+    flex-grow:1;
+}
+#chat .chat-msg-show-user .chat-room-user {
+    width: calc(23% - 15px);
+    height: 100%;
+    margin-left: 15px;
+    display: flex;
+}
+
+#chat .chat-msg-show-user .chat-msg {
+    width: 77%;
+}
+#chat .chat-room-user .msg-title {
+    font-size: 20px;
+    padding: 0 10px 10px;
+    height: auto;
+}
+
+#chat .chat-room-user-item {
+    background-color: #fff;
+    margin-bottom: 10px;
+    padding: 10px;
+    box-sizing: content-box;
+    border-radius: 5px;
+    overflow: hidden;
+    height: 30px;
+    line-height: 30px;
+}
+
+#chat .chat-room-user-item-face {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    overflow: hidden;
+    float: left;
+}
+#chat .chat-room-user-item-face img {
+    width: 100%;
+    height: 100%;
+}
+#chat .chat-room-user-item-name {
+    float: left;
+    width: calc(100% - 40px);
+    margin-left: 7px;
+    font-weight: bold;
 }
 
 #chat .room-msg-box {
@@ -340,3 +412,16 @@
 }
 
 
+#chat .chat_room_user_list {
+    position: absolute;
+    right: -1%;
+    transform: translateX(100%);
+    width: 23%;
+    height: 100%;
+    padding: 15px;
+    box-shadow: 0 0 6px 0 rgba(0, 0, 0, .05);
+    background-color: #fff;
+    border-radius: 5px;
+    overflow: hidden;
+    overflow-y: auto;
+}

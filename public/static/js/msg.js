@@ -30,12 +30,18 @@ var chatVue = new Vue({
     el:'#chat',
     data: {
         imSocket:null,
-        msgList:[],
-        msgInfo:{
+        msgList:[],//消息列表
+        msgInfo:{ //当前选中消息列表信息
             id:-1,
             title:'',
-            msgList:[],
+            msgList:[], //消息记录
         },
+        roomUserList:[], //聊天室用户
+        roomUserCount:-1, //聊天室用户数量
+        isShowRoomUser:false,//是否显示聊天室用户列表
+        isRoomUserLoading:false,
+        isRoomUserNo:false,
+        roomUserPage:1,
         init:false,
         newActiveMsg:true,
         isMsgOldNo:false, //暂无消息记录
@@ -84,10 +90,18 @@ var chatVue = new Vue({
             var msgListInfo = getArrayValueById(this.msgList,this.msgInfo['id']);
             switch (msgListInfo['msg_type']) {
                 case 0:
+                    this.isShowRoomUser = false;
                     this.msgInfo['title'] = msgListInfo['to_nick_name'];
                     break;
                 case 1:
+                    this.isRoomUserNo = false;
+                    this.isShowRoomUser = true;
+                    this.roomUserPage = 1;
+                    this.roomUserCount = -1;
+                    this.roomUserList = [];
                     this.msgInfo['title'] = msgListInfo['to_room_name'];
+                    this.getRoomUserList();
+                    this.getRoomUserCount();
                     break;
             }
             this.activeUserMsg(this.msgInfo['id']);
@@ -113,9 +127,28 @@ var chatVue = new Vue({
                 this.getUserMsgRecordList(id,msgListInfo['msg_type']);
             }
         },
+        //获取房间用户列表
+        getRoomUserList() {
+            if (!this.isRoomUserNo) {
+                this.isRoomUserLoading = true;
+                this.$nextTick(function(){
+                    //滚动到底部
+                    $('.chat-room-user-list').scrollTop($('.chat-room-user-list')[0].scrollHeight)
+                });
+                this.imSocket.emit('get_room_user_list',{roomId:this.msgInfo['id'],page:this.roomUserPage});
+                this.roomUserPage++;
+            }
+        },
+        //获取房间用户数量
+        getRoomUserCount() {
+            this.imSocket.emit('get_room_user_count',{roomId:this.msgInfo['id']});
+        },
         //发送消息
         sendMsg() {
             var msgStr = $('#room-input').val();
+            if (!msgStr) {
+                return;
+            }
             var msgListInfo = getArrayValueById(this.msgList,this.msgInfo['id'])
             var uuid = createUuid();
             var toMsg = {msg_type:msgListInfo['msg_type'],msg:msgStr,uuid:uuid};
@@ -192,6 +225,15 @@ var chatVue = new Vue({
                             self.getMsgRecord(true);
                         }
                     })
+
+                    //滚动到底获取聊天室成员
+                    $('.chat-room-user-list').scroll(function () {
+                        if(($('.chat-room-user-list')[0].scrollHeight !== $('.chat-room-user-list')[0].offsetHeight) &&
+                            self.isRoomUserNo !== true &&
+                            $('.chat-room-user-list').scrollTop()  + $('.chat-room-user-list')[0].offsetHeight === $('.chat-room-user-list')[0].scrollHeight) {
+                            self.getRoomUserList();
+                        }
+                    })
                     closeLoading();
                 });
             }
@@ -208,7 +250,6 @@ var chatVue = new Vue({
             });
         });
 
-
         //获取到消息记录
         self.imSocket.on('user_msg_record_list',function (data) {
             if (self.newActiveMsg) {
@@ -222,7 +263,7 @@ var chatVue = new Vue({
             } else {
                 self.isMsgLoading = false;
                 //暂无消息记录
-                if (data.length < 1) {
+                if (data.length < 20) {
                     self.isMsgOldNo = true;
                 }
                 self.msgInfo['msgList'] = data.concat(self.msgInfo['msgList']);
@@ -325,6 +366,18 @@ var chatVue = new Vue({
 
         });
 
+        //获取聊天室用户列表
+        self.imSocket.on('room_user_list',function (data) {
+            if (data.length < 20) {
+                self.isRoomUserNo = true;
+            }
+            self.roomUserList = self.roomUserList.concat(data);
+            self.isRoomUserLoading = false;
+        });
+        //获取聊天室用户数量
+        self.imSocket.on('room_user_count',function (data) {
+            self.roomUserCount = data;
+        });
         self.getUserMsgList();
     }
 });

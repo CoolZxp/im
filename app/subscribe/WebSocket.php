@@ -357,5 +357,41 @@ class WebSocket
         }
     }
 
+    /**
+     * 获取房间用户列表
+     * onGetRoomUserList
+     * @param $event
+     */
+    public function onGetRoomUserList($event) {
+        if ($this -> checkLogin()) {
+            if (empty($event['roomId']) || empty($event['page'])) {
+                $this -> websocket -> emit('error','未知参数');
+            } else {
+                $roomUserList = $this -> roomUser -> getRoomUserByPage($event['roomId'],$event['page']);
+                $this -> websocket -> emit('room_user_list',$roomUserList);
+            }
+        } else {
+            $this -> websocket -> emit('user_error','非法操作');
+        }
+    }
+
+
+    /**
+     * 获取房间用户数量
+     * onGetRoomUserList
+     * @param $event
+     */
+    public function onGetRoomUserCount($event) {
+        if ($this -> checkLogin()) {
+            if (empty($event['roomId'])) {
+                $this -> websocket -> emit('error','未知参数');
+            } else {
+                $roomUserCount = $this -> roomUser -> getRoomUserCount($event['roomId']);
+                $this -> websocket -> emit('room_user_count',$roomUserCount);
+            }
+        } else {
+            $this -> websocket -> emit('user_error','非法操作');
+        }
+    }
 
 }
