@@ -26,7 +26,7 @@ Route::group(function () {
     Route::post('editUser','User/editUser');
     Route::post('uploadImg','User/uploadImg');
     Route::post('user/:tel', 'User/getCode');
-
+    Route::post('getUserInfo','User/getUserInfo');
 }) -> middleware(\app\middleware\Auth::class);
 
 

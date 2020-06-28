@@ -11,7 +11,7 @@
         .base-swiper-container {
             height: calc(100% - 55px);
         }
-        .room-swiper-slide {
+        .swiper-slide-overflow {
             overflow-y: auto;
         }
     </style>
@@ -94,10 +94,12 @@
 
         <div class="swiper-slide swiper-no-swiping">Slide 2</div>
         <div class="swiper-slide swiper-no-swiping">Slide 3</div>
-        <div class="swiper-slide swiper-no-swiping">
-<!--            include file="user/user_info"-->
+
+        <div class="swiper-slide swiper-no-swiping"><!--userinfo-box-->
+            {include file="user/user_info"}
         </div>
-        <div class="swiper-slide swiper-no-swiping room-swiper-slide">
+
+        <div class="swiper-slide swiper-no-swiping swiper-slide-overflow">
             <div id="room" class="wrap">
                 <div class="im-box im-cate">
                     <div class="im-title">
@@ -184,7 +186,7 @@
     var baseSwiper = new Swiper('.base-swiper-container', {
         freeModeMomentumBounce: false,
     })
-    // setHeaderNav(2);
+    setHeaderNav(3);
 
     $('#header .header-nav-item').click(function () {
         setHeaderNav($('a',this).attr('data-index'));
@@ -197,6 +199,32 @@
         $('#header .header-nav-item').eq(index).addClass('header-nav-active');
         baseSwiper.slideTo(index);
     }
+
+    $.ajax({
+        type:"POST",
+        url:"{:url('User/getUserInfo')}",
+        headers: {
+            token: $.cookie('token'),
+        },
+        dataType:"json",
+        success:function(obj){
+            console.log(obj);
+            if(obj.code != 1){
+                humane.log(obj.msg);
+            } else {
+                var data = obj.data;
+                $("img",$(".user-box-info-img")).attr("src",data['user_face']);
+                $(".user-box-username").html(data['nick_name']);
+                $("input",$(".user-box-qianming")).val(data['user_autograph']);
+                $("input[name='nick_name']",$(".user-box-detailed-right-info-small-input")).val(data['nick_name']);
+                $("input[name='user_name']",$(".user-box-detailed-right-info-small-input")).val(data['user_name']);
+                $("textarea",$(".user-box-detailed-right-info-small-input")).html(data['user_autograph']);
+                $("input[name='birthday']",$(".user-box-detailed-right-info-small-input")).val(data['user_birthday']);
+                $(".user-box-detailed-right-info-small-input-span").eq(data['user_sex']).addClass("user-box-detailed-right-info-small-input-click");
+
+            }
+        }
+    });
 </script>
 <script src="__STATIC__/js/header.js"></script>
 <script src="__STATIC__/js/room.js"></script>

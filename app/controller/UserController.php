@@ -180,6 +180,7 @@ class UserController extends BaseController
 
     public function getCode($template_name, User $userModel)
     {
+
         if($template_name == 'info'){
             View::assign('navSelect','');
             View::assign('userInfo',$userModel -> getUserInfo($this -> request -> userId));
@@ -187,6 +188,16 @@ class UserController extends BaseController
         return View::fetch("user/{$template_name}");
     }
 
-
+    public function getUserInfo(User $userModel)
+    {
+        $data = $userModel -> getUserInfo($this -> request -> userId);
+        if(!empty($data)){
+            unset($data['id'],$data['create_time'],$data['update_time'],$data['user_status']);
+            $data['user_birthday'] = date("Y-m-d",$data['user_birthday']);
+            return generate_json(SUCCESS,null,$data);
+        }else{
+            return generate_json(ERROR_AUTH);
+        }
+    }
 
 }

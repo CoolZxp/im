@@ -1,18 +1,20 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>{:env('app_name')}</title>
-    {include file="common/require"}
+<div id="userinfo-box">
+
     <style>
-        .user-box{
-            border-radius:5px;
-            box-shadow: 0 0 6px 0 rgba(0, 0, 0, .05);
-            margin-top:50px;
+        #userinfo-box {
+            height: 100%;
+            padding: 20px 0;
+            box-sizing: border-box;
         }
-        .user-zhebi{
+        #userinfo-box .wrap {
+            height: 100%;
+        }
+        #userinfo-box .user-box{
+            border-radius:5px;
+            width: 100%;
+            height: 100%;
+        }
+        #userinfo-box .user-zhebi{
             width:100%;
             height:100vh;
             position: fixed;
@@ -22,20 +24,20 @@
             opacity: 0;
             transition:  .1s;
         }
-        .user-zhebi-appear{
+        #userinfo-box .user-zhebi-appear{
             z-index: 99;
             opacity: 1;
         }
-        .user-box-info{
+        #userinfo-box .user-box-info{
             background-image: url("https://s1.ax1x.com/2020/06/14/tzsjDP.jpg");
             background-size: 100% 100%;
             width: 100%;
             height:200px;
             padding-top:10px;
-            border-radius: 5px 5px 0 0;
+            border-radius: 5px;
             overflow: hidden;
         }
-        .user-box-info-img{
+        #userinfo-box .user-box-info-img{
             width:100px;
             height: 100px;
             line-height:100px;
@@ -47,11 +49,11 @@
             overflow: hidden;
             margin: 0 auto;
         }
-        .user-box-info-img img{
+        #userinfo-box .user-box-info-img img{
             width:100%;
             height:100%;
         }
-        .user-box-info-img-hidden{
+        #userinfo-box .user-box-info-img-hidden{
             width:100%;
             height:100%;
             background: rgba(0,0,0,.5);
@@ -65,22 +67,22 @@
             transition: opacity .3s;
             cursor:pointer;
         }
-        .user-box-info-img:hover .user-box-info-img-hidden{
+        #userinfo-box .user-box-info-img:hover .user-box-info-img-hidden{
             opacity: 1;
         }
-        .user-box-username{
+        #userinfo-box .user-box-username{
             padding: 15px;
             color:white;
             font-size:18px;
             text-align: center;
             font-weight: bold;
         }
-        .user-box-qianming{
+        #userinfo-box .user-box-qianming{
             width:100%;
             height:50px;
             text-align: center;
         }
-        .user-box-qianming input{
+        #userinfo-box .user-box-qianming input{
             width:70%;
             height:50%;
             text-align: center;
@@ -92,34 +94,37 @@
             font-weight: bold;
             transition: all .3s;
         }
-        .user-box-qianming input::-webkit-input-placeholder {
+        #userinfo-box .user-box-qianming input::-webkit-input-placeholder {
             color: white;
             font-weight: normal;
             font-size:15px;
             letter-spacing: 1px;
         }
-        .user-box-qianming input:hover{
+        #userinfo-box .user-box-qianming input:hover{
             background: hsla(0,0%,100%,.2);
             box-shadow: 0 0 0 1px hsla(0,0%,100%,.5);
         }
-        .user-box-qianming input:focus{
+        #userinfo-box .user-box-qianming input:focus{
             background: white;
             color: black;
         }
-        .user-box-detailed{
+        #userinfo-box .user-box-detailed{
             width: 100%;
-            height: 100%;
+            height: calc(100% - 210px);
             margin-top:10px;
-            border: 1px solid #e1e2e5;
             position: relative;
+            border-radius: 5px;
+            box-shadow: 0 0 6px 0 rgba(0, 0, 0, .05);
+            background-color: #fff;
+            overflow: hidden;
         }
-        .user-box-detailed-left{
+        #userinfo-box .user-box-detailed-left{
             width: 20%;
             height: auto;
             float: left;
             background: rgb(250,250,250);
         }
-        .user-box-detailed-left-small{
+        #userinfo-box .user-box-detailed-left-small{
             width: 100%;
             height:50px;
             text-align: center;
@@ -127,27 +132,27 @@
             color:#99a2aa;
             cursor:pointer;
         }
-        .user-box-detailed-left-small:last-child{
+        #userinfo-box .user-box-detailed-left-small:last-child{
             border-bottom: 1px solid #e1e2e5;
         }
-        .user-box-detailed-left-small:hover{
+        #userinfo-box .user-box-detailed-left-small:hover{
             background: #e1e4ea;
         }
-        .user-box-detailed-left-small-click{
-            background:#e33e33;
+        #userinfo-box .user-box-detailed-left-small-click{
+            background:#3580eb;
             color:white;
         }
-        .user-box-detailed-left-small-click:hover{
-            background:#e33e33;
+        #userinfo-box .user-box-detailed-left-small-click:hover{
+            background:#3580eb;
             color:white;
         }
-        .user-box-detailed-right{
+        #userinfo-box .user-box-detailed-right{
             float: left;
             width: 80%;
             border-left: 1px solid #e1e2e5;
 
         }
-        .user-box-detailed-left-geren{
+        #userinfo-box .user-box-detailed-left-geren{
             width: 100%;
             height:50px;
             text-align: center;
@@ -155,38 +160,39 @@
             color:#99a2aa;
             border-bottom: 1px solid #e1e2e5;
         }
-        .user-box-detailed-right-im{
+        #userinfo-box .user-box-detailed-right-im{
             width: 100%;
             height:50px;
             line-height: 50px;
             border-bottom: 1px solid #e1e2e5;
         }
-        .user-box-detailed-right-im span{
+        #userinfo-box .user-box-detailed-right-im span{
             margin-left:30px;
             padding-left:10px;
-            color:#e33e33;
-            border-left:3px solid #e33e33;
+            color:#3580eb;
+            border-left:3px solid #3580eb;
         }
-        .user-box-detailed-right-info{
+        #userinfo-box .user-box-detailed-right-info{
             width:100%;
         }
-        .user-box-detailed-right-info-small{
+        #userinfo-box .user-box-detailed-right-info-small{
             width: 100%;
             height:auto;
             padding-top:30px;
+            padding-left:20%;
         }
-        .user-box-detailed-right-info-small-text{
+        #userinfo-box .user-box-detailed-right-info-small-text{
             width: 20%;
             height: 30px;
             line-height: 30px;
             float: left;
             text-align: right;
         }
-        .user-box-detailed-right-info-small-input{
+        #userinfo-box .user-box-detailed-right-info-small-input{
             width: 70%;
             float: left;
         }
-        .user-box-detailed-right-info-small-input input[type="text"]{
+        #userinfo-box .user-box-detailed-right-info-small-input input[type="text"]{
             width:50%;
             height:30px;
             border:1px solid lightgray;
@@ -194,14 +200,14 @@
             border-radius: 5px;
             transition: .2s;
         }
-        .user-box-detailed-right-info-small-input input[type="text"]:hover,.user-box-detailed-right-info-small-input textarea:hover{
+        #userinfo-box .user-box-detailed-right-info-small-input input[type="text"]:hover,#userinfo-box .user-box-detailed-right-info-small-input textarea:hover{
             border-color: #8391a5;
         }
-        .user-box-detailed-right-info-small-input input[type="text"]:focus,.user-box-detailed-right-info-small-input textarea:focus{
-            border-color: #e33e33;
+        #userinfo-box .user-box-detailed-right-info-small-input input[type="text"]:focus,#userinfo-box .user-box-detailed-right-info-small-input textarea:focus{
+            border-color: #3580eb;
         }
-        .user-box-detailed-right-info-small-input textarea{
-            width:80%;
+        #userinfo-box .user-box-detailed-right-info-small-input textarea{
+            width:50%;
             height:60px;
             border:1px solid lightgray;
             resize: none;
@@ -210,9 +216,9 @@
             padding:5px;
             transition: .2s;
         }
-        .user-box-detailed-right-info-small-input-span{
+        #userinfo-box .user-box-detailed-right-info-small-input-span{
             display: block;
-            width:30px;
+            width:70px;
             height:30px;
             line-height: 30px;
             float: left;
@@ -222,20 +228,24 @@
             margin-left:5px;
             background: white;
             cursor:pointer;
+            box-shadow: 0 2px 4px 0 rgba(0, 0, 0, .05);
         }
-        .user-box-detailed-right-info-small-input-click{
+        #userinfo-box .user-box-detailed-right-info-small-input-click{
             color:white;
-            background: #e33e33;
+            background: #3580eb;
         }
-        .user-box-detailed-right-info-small-hr{
+        #userinfo-box .user-box-detailed-right-info-small-hr{
             width:80%;
             border-top:1px solid lightgray;
             margin: 0 auto;
         }
-        .user-box-detailed-right-info-small-btn{
+        #userinfo-box .user-box-detailed-right-info-small input,#userinfo-box .user-box-detailed-right-info-small-input textarea{
+            box-shadow: 0 2px 4px 0 rgba(0, 0, 0, .05);
+        }
+        #userinfo-box .user-box-detailed-right-info-small-btn{
             width:20%;
             height:40px;
-            background: #e33e33;
+            background: #3580eb;
             color:white;
             text-align: center;
             line-height: 40px;
@@ -243,200 +253,193 @@
             border-radius: 5px;
             cursor:pointer;
         }
-        .user-box-detailed-right-info-small:last-child{
+        #userinfo-box .user-box-detailed-right-info-small:last-child{
             padding-bottom: 200px;
         }
     </style>
 
     <link rel="stylesheet" href="__STATIC__/libs/head_portrait/css/index.css">
     <link rel="stylesheet" href="__STATIC__/libs/head_portrait/css/cropper.min.css">
-
     <script src="__STATIC__/libs/head_portrait/js/cropper.min.js"></script>
-    <script src="__STATIC__/libs/pjax/jquery.pjax.min.js"></script>
     <script src="__STATIC__/libs/laydate/laydate.js"></script>
-</head>
-<body>
 
     <!--白色遮蔽层-->
     <div class="user-zhebi"></div>
     <!--白色遮蔽层-->
-    <div class="wrap user-box">
-        <div class="user-box-info">
-            <div class="user-box-info-img">
-                <div class="user-box-info-img-hidden" >
-                    更换头像
+    <div class="wrap">
+        <div class="user-box">
+            <div class="user-box-info">
+                <div class="user-box-info-img">
+                    <div class="user-box-info-img-hidden">
+                        更换头像
+                    </div>
+                    <img src="" alt="">
                 </div>
-                <img src="{$userInfo.user_face}" alt="">
+                <div class="user-box-username"></div>
+                <div class="user-box-qianming">
+                    <input type="text" placeholder="编辑个性签名" value="">
+                </div>
             </div>
-            <div class="user-box-username">
-                {$userInfo.nick_name}
-            </div>
-            <div class="user-box-qianming">
-                <input type="text" placeholder="编辑个性签名" value="{$userInfo.user_autograph}">
-            </div>
-        </div>
 
-        <div class="user-box-detailed clearfix">
-            <div class="user-box-detailed-left">
-                <div class="user-box-detailed-left-geren">
-                    个人中心
+            <div class="user-box-detailed clearfix">
+                <div class="user-box-detailed-left" style="display: none">
+                    <div class="user-box-detailed-left-geren">
+                        个人中心
+                    </div>
+                    <div data-pjax="info" class="user-box-detailed-left-small user-box-detailed-left-small-click">
+                        <i class="fa fa-user-o" aria-hidden="true"></i>
+                        <span>我的信息</span>
+                    </div>
+                    <div data-pjax="la" class="user-box-detailed-left-small">
+                        <i class="fa fa-user-o" aria-hidden="true"></i>
+                        <span>啦啦啦啦</span>
+                    </div>
+                    <div class="user-box-detailed-left-small" id="test">
+                        <i class="fa fa-user-o" aria-hidden="true"></i>
+                        <span>Test</span>
+                    </div>
                 </div>
-                <div data-pjax="info" class="user-box-detailed-left-small user-box-detailed-left-small-click">
-                    <i class="fa fa-user-o" aria-hidden="true"></i>
-                    <span>我的信息</span>
-                </div>
-                <div data-pjax="la" class="user-box-detailed-left-small">
-                    <i class="fa fa-user-o" aria-hidden="true"></i>
-                    <span>啦啦啦啦</span>
-                </div>
-                <div class="user-box-detailed-left-small" id="test">
-                    <i class="fa fa-user-o" aria-hidden="true"></i>
-                    <span>Test</span>
-                </div>
-            </div>
-            <div class="user-box-detailed-right">
-                <div class="user-box-detailed-right-im">
-                    <span id="user-title">我的信息</span>
-                </div>
-                <div id="pjax_re" class="user-box-detailed-right-info">
-                    {include file="user/info"}
-                </div>
+                <div class="user-box-detailed-right" style="width:100%;">
+                    <div class="user-box-detailed-right-im">
+                        <span id="user-title">我的信息</span>
+                    </div>
+                    <div id="pjax_re" class="user-box-detailed-right-info">
+                        {include file="user/info"}
+                    </div>
 
+                </div>
             </div>
         </div>
     </div>
-
     {include file="user/head_portrait"}
+    <script>
+        //选项卡下标
+        var nowIndex = 0;
+        //性别下标
+        var sexNum = 0;
+        //切换选项卡
+        $("#userinfo-box .user-box-detailed-left-small").click(function(){
+            var index = $("#userinfo-box .user-box-detailed-left-small").index(this);
+            if(nowIndex == index){
+                return;
+            }
+            nowIndex = index;
+            $("#userinfo-box .user-box-detailed-left-small").removeClass("user-box-detailed-left-small-click");
+            $("#userinfo-box .user-box-detailed-left-small").eq(index).addClass("user-box-detailed-left-small-click");
+            $("#userinfo-box .user-zhebi").addClass("user-zhebi-appear");
+            setTimeout(function(){$("#userinfo-box .user-zhebi").removeClass("user-zhebi-appear");},150);
+            var text = $("span",$("#userinfo-box .user-box-detailed-left-small").eq(index)).html();
+            $("#user-title").html(text);
+        });
+        //性别切换
+        $("#userinfo-box .user-box-detailed-right-info-small-input-span").click(function(){
+            var index = $("#userinfo-box .user-box-detailed-right-info-small-input-span").index(this);
+            sexNum = index;
+            $("#userinfo-box .user-box-detailed-right-info-small-input-span").removeClass("user-box-detailed-right-info-small-input-click");
+            $("#userinfo-box .user-box-detailed-right-info-small-input-span").eq(index).addClass("user-box-detailed-right-info-small-input-click");
+        });
 
-</body>
-<script>
-    //选项卡下标
-    var nowIndex = 0;
-    //性别下标
-    var sexNum = 0;
-    //切换选项卡
-    $(".user-box-detailed-left-small").click(function(){
-        var index = $(".user-box-detailed-left-small").index(this);
-        if(nowIndex == index){
-            return;
-        }
-        nowIndex = index;
-        $(".user-box-detailed-left-small").removeClass("user-box-detailed-left-small-click");
-        $(".user-box-detailed-left-small").eq(index).addClass("user-box-detailed-left-small-click");
-        $(".user-zhebi").addClass("user-zhebi-appear");
-        setTimeout(function(){$(".user-zhebi").removeClass("user-zhebi-appear");},150);
-        var text = $("span",$(".user-box-detailed-left-small").eq(index)).html();
-        $("#user-title").html(text);
-    });
-    //性别切换
-    $(".user-box-detailed-right-info-small-input-span").click(function(){
-        var index = $(".user-box-detailed-right-info-small-input-span").index(this);
-        sexNum = index;
-        $(".user-box-detailed-right-info-small-input-span").removeClass("user-box-detailed-right-info-small-input-click");
-        $(".user-box-detailed-right-info-small-input-span").eq(index).addClass("user-box-detailed-right-info-small-input-click");
-    });
-
-    //个性签名摁下互回车
-    $("input",$(".user-box-qianming")).keypress(function(event){
-        var keycode = (event.keyCode ? event.keyCode : event.which);
-        if(keycode == '13'){
-            $("input",$(".user-box-qianming")).blur();
-        }
-    });
-    //个性签名失去焦点
-    $("input",$(".user-box-qianming")).blur(function(){
-        $.ajax({
-            type:"POST",
-            url:"{:url('User/editUser')}",
-            data:{
-                'username':$("input[name='user_name']",$(".user-box-detailed-right-info-small-input")).val(),
-                'qianming':$("input",$(".user-box-qianming")).val(),
-                'num':1
-            },
-            headers: {
-                token: $.cookie('token'),
-            },
-            dataType:"json",
-            success:function(data){
-                console.log(data);
-                if(data.code != 1){
-                    humane.log(data.msg);
-                } else {
-                    humane.log(data.msg);
-                    $("textarea",$(".user-box-detailed-right-info-small-input")).val($("input",$(".user-box-qianming")).val());
+        //个性签名摁下互回车
+        $("input",$("#userinfo-box .user-box-qianming")).keypress(function(event){
+            var keycode = (event.keyCode ? event.keyCode : event.which);
+            if(keycode == '13'){
+                $("input",$("#userinfo-box .user-box-qianming")).blur();
+            }
+        });
+        //个性签名失去焦点
+        $("input",$("#userinfo-box .user-box-qianming")).blur(function(){
+            $.ajax({
+                type:"POST",
+                url:"{:url('User/editUser')}",
+                data:{
+                    'username':$("input[name='user_name']",$("#userinfo-box .user-box-detailed-right-info-small-input")).val(),
+                    'qianming':$("input",$("#userinfo-box .user-box-qianming")).val(),
+                    'num':1
+                },
+                headers: {
+                    token: $.cookie('token'),
+                },
+                dataType:"json",
+                success:function(data){
+                    console.log(data);
+                    if(data.code != 1){
+                        humane.log(data.msg);
+                    } else {
+                        humane.log(data.msg);
+                        $("textarea",$("#userinfo-box .user-box-detailed-right-info-small-input")).val($("input",$("#userinfo-box .user-box-qianming")).val());
+                    }
                 }
-            }
+            });
         });
-    });
 
-    //时间控件
-    laydate.render({
-        elem: '.start',
-        theme: '#e33e33',
-        max:0
-    });
+        //时间控件
+        laydate.render({
+            elem: '.start',
+            theme: '#3580eb',
+            max:0
+        });
 
-    $("#sub_btn").click(function(){
-        var obj = new Object();
-        obj["nickname"] = $("input[name='nick_name']",$(".user-box-detailed-right-info-small-input")).val();
-        obj["username"] = $("input[name='user_name']",$(".user-box-detailed-right-info-small-input")).val();
-        obj["qianming"] = $("textarea",$(".user-box-detailed-right-info-small-input")).val();
-        obj["birthday"] = $("input[name='birthday']",$(".user-box-detailed-right-info-small-input")).val();
-        obj["usersex"] = sexNum;
-        //console.log(obj);
-        $.ajax({
-            type:"POST",
-            url:"{:url('User/editUser')}",
-            data:obj,
-            headers: {
-                token: $.cookie('token'),
-            },
-            dataType:"json",
-            success:function(data){
-                //console.log(data);
-                if(data.code != 1){
-                    humane.log(data.msg);
-                } else {
-                    humane.log(data.msg);
-                    $("input",$(".user-box-qianming")).val(obj["qianming"]);
+        $("#sub_btn").click(function(){
+            var obj = new Object();
+            obj["nickname"] = $("input[name='nick_name']",$("#userinfo-box .user-box-detailed-right-info-small-input")).val();
+            obj["username"] = $("input[name='user_name']",$("#userinfo-box .user-box-detailed-right-info-small-input")).val();
+            obj["qianming"] = $("textarea",$("#userinfo-box .user-box-detailed-right-info-small-input")).val();
+            obj["birthday"] = $("input[name='birthday']",$("#userinfo-box .user-box-detailed-right-info-small-input")).val();
+            obj["usersex"] = sexNum;
+            //console.log(obj);
+            $.ajax({
+                type:"POST",
+                url:"{:url('User/editUser')}",
+                data:obj,
+                headers: {
+                    token: $.cookie('token'),
+                },
+                dataType:"json",
+                success:function(data){
+                    //console.log(data);
+                    if(data.code != 1){
+                        humane.log(data.msg);
+                    } else {
+                        humane.log(data.msg);
+                        $("input",$("#userinfo-box .user-box-qianming")).val(obj["qianming"]);
+                    }
                 }
-            }
+            });
         });
-    });
-    $("#test").click(function(){
-        $.ajax({
-            type:"POST",
-            url:"{:url('User/getCode',['tel' => 'la'])}",
-            headers: {
-                token: $.cookie('token'),
-            },
-            data:{
-                'template_name':'la'
-            },
-            dataType:"json",
-            success:function(data){
-                console.log(data);
-            }
+        $("#test").click(function(){
+            $.ajax({
+                type:"POST",
+                url:"{:url('User/getCode',['tel' => 'la'])}",
+                headers: {
+                    token: $.cookie('token'),
+                },
+                data:{
+                    'template_name':'la'
+                },
+                dataType:"json",
+                success:function(data){
+                    console.log(data);
+                }
+            });
         });
-    });
-    $('div[data-pjax]').click(function(){
-        var index = $("div[data-pjax]").index(this);
-        var attrName = $("div[data-pjax]").eq(index).attr("data-pjax");
-        var url = "user" + "/" + attrName + ".html";
-        $.pjax({
-            headers: {
-                token: $.cookie('token'),
-            },
-            type:'post',
-            push:false,
-            data:{
-                'template_name':attrName,
-            },
-            dataType:'html',
-            url:url,
-            container: '#pjax_re',
+        $('div[data-pjax]').click(function(){
+            var index = $("div[data-pjax]").index(this);
+            var attrName = $("div[data-pjax]").eq(index).attr("data-pjax");
+            var url = "user" + "/" + attrName + ".html";
+            $.pjax({
+                headers: {
+                    token: $.cookie('token'),
+                },
+                type:'post',
+                push:false,
+                data:{
+                    'template_name':attrName,
+                },
+                dataType:'html',
+                url:url,
+                container: '#pjax_re',
+            });
         });
-    });
 
-</script>
-</html>
+    </script>
+</div>
