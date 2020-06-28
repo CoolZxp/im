@@ -102,7 +102,7 @@
         }
         #userinfo-box .user-box-qianming input:hover{
             background: hsla(0,0%,100%,.2);
-            box-shadow: 0 0 0 1px hsla(0,0%,100%,.5);
+            box-shadow: 0 0 6px 0 rgba(0, 0, 0, .05);
         }
         #userinfo-box .user-box-qianming input:focus{
             background: white;
@@ -148,9 +148,9 @@
         }
         #userinfo-box .user-box-detailed-right{
             float: left;
-            width: 80%;
-            border-left: 1px solid #e1e2e5;
-
+            width: 100%;
+            padding: 20px 0;
+            height: 100%;
         }
         #userinfo-box .user-box-detailed-left-geren{
             width: 100%;
@@ -162,100 +162,111 @@
         }
         #userinfo-box .user-box-detailed-right-im{
             width: 100%;
-            height:50px;
-            line-height: 50px;
-            border-bottom: 1px solid #e1e2e5;
+            font-size: 28px;
+            height: 40px;
+            font-weight: bold;
+            /*padding-left: 35%;*/
+            text-align: center;
+            margin-bottom: 30px;
         }
         #userinfo-box .user-box-detailed-right-im span{
-            margin-left:30px;
-            padding-left:10px;
-            color:#3580eb;
-            border-left:3px solid #3580eb;
+            /*margin-left:30px;*/
+            /*padding-left:10px;*/
+            /*color:#3580eb;*/
+            /*border-left:3px solid #3580eb;*/
         }
         #userinfo-box .user-box-detailed-right-info{
             width:100%;
+            height: calc(100% - 40px);
+            overflow-y: auto;
+
         }
         #userinfo-box .user-box-detailed-right-info-small{
             width: 100%;
-            height:auto;
-            padding-top:30px;
-            padding-left:20%;
+            margin-top: 20px;
+            line-height: 40px;
         }
         #userinfo-box .user-box-detailed-right-info-small-text{
-            width: 20%;
-            height: 30px;
-            line-height: 30px;
+            height: 40px;
             float: left;
             text-align: right;
+            font-size: 18px;
+            font-weight: bold;
+            width: 35%;
         }
         #userinfo-box .user-box-detailed-right-info-small-input{
-            width: 70%;
+            width: 65%;
             float: left;
         }
         #userinfo-box .user-box-detailed-right-info-small-input input[type="text"]{
-            width:50%;
-            height:30px;
-            border:1px solid lightgray;
+            width: 50%;
+            height: 40px;
+            background-color: #f5f6f7;
             padding:5px;
             border-radius: 5px;
             transition: .2s;
-        }
-        #userinfo-box .user-box-detailed-right-info-small-input input[type="text"]:hover,#userinfo-box .user-box-detailed-right-info-small-input textarea:hover{
-            border-color: #8391a5;
+            border: 1px solid transparent;
+            box-shadow: 0 0 6px 0 rgba(0, 0, 0, .05);
+            font-size: 16px;
+            font-weight: bold;
         }
         #userinfo-box .user-box-detailed-right-info-small-input input[type="text"]:focus,#userinfo-box .user-box-detailed-right-info-small-input textarea:focus{
             border-color: #3580eb;
         }
         #userinfo-box .user-box-detailed-right-info-small-input textarea{
             width:50%;
-            height:60px;
-            border:1px solid lightgray;
+            height:100px;
+            background-color: #f5f6f7;
             resize: none;
-            font-size: 18px;
+            font-size: 16px;
             border-radius: 5px;
             padding:5px;
             transition: .2s;
+            outline: none;
+            border: 1px solid transparent;
+            box-shadow: 0 0 6px 0 rgba(0, 0, 0, .05);
+            font-family: inherit;
         }
         #userinfo-box .user-box-detailed-right-info-small-input-span{
-            display: block;
-            width:70px;
+            display: inline-block;
+            padding: 0 20px;
             height:30px;
             line-height: 30px;
-            float: left;
             text-align: center;
             border-radius: 5px;
-            border:1px solid lightgray;
-            margin-left:5px;
-            background: white;
+            margin-right: 10px;
             cursor:pointer;
-            box-shadow: 0 2px 4px 0 rgba(0, 0, 0, .05);
+            box-shadow: 0 0 6px 0 rgba(0, 0, 0, .05);
+            background-color: #f5f6f7;
+            vertical-align: middle;
+            font-size: 16px;
         }
         #userinfo-box .user-box-detailed-right-info-small-input-click{
             color:white;
             background: #3580eb;
-        }
-        #userinfo-box .user-box-detailed-right-info-small-hr{
-            width:80%;
-            border-top:1px solid lightgray;
-            margin: 0 auto;
-        }
-        #userinfo-box .user-box-detailed-right-info-small input,#userinfo-box .user-box-detailed-right-info-small-input textarea{
-            box-shadow: 0 2px 4px 0 rgba(0, 0, 0, .05);
+            font-weight: bold;
         }
         #userinfo-box .user-box-detailed-right-info-small-btn{
             width:20%;
             height:40px;
+            line-height: 40px;
             background: #3580eb;
             color:white;
             text-align: center;
-            line-height: 40px;
             margin:0 auto;
             border-radius: 5px;
             cursor:pointer;
+            font-size: 18px;
+            transition: background-color .3s;
         }
-        #userinfo-box .user-box-detailed-right-info-small:last-child{
-            padding-bottom: 200px;
+        #userinfo-box .user-box-detailed-right-info-small-btn:hover {
+            background-color: #2b72ff;
         }
+
+        #userinfo-box .user-box-detailed-right-info-small-btn:active {
+            background-color: #2b72ff;
+        }
+
     </style>
 
     <link rel="stylesheet" href="__STATIC__/libs/head_portrait/css/index.css">
@@ -373,6 +384,7 @@
         });
         //个性签名失去焦点
         $("input",$("#userinfo-box .user-box-qianming")).blur(function(){
+            
             $.ajax({
                 type:"POST",
                 url:"{:url('User/editUser')}",
