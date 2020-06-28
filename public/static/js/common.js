@@ -68,31 +68,7 @@ function getUrlParam(name) {//封装方法
 }
 
 
-//获取QQ消息列表样式时间
-const IN_DAY = 1000 * 60 * 60 * 24; //1天
-var weeks = ["星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六"];
-function getDiffTimeStr(time,isCompleteTime) {
-    var localTime = new Date(); //当前系统时间
-    var createTime = new Date(time) //消息创建时间
-    var diff = localTime.getTime() - createTime.getTime();
-    var timeStr = '';
-    if (diff <= IN_DAY) {
-        timeStr = getTwoTime(createTime.getHours()) + ':' + getTwoTime(createTime.getMinutes());
-    } else if (diff <= IN_DAY * 2) {
-        timeStr = '昨天';
-    } else if (diff <= IN_DAY * 7) {
-        timeStr = weeks[createTime.getDay()];
-    } else if(localTime.getFullYear() - createTime.getFullYear() < 1) {
-        timeStr = getTwoTime(createTime.getMonth() + 1) + "-" + getTwoTime(createTime.getDate());
-    } else {
-        timeStr = createTime.getFullYear() + "-" + getTwoTime(createTime.getMonth() + 1) + "-" + getTwoTime(createTime.getDate());
-    }
-    if (diff > IN_DAY && isCompleteTime) {
-        return timeStr + ' ' + getTwoTime(createTime.getHours()) + ':' + getTwoTime(createTime.getMinutes());
-    } else {
-        return timeStr;
-    }
-}
+
 //把一位数的时间填充0
 function getTwoTime(num) {
     if (num.toString().length < 2) {
@@ -102,21 +78,8 @@ function getTwoTime(num) {
 }
 
 
-//消息大于99显示99+
-function updateMsgCount(count) {
-    if (count > 99) {
-        return '99+'
-    }
-    return count;
-}
 
-//获取时间差 (分钟)
-function timeDifference(time1,time2) {
-    var time1Date = new Date(time1);
-    var time2Date = new Date(time2);
-    var diffTime = Math.abs(time1Date.getTime() - time2Date.getTime());
-    return parseInt(diffTime / 1000 / 60);
-}
+
 
 //根据数组内ID返回数组
 function getArrayValueById(arr,id) {

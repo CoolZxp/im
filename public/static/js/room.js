@@ -1,4 +1,3 @@
-
 var roomVue = new Vue({
     el: '#room',
     data: {
