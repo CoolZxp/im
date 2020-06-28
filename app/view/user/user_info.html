@@ -313,6 +313,31 @@
     </div>
     {include file="user/head_portrait"}
     <script>
+        $.ajax({
+            type:"POST",
+            url:"{:url('User/getUserInfo')}",
+            headers: {
+                token: $.cookie('token'),
+            },
+            dataType:"json",
+            success:function(obj){
+                console.log(obj);
+                if(obj.code != 1){
+                    humane.log(obj.msg);
+                } else {
+                    var data = obj.data;
+                    $("img",$(".user-box-info-img")).attr("src",data['user_face']);
+                    $(".user-box-username").html(data['nick_name']);
+                    $("input",$(".user-box-qianming")).val(data['user_autograph']);
+                    $("input[name='nick_name']",$(".user-box-detailed-right-info-small-input")).val(data['nick_name']);
+                    $("input[name='user_name']",$(".user-box-detailed-right-info-small-input")).val(data['user_name']);
+                    $("textarea",$(".user-box-detailed-right-info-small-input")).html(data['user_autograph']);
+                    $("input[name='birthday']",$(".user-box-detailed-right-info-small-input")).val(data['user_birthday']);
+                    $(".user-box-detailed-right-info-small-input-span").eq(data['user_sex']).addClass("user-box-detailed-right-info-small-input-click");
+
+                }
+            }
+        });
         //选项卡下标
         var nowIndex = 0;
         //性别下标
