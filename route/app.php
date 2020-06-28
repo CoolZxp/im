@@ -27,6 +27,7 @@ Route::group(function () {
     Route::post('uploadImg','User/uploadImg');
     Route::post('user/:tel', 'User/getCode');
     Route::post('getUserInfo','User/getUserInfo');
+    Route::post('room/getSelfRoomList', 'Room/getSelfRoomList');
 }) -> middleware(\app\middleware\Auth::class);
 
 

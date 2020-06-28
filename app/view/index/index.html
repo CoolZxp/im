@@ -11,13 +11,14 @@
         .base-swiper-container {
             height: calc(100% - 55px);
         }
-        .swiper-slide-overflow {
+        .room-swiper-slide {
             overflow-y: auto;
         }
     </style>
     <script src="__STATIC__/libs/socket.io/socket.io.slim.js"></script>
     <script src="__STATIC__/libs/jq-paginator/jq-paginator.min.js"></script>
     <script src="__STATIC__/libs/pjax/jquery.pjax.min.js"></script>
+
 </head>
 <body>
 {include file="index/loading"}
@@ -92,90 +93,16 @@
             {include file="index/chat"}
         </div>
 
-        <div class="swiper-slide swiper-no-swiping">Slide 2</div>
-        <div class="swiper-slide swiper-no-swiping">Slide 3</div>
-
-        <div class="swiper-slide swiper-no-swiping"><!--userinfo-box-->
-            {include file="user/user_info"}
+        <div class="swiper-slide swiper-no-swiping">
+            {include file="index/friend"}
         </div>
-
-        <div class="swiper-slide swiper-no-swiping swiper-slide-overflow">
-            <div id="room" class="wrap">
-                <div class="im-box im-cate">
-                    <div class="im-title">
-                        分类
-                    </div>
-                    <ul class="im-cate-list clearfix">
-                        <li
-                                v-for="roomCateItem in roomCateList"
-                                :key="roomCateItem.id"
-                                class="im-cate-list-item"
-                                :class="{'im-cate-list-item-active':roomCateItem.id==cateId}"
-                                @click="setCateId(roomCateItem.id)"
-                        >
-                               {{ roomCateItem.cate_name }}
-                        </li>
-                    </ul>
-                </div>
-                <div class="im-box im-room">
-                    <div class="im-room-top clearfix">
-                        <div class="im-title im-room-top-title">
-                            聊天室
-                        </div>
-                        <button class="im-room-top-new">
-                            新建聊天室
-                        </button>
-                    </div>
-                    <div class="im-title im-room-no" v-if="isShowNo">暂无聊天室...</div>
-                    <ul class="im-room-list">
-                        <li
-                                v-for="roomItem in roomList"
-                                :key="roomItem.id"
-                                class="im-room-list-item clearfix"
-                                :class="{'im-room-list-item-hidden':roomItem.isHidden}"
-                        >
-                            <div class="im-room-list-item-img" >
-                                <img :src="roomItem.room_img">
-                            </div>
-                            <div class="im-room-list-item-main"  >
-                                <div class="im-room-list-item-row clearfix">
-                                    <div class="im-room-list-item-title">
-                                        {{roomItem.room_name}}
-                                    </div>
-                                </div>
-
-                                <div class="im-room-list-item-row clearfix">
-                                    <div class="im-room-list-item-user">
-                                        <div class="im-room-list-item-user-info">
-                                            <img :src="roomItem.user_face" class="im-room-list-item-user-face">
-                                        </div>
-                                        <div class="im-room-list-item-user-name">{{roomItem.nick_name}}</div>
-                                    </div>
-                                </div>
-
-                                <div class="im-room-list-item-row clearfix">
-                                    <div class="im-room-list-item-desc">
-                                        {{roomItem.room_desc}}
-                                    </div>
-                                </div>
-
-
-                            </div>
-
-                            <div class="im-room-list-item-row clearfix">
-                                <div class="im-room-list-item-user-num">
-                                    <i class="fa fa-user" aria-hidden="true"></i>
-                                    {{roomItem.room_user_num}}
-                                </div>
-                            </div>
-                        </li>
-                    </ul>
-                </div>
-                <div class="im-room-list-page-wrap" >
-                    <ul class="im-room-list-page"></ul>
-                </div>
-
-            </div>
+        <div class="swiper-slide swiper-no-swiping room-swiper-slide">
+            {include file="index/room"}
+        </div>
+        <div class="swiper-slide swiper-no-swiping">
+<!--            include file="user/user_info"-->
+        </div>
+        <div class="swiper-slide swiper-no-swiping">
         </div>
     </div>
 </div>
@@ -186,7 +113,7 @@
     var baseSwiper = new Swiper('.base-swiper-container', {
         freeModeMomentumBounce: false,
     })
-    setHeaderNav(3);
+    // setHeaderNav(2);
 
     $('#header .header-nav-item').click(function () {
         setHeaderNav($('a',this).attr('data-index'));
@@ -199,32 +126,6 @@
         $('#header .header-nav-item').eq(index).addClass('header-nav-active');
         baseSwiper.slideTo(index);
     }
-
-    $.ajax({
-        type:"POST",
-        url:"{:url('User/getUserInfo')}",
-        headers: {
-            token: $.cookie('token'),
-        },
-        dataType:"json",
-        success:function(obj){
-            console.log(obj);
-            if(obj.code != 1){
-                humane.log(obj.msg);
-            } else {
-                var data = obj.data;
-                $("img",$(".user-box-info-img")).attr("src",data['user_face']);
-                $(".user-box-username").html(data['nick_name']);
-                $("input",$(".user-box-qianming")).val(data['user_autograph']);
-                $("input[name='nick_name']",$(".user-box-detailed-right-info-small-input")).val(data['nick_name']);
-                $("input[name='user_name']",$(".user-box-detailed-right-info-small-input")).val(data['user_name']);
-                $("textarea",$(".user-box-detailed-right-info-small-input")).html(data['user_autograph']);
-                $("input[name='birthday']",$(".user-box-detailed-right-info-small-input")).val(data['user_birthday']);
-                $(".user-box-detailed-right-info-small-input-span").eq(data['user_sex']).addClass("user-box-detailed-right-info-small-input-click");
-
-            }
-        }
-    });
 </script>
 <script src="__STATIC__/js/header.js"></script>
 <script src="__STATIC__/js/room.js"></script>

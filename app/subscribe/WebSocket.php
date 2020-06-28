@@ -394,4 +394,23 @@ class WebSocket
         }
     }
 
+    /**
+     * 移除消息列表
+     * onRemoveUserMsg
+     * @param $event
+     */
+    public function onRemoveUserMsg($event) {
+        if ($this -> checkLogin()) {
+            if (empty($event['id'])) {
+                $this -> websocket -> emit('error','未知参数');
+            } else {
+                UserMsg::destroy(function($query) use($event) {
+                    $query->where('id',$event['id']);
+                    $query->where('user_id',$this -> getUserId());
+                });
+            }
+        } else {
+            $this -> websocket -> emit('user_error','非法操作');
+        }
+    }
 }

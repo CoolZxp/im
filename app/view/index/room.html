@@ -1,0 +1,68 @@
+<script>
+    var getSelfRoomList = "{:url('Room/getSelfRoomList')}";
+</script>
+<link rel="stylesheet" href="__STATIC__/css/room.css">
+<div id="room" class="wrap">
+
+    <div class="im-box im-room">
+        <div class="im-room-top clearfix">
+            <div class="im-title im-room-top-title">
+                聊天室
+            </div>
+            <button class="im-room-top-new">
+                新建聊天室
+            </button>
+        </div>
+        <div class="im-title im-room-no" v-if="isShowNo">暂无聊天室...</div>
+        <ul class="im-room-list">
+            <li
+                    v-for="roomItem in roomList"
+                    :key="roomItem.id"
+                    class="im-room-list-item clearfix"
+                    :class="{'im-room-list-item-hidden':roomItem.isHidden}"
+            >
+                <div class="im-room-list-item-img" >
+                    <img :src="roomItem.room_img">
+                    <div class="im-room-btn">
+                        加入退出
+                    </div>
+                </div>
+                <div class="im-room-list-item-main"  >
+                    <div class="im-room-list-item-row clearfix">
+                        <div class="im-room-list-item-title">
+                            {{roomItem.room_name}}
+                        </div>
+                    </div>
+
+                    <div class="im-room-list-item-row clearfix">
+                        <div class="im-room-list-item-user">
+                            <div class="im-room-list-item-user-info">
+                                <img :src="roomItem.user_face" class="im-room-list-item-user-face">
+                            </div>
+                            <div class="im-room-list-item-user-name">{{roomItem.nick_name}}</div>
+                        </div>
+                    </div>
+
+                    <div class="im-room-list-item-row clearfix">
+                        <div class="im-room-list-item-desc">
+                            {{roomItem.room_desc}}
+                        </div>
+                    </div>
+
+
+                </div>
+
+                <div class="im-room-list-item-row clearfix">
+                    <div class="im-room-list-item-user-num">
+                        <i class="fa fa-user" aria-hidden="true"></i>
+                        {{roomItem.room_user_count}}
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </div>
+    <div class="im-room-list-page-wrap" >
+        <ul class="im-room-list-page"></ul>
+    </div>
+</div>
+<script src="__STATIC__/js/room.js"></script>

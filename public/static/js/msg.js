@@ -64,6 +64,18 @@ var chatVue = new Vue({
         leaveWebSocketRoom(roomId) {
             this.imSocket.emit('leave_websocket_room',{roomId:roomId});
         },
+        removeUserMsg() {
+            var id = this.msgInfo.id;
+            if (id !== -1) {
+                this.imSocket.emit('remove_user_msg',{id:id});
+                for (var i = 0; i < this.msgList.length; i++) {
+                    if (this.msgList[i].id == id) {
+                        this.msgList.splice(i, 1);
+                    }
+                }
+                this.msgInfo.id = -1;
+            }
+        },
         //发送获取消息列表请求
         getUserMsgList() {
             this.imSocket.emit('get_user_msg_list');
@@ -135,13 +147,15 @@ var chatVue = new Vue({
                     //滚动到底部
                     $('.chat-room-user-list').scrollTop($('.chat-room-user-list')[0].scrollHeight)
                 });
-                this.imSocket.emit('get_room_user_list',{roomId:this.msgInfo['id'],page:this.roomUserPage});
+                var msgListInfo = getArrayValueById(this.msgList,this.msgInfo['id']);
+                this.imSocket.emit('get_room_user_list',{roomId:msgListInfo['to_room_id'],page:this.roomUserPage});
                 this.roomUserPage++;
             }
         },
         //获取房间用户数量
         getRoomUserCount() {
-            this.imSocket.emit('get_room_user_count',{roomId:this.msgInfo['id']});
+            var msgListInfo = getArrayValueById(this.msgList,this.msgInfo['id']);
+            this.imSocket.emit('get_room_user_count',{roomId:msgListInfo['to_room_id']});
         },
         //发送消息
         sendMsg() {

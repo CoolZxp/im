@@ -3,30 +3,12 @@ var roomVue = new Vue({
     el: '#room',
     data: {
         roomList: [],
-        roomCateList: [],
         maxPage: 0,
         init:false,
         page: 1,
-        cateId: 0,
         isShowNo:false,
     },
     methods: {
-        getRoomCateList() {
-            var self = this;
-            $.ajax({
-                type:"POST",
-                url: getRoomCateList,
-                headers: {
-                    token: $.cookie('token'),
-                },
-                dataType:"json",
-                success:function(data){
-                    if (data.code === 1) {
-                        self.roomCateList = data.data;
-                    }
-                }
-            })
-        },
         getRoomList() {
             var self = this;
             if (self.init) {
@@ -35,10 +17,9 @@ var roomVue = new Vue({
             }
             $.ajax({
                 type:"POST",
-                url: getRoomListUrl,
+                url: getSelfRoomList,
                 data:{
                     page: self.page,
-                    cateId: self.cateId,
                 },
                 headers: {
                     token: $.cookie('token'),
@@ -47,7 +28,7 @@ var roomVue = new Vue({
                 success:function(data){
                     if (data.code === 1) {
                         var listNum = data.data.list.length % 3;
-                        if (data.data.list.length < 3 && data.data.list.length != 0) {
+                        if (data.data.list.length < 3 && data.data.list.length !== 0) {
                             listNum = 3 - data.data.list.length;
                         }
                         for (var i = 0;i < listNum;i++) {
@@ -55,8 +36,7 @@ var roomVue = new Vue({
                         }
                         self.roomList = data.data.list;
                         self.maxPage = data.data.maxPage;
-                        if (self.maxPage == 0) {
-                            console.log(1);
+                        if (self.maxPage === 0) {
                             self.maxPage = 1;
                             self.isShowNo = true;
                         } else {
@@ -91,19 +71,12 @@ var roomVue = new Vue({
                 last: '<li class="first">尾页</li>',
                 page: '<li class="first">{{page}}</li>',
                 onPageChange: function (num, type) {
-                    if (type == 'change') {
+                    if (type === 'change') {
                         self.setPage(num);
                         self.getRoomList();
                     }
                 }
             });
-        },
-        setCateId(id) {
-            if (this.cateId != id) {
-                this.cateId = id;
-                this.setPage(1);
-                this.getRoomList();
-            }
         },
         setPage(num) {
             var self = this;
@@ -114,7 +87,6 @@ var roomVue = new Vue({
         }
     },
     created: function () {
-        this.getRoomCateList();
         this.getRoomList();
     }
 })
