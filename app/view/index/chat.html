@@ -34,7 +34,10 @@
 
             <div class="box-right  clearfix" v-show="msgInfo.id !== -1">
                 <div class="chat-box" :class="{'chat-msg-show-user':isShowRoomUser}">
-                    <div class="msg-title">{{msgInfo.title}}</div>
+                    <div class="msg-title">
+                        {{msgInfo.title}}
+                        <div class="chat-remove-btn" @click="removeUserMsg()">移除消息</div>
+                    </div>
                     <div class="chat-msg">
                         <div class="room-msg-content clearfix">
 

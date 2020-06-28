@@ -45,7 +45,8 @@
     margin-bottom: 10px;
 }
 #room .im-room-top {
-    height: 50px;
+    height: 40px;
+    line-height: 40px;
 }
 
 #room .im-room-top-title {
@@ -54,8 +55,8 @@
 
 #room .im-room-top-new {
     float: right;
-    height: 40px;
-    line-height: 40px;
+    height: 35px;
+    line-height: 35px;
     padding: 0 15px;
     margin-top: 5px;
     background-color: #3580eb;
@@ -63,7 +64,7 @@
     border-radius: 5px;
     cursor: pointer;
     transition: background-color .5s;
-    font-size: 20px;
+    font-size: 18px;
 }
 
 #room .im-room-top-new:hover {
